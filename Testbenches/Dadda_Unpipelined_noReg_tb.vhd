@@ -29,8 +29,8 @@ begin
 		port map(X, Y, s, P);
 
 	inputs : process
-		variable Xin       : STD_LOGIC_VECTOR(7 downto 0);
-		variable Yin       : STD_LOGIC_VECTOR(7 downto 0);
+		variable Xin       : STD_LOGIC_VECTOR(10 downto 0);
+		variable Yin       : STD_LOGIC_VECTOR(5 downto 0);
 
 	begin
 		for i in 0 to 10 loop
@@ -50,10 +50,10 @@ begin
 				s <= '0';
 				wait for 1 ns;
 
-				X   <= Int_to_DR(i, 8);
-				Y   <= Int_to_DR(j, 8);
-				Xin := conv_std_logic_vector(i, 8);
-				Yin := conv_std_logic_vector(j, 8);
+				X   <= Int_to_DR(i, 11);
+				Y   <= Int_to_DR(j, 6);
+				Xin := conv_std_logic_vector(i, 11);
+				Yin := conv_std_logic_vector(j, 6);
 
 				wait for 50 ns;
 				s <= '1';

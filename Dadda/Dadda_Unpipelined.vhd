@@ -104,11 +104,11 @@ begin
 	end generate;
 
 	FA111a : FAm                        --P11
-		port map(carry_array1(0)(11), input_array(10)(1), sum_array1(9)(2), sleep, carry_array1(1)(12), sum_array2(1)(11));
+		port map(carry_array1(0)(11), input_array(10)(1), input_array(9)(2), sleep, carry_array1(1)(12), sum_array2(1)(11));
 	FA111b : FAm                        --P11
-		port map(input_array(8)(3), input_array(7)(4), sum_array1(6)(5), sleep, carry_array2(1)(12), sum_array2(1)(11));
+		port map(input_array(8)(3), input_array(7)(4), input_array(6)(5), sleep, carry_array2(1)(12), sum_array2(1)(11));
 	FA112a : FAm                        --P12
-		port map(input_array(10)(2), input_array(9)(3), sum_array1(8)(4), sleep, carry_array2(1)(13), sum_array2(1)(12));
+		port map(input_array(10)(2), input_array(9)(3), input_array(8)(4), sleep, carry_array2(1)(13), sum_array2(1)(12));
 
 	-- Third Stage - All columns will have 3pp or less
 	HA23a : HAm                         -- P3
@@ -133,7 +133,8 @@ begin
 		port map(input_array(2)(0), input_array(1)(1), sleep, carry_array1(3)(3), sum_array1(3)(2));
 	FA33 : FAm                          -- P3
 		port map(sum_array1(2)(3), input_array(1)(2), input_array(0)(3), sleep, carry_array1(3)(4), sum_array1(3)(3));
-
+	FA34 : FAm
+		port map(carry_array1(2)(4), sum_array1(2)(4), input_array(0)(4), sleep, carry_array1(3)(5), sum_array1(3)(4));
 	FaGen3a : for i in 1 to 8 generate  -- P5-P12
 		FA3a : FAm
 			port map(sum_array1(2)(i + 4), sum_array2(1)(i + 4), carry_array1(2)(i + 4), sleep, carry_array1(3)(i + 5), sum_array1(3)(i + 4));

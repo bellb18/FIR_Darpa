@@ -55,7 +55,7 @@ begin
 				Xin := conv_std_logic_vector(i, 8);
 				Yin := conv_std_logic_vector(j, 8);
 
-				wait until is_data(P);
+				wait for 50 ns;
 				s <= '1';
 				wait for 1 ns;
 				
@@ -67,7 +67,7 @@ begin
 					Y(i).rail1 <= '0';
 					Y(i).rail0 <= '0';
 				end loop;
-				wait until is_null(P);
+				wait for 50 ns;
 
 			end loop;
 		end loop;

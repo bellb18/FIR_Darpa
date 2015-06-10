@@ -51,17 +51,32 @@ architecture arch of Dadda_Unpipelined is
 
     signal carry_array1, carry_array2, sum_array1, sum_array2         : Ctype;
     signal discard_carry: dual_rail_logic;
-    signal input_array                    : InType;
+    signal temp_input_array, input_array                    : InType;
 
 begin
     
-    -- Fix inverted inputs
+    -- Generate partial products
     AndGenx: for i in 0 to 10 generate
         AndGeny: for j in 0 to 5 generate
             AndGen: and2im
-                port map(x(i), y(j), sleep, input_array(i)(j));
+                port map(x(i), y(j), sleep, temp_input_array(i)(j));
         end generate;
     end generate;
+    
+    -- Fix inverted inputs
+    NotInvGena: for i in 0 to 9 generate
+    	NotInvGenb: for j in 0 to 4 generate
+    		input_array(i)(j) <= temp_input_array(i)(j);
+	    end generate;
+	end generate;
+	InvGena: for i in 0 to 9 generate
+		input_array(i)(5).RAIL0 <= temp_input_array(i)(5).RAIL1;
+		input_array(i)(5).RAIL1 <= temp_input_array(i)(5).RAIL0;
+	end generate;
+	InvGenb: for i in 0 to 4 generate
+		input_array(10)(i).RAIL0 <= temp_input_array(10)(i).RAIL1;
+		input_array(10)(i).RAIL1 <= temp_input_array(10)(i).RAIL0;
+	end generate;
     
     -- First Stage - All columns will have 6pp or less
     HA05a: HAm1 --P5
@@ -98,6 +113,7 @@ begin
     -- Third Stage
     
     -- Fourth Stage
+    
     
     -- Final Adder (Carry Propagate)
     p(0) <= input_array(0)(0);

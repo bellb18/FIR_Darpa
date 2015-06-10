@@ -43,21 +43,21 @@ begin
 		end loop;
 
 		s <= '1';
-		wait for 50 ns;
-
-		for j in 0 to 63 loop
-			for i in 0 to 2047 loop
+		wait for 10 ns;
+		
+		for i in 0 to 2047 loop
+			for j in 0 to 63 loop
 				s <= '0';
-				wait for 10 ns;
+				wait for 1 ns;
 
 				X   <= Int_to_DR(i, 8);
 				Y   <= Int_to_DR(j, 8);
 				Xin := conv_std_logic_vector(i, 8);
 				Yin := conv_std_logic_vector(j, 8);
 
-				wait for 50 ns;
+				wait until is_data(P);
 				s <= '1';
-				wait for 10 ns;
+				wait for 1 ns;
 				
 				for i in 0 to 10 loop
 					X(i).rail1 <= '0';
@@ -67,7 +67,7 @@ begin
 					Y(i).rail1 <= '0';
 					Y(i).rail0 <= '0';
 				end loop;
-				wait for 10 ns;
+				wait until is_null(P);
 
 			end loop;
 		end loop;

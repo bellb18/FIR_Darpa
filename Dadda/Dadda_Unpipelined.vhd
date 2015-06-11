@@ -77,8 +77,9 @@ begin
 		input_array(9)(i).RAIL0 <= temp_input_array(9)(i).RAIL1;
 		input_array(9)(i).RAIL1 <= temp_input_array(9)(i).RAIL0;
 	end generate;
+	input_array(9)(6) <= temp_input_array(9)(6);
 
-	-- First Stage - All columns will have 6pp or less
+	-- 0th Stage - All columns will have 6pp or less
 	FA06a : FAm1                        --P6
 		port map(input_array(6)(0), input_array(5)(1), sleep, carry_array1(0)(7), sum_array1(0)(6));
 	FaGen0a : for i in 1 to 2 generate  --P7-P8
@@ -92,7 +93,7 @@ begin
 	FA010 : FAm                         --P10
 		port map(input_array(9)(1), input_array(8)(2), input_array(7)(3), sleep, carry_array1(0)(11), sum_array1(0)(10));
 
-	-- Second Stage - All columns will have 4pp or less
+	-- 1st Stage - All columns will have 4pp or less
 	HA14a : HAm                         --P4
 		port map(input_array(4)(0), input_array(3)(1), sleep, carry_array1(1)(5), sum_array1(1)(4));
 	HA15a : HAm                         --P5
@@ -116,46 +117,62 @@ begin
 
 	FaGen1b : for i in 1 to 6 generate  --P6-P11 gate 2
 		FA1a : FAm
-			port map(input_array(i + 1)(4), input_array(i)(5), input_array(i - 1)(6), sleep, carry_array1(1)(i + 6), sum_array1(1)(i + 5));
+			port map(input_array(i + 1)(4), input_array(i)(5), input_array(i - 1)(6), sleep, carry_array2(1)(i + 6), sum_array2(1)(i + 5));
 	end generate;
 
 	FA112a : FAm                        --P12
 		port map(input_array(9)(3), input_array(8)(4), input_array(7)(5), sleep, carry_array1(1)(13), sum_array1(1)(12));
 
-	-- Third Stage - All columns will have 3pp or less
+	-- 2nd Stage - All columns will have 3pp or less
 	HA23a : HAm                         -- P3
-		port map(input_array(3)(0), input_array(2)(1), sleep, carry_array1(2)(4), sum_array1(2)(3));
-	Fa24a : FAm                         -- P4
-		port map(input_array(2)(2), input_array(1)(3), sum_array1(1)(4), sleep, carry_array1(2)(5), sum_array1(2)(4));
-	Fa25a : FAm                         -- P5
-		port map(input_array(0)(5), sum_array1(1)(5), carry_array1(1)(5), sleep, carry_array1(2)(6), sum_array1(2)(5));
-
-	FaGen2a : for i in 1 to 6 generate  -- P6-P11
+		port map(input_array(3)(0), input_array(2)(1), sleep,
+			     carry_array1(2)(4), sum_array1(2)(3));
+	FA24a : FAm                         -- P4
+		port map(sum_array1(1)(4), input_array(2)(2), input_array(1)(3),
+			     sleep, carry_array1(2)(5), sum_array1(2)(4));
+	FA25a : FAm                         -- P5
+		port map(sum_array2(1)(5), sum_array1(1)(5), carry_array1(1)(5),
+			     sleep, carry_array1(2)(6), sum_array1(2)(5));
+	FAGen2a : for i in 1 to 6 generate  -- P6-P11
 		FA2a : FAm
-			port map(carry_array1(1)(i + 5), carry_array2(1)(i + 5), sum_array1(1)(i + 5), sleep, carry_array1(2)(i + 6), sum_array1(2)(i + 5));
+			port map(sum_array2(1)(i + 5), sum_array1(1)(i + 5), carry_array2(1)(i + 5),
+				     sleep, carry_array1(2)(i + 6), sum_array1(2)(i + 5));
 	end generate;
-
-	FA212 : FAm                         -- P12
-		port map(carry_array1(1)(12), carry_array2(1)(12), input_array(7)(5), sleep, carry_array1(2)(13), sum_array1(2)(12));
-	FA213 : FAm                         -- P13
-		port map(input_array(10)(3), input_array(9)(4), input_array(8)(5), sleep, carry_array1(2)(14), sum_array1(2)(13));
-
-	-- Fourth Stage - All columns will have 2pp or less
-	HA32 : HAm                          -- P2
-		port map(input_array(2)(0), input_array(1)(1), sleep, carry_array1(3)(3), sum_array1(3)(2));
-	FA33 : FAm                          -- P3
-		port map(sum_array1(2)(3), input_array(1)(2), input_array(0)(3), sleep, carry_array1(3)(4), sum_array1(3)(3));
-	FA34 : FAm
-		port map(carry_array1(2)(4), sum_array1(2)(4), input_array(0)(4), sleep, carry_array1(3)(5), sum_array1(3)(4));
-	FaGen3a : for i in 1 to 8 generate  -- P5-P12
+	FA212a : FAm                        -- P12
+		port map(sum_array1(1)(12), carry_array2(1)(12), carry_array1(1)(12),
+			     sleep, carry_array1(2)(13), sum_array1(2)(12));
+	FA213a : FAm                        -- P13
+		port map(carry_array1(1)(13), input_array(9)(4), input_array(8)(5),
+			     sleep, carry_array1(2)(14), sum_array1(2)(13));
+			     
+	-- 3rd Stage - All columns will have 2pp or less
+	HA32a : HAm                         -- P2
+		port map(input_array(2)(0), input_array(1)(1), sleep,
+			     carry_array1(3)(3), sum_array1(3)(2));
+	FA33a : FAm                         -- P3
+		port map(sum_array1(2)(3), input_array(2)(2), input_array(1)(3),
+			     sleep, carry_array1(3)(4), sum_array1(3)(3));
+	FA34a : FAm                         -- P4
+		port map(sum_array1(2)(4), carry_array1(2)(4), input_array(0)(4),
+			     sleep, carry_array1(3)(5), sum_array1(3)(4));
+	FA35a : FAm                         -- P5
+		port map(sum_array1(2)(5), carry_array1(2)(5), input_array(0)(5),
+			     sleep, carry_array1(3)(6), sum_array1(3)(5));
+	FAGen3a : for i in 1 to 6 generate  -- P6-P11
 		FA3a : FAm
-			port map(sum_array1(2)(i + 4), sum_array2(1)(i + 4), carry_array1(2)(i + 4), sleep, carry_array1(3)(i + 5), sum_array1(3)(i + 4));
+			port map(carry_array1(2)(i + 5), carry_array1(1)(i + 5),
+				     sum_array1(2)(i + 5), sleep, carry_array1(3)(i + 6), sum_array1(3)(i + 5));
 	end generate;
 
-	FA313 : FAm                         -- P13
-		port map(sum_array1(2)(13), carry_array1(2)(13), carry_array1(1)(13), sleep, carry_array1(3)(14), sum_array1(3)(13));
-	FA314 : FAm                         -- P14
-		port map(carry_array1(2)(14), input_array(10)(4), input_array(9)(5), sleep, carry_array1(3)(15), sum_array1(3)(14));
+	FA312a : FAm                        -- P12
+		port map(sum_array1(2)(12), carry_array1(2)(12),
+			     input_array(6)(6), sleep, carry_array1(3)(13), sum_array1(3)(12));
+	FA313a : FAm                        -- P13
+		port map(sum_array1(2)(13), carry_array1(2)(13),
+			     input_array(7)(6), sleep, carry_array1(3)(14), sum_array1(3)(13));
+	FA314a : FAm                        -- P14
+		port map(carry_array1(2)(14), input_array(9)(5),
+			     input_array(8)(6), sleep, carry_array1(3)(15), sum_array1(3)(14));
 
 	-- Final Adder (Carry Propagate)
 	p(0) <= input_array(0)(0);
@@ -167,9 +184,9 @@ begin
 		FA5a : FAm
 			port map(sum_array1(3)(i), carry_array1(3)(i), carry_array1(4)(i), sleep, carry_array1(4)(i + 1), p(i));
 	end generate;
-	FA514a : FAm                        --P15
+	FA515a : FAm                        --P15
 		port map(input_array(9)(6), carry_array1(3)(15), carry_array1(4)(15), sleep, carry_array1(4)(16), p(15));
-	HA515a : HAm1                       --P16
+	HA516a : HAm1                       --P16
 		port map(carry_array1(4)(16), discard_carry, p(16));
 
 end arch;

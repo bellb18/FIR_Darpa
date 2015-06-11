@@ -3,9 +3,9 @@ use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 entity Dadda_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
-		 y     : in  dual_rail_logic_vector(5 downto 0);
+		 y     : in  dual_rail_logic_vector(6 downto 0);
 		 sleep : in  std_logic;
-		 p     : out dual_rail_logic_vector(15 downto 0));
+		 p     : out dual_rail_logic_vector(16 downto 0));
 end;
 
 architecture arch of Dadda_Unpipelined is
@@ -46,8 +46,8 @@ architecture arch of Dadda_Unpipelined is
 			 z     : OUT dual_rail_logic);
 	end component;
 
-	type Ctype is array (4 downto 0) of dual_rail_logic_vector(15 downto 0);
-	type InType is array (9 downto 0) of dual_rail_logic_vector(5 downto 0);
+	type Ctype is array (4 downto 0) of dual_rail_logic_vector(16 downto 0);
+	type InType is array (9 downto 0) of dual_rail_logic_vector(6 downto 0);
 
 	signal carry_array1, carry_array2, sum_array1, sum_array2 : Ctype;
 	signal discard_carry                                      : dual_rail_logic;
@@ -57,7 +57,7 @@ begin
 
 	-- Generate partial products
 	AndGenx : for i in 0 to 9 generate
-		AndGeny : for j in 0 to 5 generate
+		AndGeny : for j in 0 to 6 generate
 			AndGen : and2im
 				port map(x(i), y(j), sleep, temp_input_array(i)(j));
 		end generate;
@@ -65,28 +65,32 @@ begin
 
 	-- Fix inverted inputs
 	NotInvGena : for i in 0 to 8 generate
-		NotInvGenb : for j in 0 to 4 generate
+		NotInvGenb : for j in 0 to 5 generate
 			input_array(i)(j) <= temp_input_array(i)(j);
 		end generate;
 	end generate;
 	InvGena : for i in 0 to 8 generate
-		input_array(i)(5).RAIL0 <= temp_input_array(i)(5).RAIL1;
-		input_array(i)(5).RAIL1 <= temp_input_array(i)(5).RAIL0;
+		input_array(i)(6).RAIL0 <= temp_input_array(i)(6).RAIL1;
+		input_array(i)(6).RAIL1 <= temp_input_array(i)(6).RAIL0;
 	end generate;
-	InvGenb : for i in 0 to 4 generate
+	InvGenb : for i in 0 to 5 generate
 		input_array(9)(i).RAIL0 <= temp_input_array(9)(i).RAIL1;
 		input_array(9)(i).RAIL1 <= temp_input_array(9)(i).RAIL0;
 	end generate;
 
 	-- First Stage - All columns will have 6pp or less
-	HA05a : HAm1                        --P5
-		port map(input_array(5)(0), carry_array1(0)(6), sum_array1(0)(5));
-	HaGen0a : for i in 1 to 3 generate  --P6-P8
-		Ha0a : HAm
-			port map(input_array(i + 5)(0), input_array(i + 4)(1), sleep, carry_array1(0)(i + 6), sum_array1(0)(i + 5));
+	FA06a : FAm1                        --P6
+		port map(input_array(6)(0), input_array(5)(1), sleep, carry_array1(0)(7), sum_array1(0)(6));
+	FaGen0a : for i in 1 to 2 generate  --P7-P8
+		Fa0a : FAm
+			port map(input_array(i + 6)(0), input_array(i + 5)(1), input_array(i + 4)(2), sleep, carry_array1(0)(i + 7), sum_array1(0)(i + 6));
 	end generate;
-	FA09a : FAm1                       --P9
+	FA09a : FAm1                        --P9
 		port map(input_array(9)(0), input_array(8)(1), sleep, carry_array1(0)(10), sum_array1(0)(9));
+	HA09a : HAm                         --P9
+		port map(input_array(7)(2), input_array(6)(3), sleep, carry_array2(0)(10), sum_array2(0)(9));
+	FA010 : FAm                         --P10
+		port map(input_array(9)(1), input_array(8)(2), input_array(7)(3), sleep, carry_array1(0)(11), sum_array1(0)(10));
 
 	-- Second Stage - All columns will have 4pp or less
 	HA14a : HAm                         --P4
@@ -94,21 +98,29 @@ begin
 	HA15a : HAm                         --P5
 		port map(input_array(2)(3), input_array(1)(4), sleep, carry_array1(1)(6), sum_array1(1)(5));
 	FA15a : FAm                         --P5
-		port map(input_array(4)(1), input_array(3)(2), sum_array1(0)(5), sleep, carry_array2(1)(6), sum_array2(1)(5));
+		port map(input_array(5)(0), input_array(4)(1), input_array(3)(2), sleep, carry_array2(1)(6), sum_array2(1)(5));
+	FA16a : FAm                         -- P6
+		port map(sum_array1(0)(6), input_array(4)(2), input_array(3)(3), sleep, carry_array1(1)(7), sum_array1(1)(6));
 
-	FaGen1a : for i in 1 to 4 generate  --P6-P9
+	FaGen1a : for i in 1 to 2 generate  --P7-P8 gate 1
 		FA1a : FAm
-			port map(input_array(i + 3)(2), sum_array1(0)(i + 5), carry_array1(0)(i + 5), sleep, carry_array1(1)(i + 6), sum_array1(1)(i + 5));
-		FA1b : FAm
-			port map(input_array(i + 2)(3), input_array(i + 1)(4), input_array(i)(5), sleep, carry_array2(1)(i + 6), sum_array2(1)(i + 5));
+			port map(input_array(i + 3)(3), sum_array1(0)(i + 6), carry_array1(0)(i + 6), sleep, carry_array1(1)(i + 7), sum_array1(1)(i + 6));
 	end generate;
 
-	FA110a : FAm                        --P10
-		port map(carry_array1(0)(10), input_array(9)(1), input_array(8)(2), sleep, carry_array1(1)(11), sum_array1(1)(10));
-	FA110b : FAm                        --P10
-		port map(input_array(7)(3), input_array(6)(4), input_array(5)(5), sleep, carry_array2(1)(11), sum_array2(1)(10));
-	FA111a : FAm                        --P11
-		port map(input_array(9)(2), input_array(8)(3), input_array(7)(4), sleep, carry_array1(1)(12), sum_array2(1)(11));
+	FA19a : FAm                         -- P9 gate 1
+		port map(sum_array1(0)(9), sum_array2(0)(9), carry_array1(0)(9), sleep, carry_array1(1)(10), sum_array1(1)(9));
+	FA110a : FAm                        -- P10 gate 1
+		port map(sum_array1(0)(10), carry_array2(0)(10), carry_array1(0)(10), sleep, carry_array1(1)(11), sum_array1(1)(10));
+	FA111a : FAm                        -- P11 gate 1
+		port map(carry_array1(0)(11), input_array(9)(2), input_array(8)(3), sleep, carry_array1(1)(12), sum_array1(1)(11));
+
+	FaGen1b : for i in 1 to 6 generate  --P6-P11 gate 2
+		FA1a : FAm
+			port map(input_array(i + 1)(4), input_array(i)(5), input_array(i - 1)(6), sleep, carry_array1(1)(i + 6), sum_array1(1)(i + 5));
+	end generate;
+
+	FA112a : FAm                        --P12
+		port map(input_array(9)(3), input_array(8)(4), input_array(7)(5), sleep, carry_array1(1)(13), sum_array1(1)(12));
 
 	-- Third Stage - All columns will have 3pp or less
 	HA23a : HAm                         -- P3
@@ -127,7 +139,7 @@ begin
 		port map(carry_array1(1)(12), carry_array2(1)(12), input_array(7)(5), sleep, carry_array1(2)(13), sum_array1(2)(12));
 	FA213 : FAm                         -- P13
 		port map(input_array(10)(3), input_array(9)(4), input_array(8)(5), sleep, carry_array1(2)(14), sum_array1(2)(13));
-		
+
 	-- Fourth Stage - All columns will have 2pp or less
 	HA32 : HAm                          -- P2
 		port map(input_array(2)(0), input_array(1)(1), sleep, carry_array1(3)(3), sum_array1(3)(2));
@@ -151,13 +163,13 @@ begin
 		port map(input_array(1)(0), input_array(0)(1), sleep, carry_array1(4)(2), p(1));
 	FA52a : FAm                         --P2
 		port map(input_array(0)(2), sum_array1(3)(2), carry_array1(4)(2), sleep, carry_array1(4)(3), p(2));
-	FaGen5a : for i in 3 to 13 generate -- P3-P13
+	FaGen5a : for i in 3 to 14 generate -- P3-P14
 		FA5a : FAm
 			port map(sum_array1(3)(i), carry_array1(3)(i), carry_array1(4)(i), sleep, carry_array1(4)(i + 1), p(i));
 	end generate;
-	FA514a : FAm                        --P14
-		port map(input_array(9)(5), carry_array1(3)(14), carry_array1(4)(14), sleep, carry_array1(4)(15), p(14));
-	HA515a : HAm1                       --P15
-		port map(carry_array1(4)(15), discard_carry, p(15));
+	FA514a : FAm                        --P15
+		port map(input_array(9)(6), carry_array1(3)(15), carry_array1(4)(15), sleep, carry_array1(4)(16), p(15));
+	HA515a : HAm1                       --P16
+		port map(carry_array1(4)(16), discard_carry, p(16));
 
 end arch;

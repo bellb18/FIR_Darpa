@@ -255,9 +255,9 @@ architecture archcsax0 of CSAm_inv is
 			 z     : OUT dual_rail_logic);
 	end component;
 
-	component INV is
+	component NCL_inv is
 		port(x : IN  dual_rail_logic;
-			 z : OUT dual_rail_logic);
+			 y : OUT dual_rail_logic);
 	end component;
 
 	signal Casin, Casin_inv : dual_rail_logic;
@@ -275,7 +275,7 @@ begin
 			     sleep,
 			     COUT,
 			     SOUT); 
-	th2 : INV
+	th2 : NCL_inv
 		port map(Casin, Casin_inv);
 
 end archcsax0;

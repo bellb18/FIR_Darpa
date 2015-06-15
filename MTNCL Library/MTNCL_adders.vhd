@@ -154,16 +154,11 @@ end FAm1;
 -- Full Adder with Cin = '1'
 architecture arch of FAm1 is
 
-	signal Cmid : dual_rail_logic;
-
 begin
 	cout0 : th12m_a
-		port map(X.rail0, Y.rail0, sleep, Cmid.rail0);
+		port map(X.rail1, Y.rail1, sleep, COUT.rail1);
 	cout1 : th22m_a
-		port map(X.rail1, Y.rail1, sleep, Cmid.rail1);
-
-	COUT.rail1 <= Cmid.rail0;
-	COUT.rail0 <= Cmid.rail1;
+		port map(X.rail0, Y.rail0, sleep, COUT.rail0);
 
 	sum0 : th24compm_a
 		port map(X.rail0, Y.rail0, Y.rail1, X.rail1, sleep, S.rail0);

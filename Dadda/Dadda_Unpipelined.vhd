@@ -54,8 +54,8 @@ architecture arch of Dadda_Unpipelined is
 	signal temp_input_array, input_array                      : InType;
 
 begin
-	one.rail1 <= '1';
-	one.rail0 <= '0';
+	--one.rail1 <= '1';
+	--one.rail0 <= '0';
 	-- Generate partial products
 	AndGenx : for i in 0 to 9 generate
 		AndGeny : for j in 0 to 6 generate
@@ -81,14 +81,14 @@ begin
 	input_array(9)(6) <= temp_input_array(9)(6);
 
 	-- 0th Stage - All columns will have 6pp or less
-	FA06a : FAm                        --P6
-		port map(one, input_array(6)(0), input_array(5)(1), sleep, carry_array1(0)(7), sum_array1(0)(6));
+	FA06a : FAm1                        --P6
+		port map(input_array(6)(0), input_array(5)(1), sleep, carry_array1(0)(7), sum_array1(0)(6));
 	FaGen0a : for i in 1 to 2 generate  --P7-P8
 		Fa0a : FAm
 			port map(input_array(i + 6)(0), input_array(i + 5)(1), input_array(i + 4)(2), sleep, carry_array1(0)(i + 7), sum_array1(0)(i + 6));
 	end generate;
-	FA09a : FAm                        --P9
-		port map(one, input_array(9)(0), input_array(8)(1), sleep, carry_array1(0)(10), sum_array1(0)(9));
+	FA09a : FAm1                        --P9
+		port map(input_array(9)(0), input_array(8)(1), sleep, carry_array1(0)(10), sum_array1(0)(9));
 	HA09a : HAm                         --P9
 		port map(input_array(7)(2), input_array(6)(3), sleep, carry_array2(0)(10), sum_array2(0)(9));
 	FA010 : FAm                         --P10

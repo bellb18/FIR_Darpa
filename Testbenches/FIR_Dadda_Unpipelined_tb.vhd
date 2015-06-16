@@ -38,7 +38,6 @@ begin
 
 	begin
 		rst <= '1';
-		wait for 10 ns;
 		
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
@@ -48,6 +47,8 @@ begin
 			C(i).rail1 <= '0';
 			C(i).rail0 <= '0';
 		end loop;
+		
+		wait for 10 ns;
 		rst <= '0';
 
 		sleep <= '1';

@@ -7,7 +7,7 @@ entity BaughWooleyMult is
 	port(x             : in  dual_rail_logic_vector(9 downto 0);
 		 y             : in  dual_rail_logic_vector(6 downto 0);
 		 sleep 		   : in  std_logic;
-		 p        : out dual_rail_logic_vector(16 downto 0));
+		 p        : out dual_rail_logic_vector(15 downto 0));
 end entity;
 
 architecture arch_BaughWooleyMult_NonPipe of BaughWooleyMult is
@@ -189,7 +189,8 @@ begin
 			port map(rowSevenSout(i + 1), rowSevenCout(i), fullAddersCout(i - 1), sleep, fullAddersCout(i), p(i + 7));
 	end generate;
 	finalAdder: FAm1
-		port map(rowSevenCout(9), fullAddersCout(8), sleep, fullAddersCout(9), p(16));
+		-- rowSevenSout(0) isn't actually used anywhere so it's used to hold the bit that gets truncated
+		port map(rowSevenCout(9), fullAddersCout(8), sleep, fullAddersCout(9), rowSevenSout(0));
 	
 
 end architecture arch_BaughWooleyMult_NonPipe;

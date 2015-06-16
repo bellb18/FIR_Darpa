@@ -4,8 +4,10 @@ use work.ncl_signals.all;
 ----------------------------------------------------------
 --
 -- Merged Multiplier and Add Unit
---      without ripple carry adder
+--      without final fast adder
 --
+-- Inputs: 0.000000000 and 0.000000
+-- Output: 00.00000000000000 (discard LSB)
 ----------------------------------------------------------
 entity Merged_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);

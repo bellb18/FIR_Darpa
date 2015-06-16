@@ -128,7 +128,7 @@ begin
 		end loop;
 		wait until is_null(P);
 		
-		--423 * 60 = 25380 (0110 0011 0010 0100)
+		--423 * 60 = 25380 (0110 0100 0101 0000)
 		s <= '0';
 		wait for 1 ns;
 		X   <= Int_to_DR(428, 10);
@@ -170,13 +170,13 @@ begin
 		end loop;
 		wait until is_null(P);
 		
-		-- 96 * 64 = 6144 (0001 1000 0000 0000)
+		-- 463 * 22 = (0010 0111 1100 1010) 
 		s <= '0';
 		wait for 1 ns;
-		X   <= Int_to_DR(96, 10);
-		Y   <= Int_to_DR(64, 7);
-		Xin := conv_std_logic_vector(96, 10);
-		Yin := conv_std_logic_vector(64, 7);
+		X   <= Int_to_DR(463, 10);
+		Y   <= Int_to_DR(22, 7);
+		Xin := conv_std_logic_vector(463, 10);
+		Yin := conv_std_logic_vector(22, 7);
 		wait until is_data(P);
 		wait for 2 ns;
 		s <= '1';
@@ -233,7 +233,7 @@ begin
 		end loop;
 		wait until is_null(P);
 		
-		-- 339 * -31 = -10509 (0010 1001 0000 1101)
+		-- 339 * -31 = -10509 (1101 0110 1111 0011)
 		s <= '0';
 		wait for 1 ns;
 		X   <= Int_to_DR(339, 10);

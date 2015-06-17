@@ -14,7 +14,7 @@ end;
 architecture arch of tb_Merged_Unpipelined_noReg is
 	signal X, A : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
 	signal Y, B : DUAL_RAIL_LOGIC_VECTOR(6 downto 0);
-	signal P, C    : DUAL_RAIL_LOGIC_VECTOR(15 downto 0);
+	signal P    : DUAL_RAIL_LOGIC_VECTOR(16 downto 0);
 	signal s : std_logic;
 	
 	component Merged_Unpipelined is
@@ -23,13 +23,12 @@ architecture arch of tb_Merged_Unpipelined_noReg is
 			 a     : in  dual_rail_logic_vector(9 downto 0);
 			 b     : in  dual_rail_logic_vector(6 downto 0);
 			 sleep : in  std_logic;
-			 p     : out dual_rail_logic_vector(15 downto 0);
-			 c     : out dual_rail_logic_vector(15 downto 0));
+			 p     : out dual_rail_logic_vector(16 downto 0));
 	end component;
 
 begin
 	CUT : Merged_Unpipelined
-		port map(X, Y, A, B, s, P, C);
+		port map(X, Y, A, B, s, P);
 
 	inputs : process
 		variable Xin, Ain       : STD_LOGIC_VECTOR(9 downto 0);
@@ -48,7 +47,7 @@ begin
 		s <= '1';
 		wait for 10 ns;
 		
-		-- (455 * -14) + (-193 * 45) = -15055 (1100 0101 0011 0001)
+		-- (455 * -14) + (-193 * 45) = -15055
 		s <= '0';
 		wait for 1 ns;
 		X   <= Int_to_DR(455, 10);
@@ -148,7 +147,7 @@ begin
 		end loop;
 		wait until is_null(P);
 		
-		-- (300 * -62) + (-166 * 39) = -3475
+		-- (300 * -62) + (-166 * 39) = -25074
 		s <= '0';
 		wait for 1 ns;
 		X   <= Int_to_DR(300, 10);
@@ -315,7 +314,7 @@ begin
 	end process;
 
 	outputs : process(P)
-		variable Pout : STD_LOGIC_VECTOR(15 downto 0);
+		variable Pout : STD_LOGIC_VECTOR(16 downto 0);
 
 	begin
 		if is_data(P) then

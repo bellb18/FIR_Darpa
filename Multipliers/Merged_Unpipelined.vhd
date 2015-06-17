@@ -15,7 +15,7 @@ entity Merged_Unpipelined is
 		 a     : in  dual_rail_logic_vector(9 downto 0);
 		 b     : in  dual_rail_logic_vector(6 downto 0);
 		 sleep : in  std_logic;
-		 p     : out dual_rail_logic_vector(15 downto 0));
+		 p     : out dual_rail_logic_vector(16 downto 0));
 end;
 
 architecture arch of Merged_Unpipelined is
@@ -56,7 +56,7 @@ architecture arch of Merged_Unpipelined is
 			 z     : OUT dual_rail_logic);
 	end component;
 
-	type Ctype is array (4 downto 0) of dual_rail_logic_vector(16 downto 0);
+	type Ctype is array (6 downto 0) of dual_rail_logic_vector(16 downto 0);
 	type InType is array (9 downto 0) of dual_rail_logic_vector(6 downto 0);
 
 	signal carry_array1, carry_array2, sum_array1, sum_array2 : Ctype;
@@ -230,9 +230,9 @@ begin
 		port map(carry_array1(2)(5), carry_array2(2)(5), input_array2(0)(5), sleep, carry_array2(3)(6), sum_array2(3)(5));
 	FAGen3a : for i in 6 to 12 generate -- P6-P12
 		FA3a : FAm
-			port map(sum_array1(2)(i), sum_array2(1)(i), sum_array3(2)(i), sleep, carry_array1(3)(i + 1), sum_array1(3)(i));
+			port map(sum_array1(2)(i), sum_array2(2)(i), sum_array3(2)(i), sleep, carry_array1(3)(i + 1), sum_array1(3)(i));
 		FA3b : FAm
-			port map(carry_array1(2)(i), carry_array2(1)(i), carry_array3(2)(i), sleep, carry_array2(3)(i + 1), sum_array2(3)(i));
+			port map(carry_array1(2)(i), carry_array2(2)(i), carry_array3(2)(i), sleep, carry_array2(3)(i + 1), sum_array2(3)(i));
 	end generate;
 	FA313a : FAm                        -- P13
 		port map(sum_array1(2)(13), sum_array2(2)(13), carry_array3(2)(13), sleep, carry_array1(3)(14), sum_array1(3)(13));

@@ -5,7 +5,7 @@ entity Dadda_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
 		 y     : in  dual_rail_logic_vector(6 downto 0);
 		 sleep : in  std_logic;
-		 p     : out dual_rail_logic_vector(16 downto 0));
+		 p     : out dual_rail_logic_vector(15 downto 0));
 end;
 
 architecture arch of Dadda_Unpipelined is
@@ -187,7 +187,5 @@ begin
 	end generate;
 	FA515a : FAm                        --P15
 		port map(input_array(9)(6), carry_array1(3)(15), carry_array1(4)(15), sleep, carry_array1(4)(16), p(15));
-	HA516a : HAm1                       --P16
-		port map(carry_array1(4)(16), discard_carry, p(16));
 
 end arch;

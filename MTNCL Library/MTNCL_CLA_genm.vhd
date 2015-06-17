@@ -78,7 +78,7 @@ begin
 				port map(temp_carry(i - 1), xi(i), yi(i), sleep, temp_carry(i), temp_sum(i));
 		end generate Full_Adders;
 		carry_in <= temp_carry((width mod 4) - 1);
-		sum((width mod 4) - 1 downto 0) <= temp_sum;
+		temp_sum2((width mod 4) - 1 downto 0) <= temp_sum;
 	end generate Extra_Bits;
 
 	Otherwise : if (width mod 4 = 0) generate
@@ -204,13 +204,13 @@ entity carry_generatem is
 end carry_generatem;
 
 architecture Structural of carry_generatem is
-	component carry_prop_gen_m
+	component carry_propagatem
 		port(xi    : in  DUAL_RAIL_LOGIC;
 			 yi    : in  DUAL_RAIL_LOGIC;
 			 sleep : in  STD_LOGIC;
 			 gi    : out DUAL_RAIL_LOGIC;
 			 pi    : out DUAL_RAIL_LOGIC);
-	end component carry_prop_gen_m;
+	end component carry_propagatem;
 
 	component th55m_a is
 		port(
@@ -248,7 +248,7 @@ architecture Structural of carry_generatem is
 
 begin
 	GENERATE_prop_gen : for i in 0 to 3 generate
-		gen_prop_gen_0 : carry_prop_gen_m
+		gen_prop_gen_0 : carry_propagatem
 			port map(xi    => xi(i),
 				     yi    => yi(i),
 				     sleep => sleep,

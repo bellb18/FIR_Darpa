@@ -7,10 +7,10 @@ use ieee.math_real.all;
 use ieee.std_logic_arith.all;
 
 
-entity tb_BaughWooley_Unpipelined_noReg is
+entity tb_BaughWooley_Unpipelined is
 end;
 
-architecture arch of tb_BaughWooley_Unpipelined_noReg is
+architecture arch of tb_BaughWooley_Unpipelined is
 	signal X : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
 	signal Y : DUAL_RAIL_LOGIC_VECTOR(6 downto 0);
 	signal P    : DUAL_RAIL_LOGIC_VECTOR(16 downto 0);

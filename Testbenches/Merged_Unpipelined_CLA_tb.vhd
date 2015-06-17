@@ -8,10 +8,10 @@ use work.functions.all;
 
 use ieee.math_real.all;
 
-entity tb_Merged_Unpipelined_CLA_noReg is
+entity tb_Merged_Unpipelined_CLA is
 end;
 
-architecture arch of tb_Merged_Unpipelined_CLA_noReg is
+architecture arch of tb_Merged_Unpipelined_CLA is
 	signal X, A : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
 	signal Y, B : DUAL_RAIL_LOGIC_VECTOR(6 downto 0);
 	signal P    : DUAL_RAIL_LOGIC_VECTOR(16 downto 0);

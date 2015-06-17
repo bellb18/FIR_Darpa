@@ -8,10 +8,10 @@ use work.functions.all;
 
 use ieee.math_real.all;
 
-entity tb_Dadda_Unpipelined_noReg2 is
+entity tb2_Dadda_Unpipelined is
 end;
 
-architecture arch of tb_Dadda_Unpipelined_noReg2 is
+architecture arch of tb2_Dadda_Unpipelined is
 	signal X : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
 	signal Y : DUAL_RAIL_LOGIC_VECTOR(6 downto 0);
 	signal P : DUAL_RAIL_LOGIC_VECTOR(15 downto 0);

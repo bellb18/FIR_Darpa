@@ -189,11 +189,6 @@ architecture arch of compm is
              rst: in std_logic;
        z: out std_logic ); 
     end component; 
-    
-        component inv_a is 
-            port(a: in std_logic;
-           z: out std_logic ); 
-        end component;
          
                 component andtreem is
            generic(width: in integer := 4);
@@ -235,8 +230,8 @@ begin
   
   Gfgate: th22n_a
     port map(tko, ki, rst, ttko);
-  Gfinv: inv_a
-    port map(ttko, ko);
+  	ko <= NOT ttko;
+
 
 
 
@@ -265,11 +260,6 @@ architecture arch of compdm is
              rst: in std_logic;
        z: out std_logic ); 
     end component; 
-    
-        component inv_a is 
-            port(a: in std_logic;
-           z: out std_logic ); 
-        end component;
         
                 component andtreem is
            generic(width: in integer := 4);
@@ -311,9 +301,7 @@ begin
   
   Gfgate: th22d_a
     port map(tko, ki, rst, ttko);
-  Gfinv: inv_a
-    port map(ttko, ko);
-
+    ko <= NOT ttko;
 
 
 end arch;
@@ -342,12 +330,7 @@ architecture arch of comp1m is
                 c: in std_logic;
                 rst: in std_logic;
           z: out std_logic ); 
-       end component; 
-    
-        component inv_a is 
-            port(a: in std_logic;
-           z: out std_logic ); 
-        end component;
+       end component;
         
                 component andtreem is
            generic(width: in integer := 4);
@@ -389,8 +372,7 @@ begin
   
   Gfgate: th33n_a
     port map(tko, ki, kin, rst, ttko);
-  Gfinv: inv_a
-    port map(ttko, ko);
+    ko <= NOT ttko;
 
 
 
@@ -417,12 +399,7 @@ architecture arch of comp1dm is
                 c: in std_logic;
                 rst: in std_logic;
           z: out std_logic ); 
-       end component; 
-    
-        component inv_a is 
-            port(a: in std_logic;
-           z: out std_logic ); 
-        end component;
+       end component;
         
                 component andtreem is
            generic(width: in integer := 4);
@@ -464,8 +441,7 @@ begin
   
   Gfgate: th33d_a
     port map(tko, ki, kin, rst, ttko);
-  Gfinv: inv_a
-    port map(ttko, ko);
+    ko <= NOT ttko;
 
 
 

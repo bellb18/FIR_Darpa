@@ -37,7 +37,6 @@ begin
 		variable Cin       : STD_LOGIC_VECTOR(6 downto 0);
 
 	begin
-		rst <= '1';
 		
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
@@ -48,23 +47,21 @@ begin
 			C(i).rail0 <= '0';
 		end loop;
 		
-		wait for 10 ns;
-		rst <= '0';
-
+		rst <= '1';
 		sleep <= '1';
-		wait until ki = '1';
+		wait for 50 ns;
+		rst <= '0';
 		
 		for i in 0 to 1023 loop
-			--for j in 0 to 127 loop
 				sleep <= '0';
 				wait for 1 ns;
 
 				X   <= Int_to_DR(i, 10);
-				--C   <= Int_to_DR(j, 7);
 				Xin := conv_std_logic_vector(i, 10);
-				--Cin := conv_std_logic_vector(j, 7);
+				C <= Int_to_DR(2, 7);
+				Cin := conv_std_logic_vector(2, 7);
 
-				wait for 50 ns;
+				wait until ko = '0';
 				sleep <= '1';
 				wait for 1 ns;
 				
@@ -76,8 +73,7 @@ begin
 					C(i).rail1 <= '0';
 					C(i).rail0 <= '0';
 				end loop;
-				wait until ki = '0';
-
+				wait until ko = '1';
 			end loop;
 		--end loop;
 

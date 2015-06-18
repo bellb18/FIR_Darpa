@@ -4,9 +4,9 @@ use IEEE.std_logic_1164.all;
 -- Boolean Full Adder
 entity FA is
 	port(
-		CIN   : IN  std_logic;
 		X     : IN  std_logic;
 		Y     : IN  std_logic;
+		CIN   : IN  std_logic;
 		COUT  : OUT std_logic;
 		S     : OUT std_logic);
   end FA;

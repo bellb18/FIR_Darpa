@@ -1,6 +1,5 @@
 Library IEEE;
 use IEEE.std_logic_1164.all;
-
 -- Boolean Full Adder
 entity FA is
 	port(
@@ -76,4 +75,66 @@ begin
     S     <= not X;
     COUT  <= X;
   end process;
+end arch;
+
+-- Carry save adder
+library ieee;
+use ieee.std_logic_1164.all;
+entity CSA is 
+	port(
+	X : IN std_logic;
+	Y : IN std_logic;
+	CIN   : IN std_logic;
+	SIN: IN std_logic;
+	COUT : OUT std_logic;
+	SOUT : OUT std_logic);
+end CSA;
+
+architecture arch of CSA is
+	
+component FA is
+port(
+	X     : IN  std_logic;
+	Y     : IN  std_logic;
+	CIN   : IN  std_logic;	
+	COUT  : OUT std_logic;
+	S     : OUT std_logic);
+end component;
+
+signal anded: std_logic;
+	
+begin	
+	anded <= X and Y;
+	fullAdder: FA port map(CIN, anded, SIN, COUT, SOUT);
+end arch;
+
+-- Inverted carry save adder
+library ieee;
+use ieee.std_logic_1164.all;
+entity CSA_inv is 
+port(
+	X : IN std_logic;
+	Y : IN std_logic;
+	CIN   : IN std_logic;
+	SIN   : IN std_logic;
+	COUT : OUT std_logic;
+	SOUT : OUT std_logic);
+end CSA_inv;
+
+architecture arch of CSA_inv is
+	
+component FA is
+port(
+	X     : IN  std_logic;
+	Y     : IN  std_logic;
+	CIN   : IN  std_logic;
+	COUT  : OUT std_logic;
+	S     : OUT std_logic);
+end component;
+
+signal anded: std_logic;
+
+begin	
+	anded <= X nand Y;
+	fullAdder: FA port map(CIN, anded, SIN, COUT, SOUT);
 end arch;

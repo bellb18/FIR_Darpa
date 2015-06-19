@@ -3,15 +3,15 @@ use IEEE.std_logic_1164.all;
 
 
 entity Dadda_Boolean_Unpipelined is
-	port(x     : in  std_logic_vector(9 downto 0);
-		 y     : in  std_logic_vector(6 downto 0);
-		 p     : out std_logic_vector(15 downto 0));
+	port(x     : IN  std_logic_vector(9 downto 0);
+		 y     : IN  std_logic_vector(6 downto 0);
+		 p     : OUT std_logic_vector(15 downto 0));
 end;
 
 architecture arch of Dadda_Boolean_Unpipelined is
 	component FA
-		port(CIN, X, Y : in  std_logic;
-			 COUT, S   : out std_logic);
+		port(CIN, X, Y : IN  std_logic;
+			 COUT, S   : OUT std_logic);
 	end component;
 
 	component HA is
@@ -30,10 +30,10 @@ architecture arch of Dadda_Boolean_Unpipelined is
 	end component;
 
 	component FA1 is
-		port(X     : std_logic;
-			 Y     : in  std_logic;
-			 COUT  : out std_logic;
-			 S     : out std_logic);
+		port(X     : IN  std_logic;
+			 Y     : IN  std_logic;
+			 COUT  : OUT std_logic;
+			 S     : OUT std_logic);
 	end component;
 
 	type Ctype is array (4 downto 0) of std_logic_vector(16 downto 0);
@@ -58,7 +58,7 @@ begin
 		end generate;
 	end generate;
 	InvGena : for i in 0 to 8 generate
-		input_array(i)(6) <= not input_array(i)(6);
+		input_array(i)(6) <= not temp_input_array(i)(6);
 	end generate;
 	InvGenb : for i in 0 to 5 generate
 		input_array(9)(i) <= not temp_input_array(9)(i);

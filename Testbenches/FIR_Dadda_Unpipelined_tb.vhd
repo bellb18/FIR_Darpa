@@ -4,6 +4,7 @@ use IEEE.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_arith.all;
 use work.ncl_signals.all;
+use work.arraypack.all;
 use work.functions.all;
 
 use ieee.math_real.all;
@@ -13,13 +14,13 @@ end;
 
 architecture arch of tb_FIR_Dadda_Unpipelined is
 	signal X : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
-	signal C : DUAL_RAIL_LOGIC_VECTOR(6 downto 0);
+	signal C : array16;
 	signal Y    : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 	
 component FIR_Dadda_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
-		 c     : in  dual_rail_logic_vector(6 downto 0);
+		 c     : in  array16;
 		 ki    : in  std_logic;
 		 rst   : in  std_logic;
 		 sleep : in  std_logic;
@@ -33,8 +34,9 @@ begin
 		port map(X, C, ki, rst, sleep, ko, sleepout, Y);
 
 	inputs : process
+		type Ctype is array (15 downto 0) of std_logic_vector(6 downto 0);
 		variable Xin       : STD_LOGIC_VECTOR(9 downto 0);
-		variable Cin       : STD_LOGIC_VECTOR(6 downto 0);
+		variable Cin       : Ctype;
 
 	begin
 		
@@ -42,15 +44,17 @@ begin
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
 		end loop;
-		for i in 0 to 6 loop
-			C(i).rail1 <= '0';
-			C(i).rail0 <= '0';
-		end loop;
 		
 		rst <= '1';
 		sleep <= '1';
 		wait for 50 ns;
 		rst <= '0';
+		for i in 0 to 7 loop
+				C(2*i + 1) <= Int_to_DR(2*i, 7);
+				Cin(2*i + 1) := conv_std_logic_vector(2*i, 7);
+				C(2*i) <= Int_to_DR(-3*i, 7);
+				Cin(2*i) := conv_std_logic_vector(-3*i, 7);
+		end loop;
 		
 		for i in 0 to 1023 loop
 				sleep <= '0';
@@ -58,8 +62,6 @@ begin
 
 				X   <= Int_to_DR(i, 10);
 				Xin := conv_std_logic_vector(i, 10);
-				C <= Int_to_DR(2, 7);
-				Cin := conv_std_logic_vector(2, 7);
 
 				wait until ko = '0';
 				sleep <= '1';
@@ -69,10 +71,6 @@ begin
 					X(i).rail1 <= '0';
 					X(i).rail0 <= '0';
 				end loop;
-				for i in 0 to 6 loop
-					C(i).rail1 <= '0';
-					C(i).rail0 <= '0';
-				end loop;
 				wait until ko = '1';
 			end loop;
 		--end loop;
@@ -80,10 +78,6 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '1';
 			X(i).rail0 <= '0';
-		end loop;
-		for i in 0 to 6 loop
-			C(i).rail1 <= '1';
-			C(i).rail0 <= '0';
 		end loop;
 		wait;
 

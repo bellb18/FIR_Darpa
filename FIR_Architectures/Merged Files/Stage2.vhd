@@ -47,20 +47,6 @@ architecture struct of Merged_S2 is
 			S     : OUT dual_rail_logic);
 	end component;
 
-	component HAm1 is
-		port(
-			X    : IN  dual_rail_logic;
-			COUT : OUT dual_rail_logic;
-			S    : OUT dual_rail_logic);
-	end component;
-
-	component FAm1 is
-		port(X     : dual_rail_logic;
-			 Y     : in  dual_rail_logic;
-			 sleep : in  std_logic;
-			 COUT  : out dual_rail_logic;
-			 S     : out dual_rail_logic);
-	end component;
 begin
 	Z0  <= X0;
 	Z1	<= X1;

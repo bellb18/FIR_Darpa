@@ -41,21 +41,6 @@ architecture arch of Merged_S1 is
 			COUT  : OUT dual_rail_logic;
 			S     : OUT dual_rail_logic);
 	end component;
-
-	component HAm1 is
-		port(
-			X    : IN  dual_rail_logic;
-			COUT : OUT dual_rail_logic;
-			S    : OUT dual_rail_logic);
-	end component;
-
-	component FAm1 is
-		port(X     : dual_rail_logic;
-			 Y     : in  dual_rail_logic;
-			 sleep : in  std_logic;
-			 COUT  : out dual_rail_logic;
-			 S     : out dual_rail_logic);
-	end component;
 	
 begin
 	--Inputs to outputs directly
@@ -95,7 +80,7 @@ begin
 		Z13(i) <= X13(i);
 	end generate;
 	Z14a: for i in 0 to 31 generate
-		Z14(i) <= X11(i);
+		Z14(i) <= X14(i);
 	end generate;
 	
 	-- Adder logic

@@ -122,6 +122,60 @@ end arch;
 
 
 -----------------------------------------
+-- Definition of Hybrid Carry Look Ahead(CLA)
+-- 16 - bits and 16 - bit output
+-----------------------------------------
+
+Library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+use work.MTNCL_gates.all;
+use work.ncl_signals.all;
+entity CLA_16m is
+	port(
+		X    : in  dual_rail_logic_vector(15 downto 0);
+		Y    : in  dual_rail_logic_vector(15 downto 0);
+		sleep : in  std_logic;
+		S   : out dual_rail_logic_vector(15 downto 0)
+	);
+end;
+
+architecture arch of CLA_16m is
+	component carry_generatem
+		port(xi    : in  DUAL_RAIL_LOGIC_VECTOR(3 downto 0);
+			 yi    : in  DUAL_RAIL_LOGIC_VECTOR(3 downto 0);
+			 cin   : in  DUAL_RAIL_LOGIC;
+			 sleep : in  STD_LOGIC;
+			 cout  : out DUAL_RAIL_LOGIC);
+	end component carry_generatem;
+
+	component RCA4bm
+		port(x     : in  dual_rail_logic_vector(3 downto 0);
+			 y     : in  dual_rail_logic_vector(3 downto 0);
+			 cin   : in  DUAL_RAIL_LOGIC;
+			 sleep : in  std_logic;
+			 cout  : out DUAL_RAIL_LOGIC;
+			 sum   : out dual_rail_logic_vector(3 downto 0));
+	end component RCA4bm;
+
+	signal adder_cout : DUAL_RAIL_LOGIC_VECTOR(3 downto 0);
+	signal temp_carry : DUAL_RAIL_LOGIC_VECTOR(4 downto 0);
+
+
+begin
+	temp_carry(0).rail0 <= '1';
+	temp_carry(0).rail1 <= '0';
+	CLAGen : for i in 0 to 3 generate
+		CLA1 : carry_generatem
+			port map(X(4 * i + 3 downto 4 * i), Y(4 * i + 3 downto 4 * i), temp_carry(i), sleep, temp_carry(i + 1));
+		RCA1 : RCA4bm
+			port map(X(4 * i + 3 downto 4 * i), Y(4 * i + 3 downto 4 * i), temp_carry(i), sleep, adder_cout(i), S(4 * i + 3 downto 4 * i));
+	end generate;
+end arch;
+
+
+
+-----------------------------------------
 -- Definition of Propapate/Generate
 -- Propagate term:
 -- pi = ai + bi

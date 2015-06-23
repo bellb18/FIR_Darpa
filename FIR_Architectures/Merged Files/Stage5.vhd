@@ -110,10 +110,10 @@ begin
 	end generate;
 	FA14Gen : for i in 0 to 5 generate
 		FA14 : FAm
-			port map(X14(3 * i + 1), X14(3 * i + 2), X14(3 * i + 3), sleep, Z15(i + 1), Z14(i + 7));
+			port map(X14(3 * i), X14(3 * i + 1), X14(3 * i + 2), sleep, Z15(i + 1), Z14(i + 7));
 	end generate;
 	FA15Gen : for i in 0 to 5 generate
 		FA15 : FAm
-			port map(X15(3 * i + 1), X15(3 * i + 2), X15(3 * i + 3), sleep, temp_carry(i), Z15(i + 7));
+			port map(X15(3 * i), X15(3 * i + 1), X15(3 * i + 2), sleep, temp_carry(i), Z15(i + 7));
 	end generate;
 end;

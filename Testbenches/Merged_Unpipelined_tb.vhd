@@ -38,10 +38,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 
 		s <= '1';
@@ -65,10 +69,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -90,10 +98,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -115,10 +127,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -140,10 +156,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -165,10 +185,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -190,10 +214,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -215,10 +243,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -240,10 +272,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -265,10 +301,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -290,10 +330,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 

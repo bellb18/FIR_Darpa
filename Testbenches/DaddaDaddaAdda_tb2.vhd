@@ -36,9 +36,9 @@ architecture arch of tb_DaddaDaddaAdda is
 
 begin
 	M1 : Dadda_Unpipelined
-		port map(X, A, s, P1);
+		port map(X, Y, s, P1);
 	M2 : Dadda_Unpipelined
-		port map(Y, B, s, P2);
+		port map(A, B, s, P2);
 	A1 : RCA_genm
 		generic map(16)
 		port map(P1, P2, s, P);
@@ -51,10 +51,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 
 		s <= '1';
@@ -78,10 +82,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -103,10 +111,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -128,10 +140,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -153,10 +169,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -178,10 +198,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -203,10 +227,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -228,10 +256,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -253,10 +285,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -278,10 +314,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 		
@@ -303,10 +343,14 @@ begin
 		for i in 0 to 9 loop
 			X(i).rail1 <= '0';
 			X(i).rail0 <= '0';
+			A(i).rail1 <= '0';
+			A(i).rail0 <= '0';
 		end loop;
 		for i in 0 to 6 loop
 			Y(i).rail1 <= '0';
 			Y(i).rail0 <= '0';
+			B(i).rail1 <= '0';
+			B(i).rail0 <= '0';
 		end loop;
 		wait until is_null(P);
 
@@ -327,7 +371,7 @@ begin
 	end process;
 
 	outputs : process(P)
-		variable Pout : STD_LOGIC_VECTOR(16 downto 0);
+		variable Pout : STD_LOGIC_VECTOR(15 downto 0);
 
 	begin
 		if is_data(P) then

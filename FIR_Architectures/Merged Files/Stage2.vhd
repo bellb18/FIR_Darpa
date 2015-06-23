@@ -71,7 +71,7 @@ begin
     		port map(X4(3 * i), X4(3 * i + 1), X4(3 * i + 2), sleep, Z5(i + 6), Z4(i + 25));
     end generate;
     HA4 : HAm
-    	port map(X4(13), X4(14), sleep, Z5(22), Z4(41));
+    	port map(X4(48), X4(49), sleep, Z5(22), Z4(41));
     FA5Gen : for i in 0 to 18 generate
     	FA5 : FAm
     		port map(X5(3 * i), X5(3 * i + 1), X5(3 * i + 2), sleep, Z6(i + 3), Z5(i + 23));
@@ -85,7 +85,7 @@ begin
     		port map(X7(3 * i), X7(3 * i + 1), X7(3 * i + 2), sleep, Z8(i), Z7(i + 21));
     end generate;
     HA7 : HAm
-    	port map(X7(1), X7(2), sleep, Z8(20), Z7(41));
+    	port map(X7(60), X7(61), sleep, Z8(20), Z7(41));
     FA8Gen : for i in 0 to 20 generate
     	FA8 : FAm
     		port map(X8(3 * i), X8(3 * i + 1), X8(3 * i + 2), sleep, Z9(i), Z8(i + 21));

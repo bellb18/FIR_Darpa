@@ -29,11 +29,10 @@ architecture arch of Merged_S7 is
 	
 begin
 	--Inputs to outputs directly
-	Z1(0) <= X1(8);
-	
 	Z0a: for i in 0 to 3 generate
 		Z0(i) <= X0(i + 5);
 	end generate;
+	Z1(0) <= X1(8);
 	
 	-- Adder logic
 	FA0 : FAm

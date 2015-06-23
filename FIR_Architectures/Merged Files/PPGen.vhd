@@ -93,7 +93,7 @@ begin
 		Z5ANDc : and2im
 			port map(X(i)(3), C(i)(2), sleep, Z5(i + 32));
 		Z5ANDd : and2im
-			port map(X(i)(5), C(i)(3), sleep, Z5(i + 48));
+			port map(X(i)(2), C(i)(3), sleep, Z5(i + 48));
 		Z5ANDe : and2im
 			port map(X(i)(1), C(i)(4), sleep, Z5(i + 64));
 		Z5ANDf : and2im

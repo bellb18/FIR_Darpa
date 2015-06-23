@@ -49,10 +49,10 @@ begin
 		wait for 50 ns;
 		rst <= '0';
 		for i in 0 to 7 loop
-				C(2*i + 1) <= Int_to_DR(2*i, 7);
-				Cin(2*i + 1) := conv_std_logic_vector(2*i, 7);
 				C(2*i) <= Int_to_DR(-3*i, 7);
 				Cin(2*i) := conv_std_logic_vector(-3*i, 7);
+				C(2*i + 1) <= Int_to_DR(2*i, 7);
+				Cin(2*i + 1) := conv_std_logic_vector(2*i, 7);
 		end loop;
 		
 		for i in 0 to 1023 loop

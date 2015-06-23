@@ -25,7 +25,7 @@ architecture struct of Merged_S9 is
 	signal  temp_carry : dual_rail_logic;
 begin
 	Z0a : for i in 0 to 1 generate
-		Z0(i) <= X0(i);
+		Z0(i) <= X0(i + 2);
 	end generate;
 	Z1(0) <= X1(3);
 	Z2(0) <= X2(3);
@@ -44,7 +44,7 @@ begin
 	Z15(0) <= X15(3);
 	
 	HA0 : HAm
-		port map(X0(2), X0(3), sleep, Z1(1), Z0(2));
+		port map(X0(0), X0(1), sleep, Z1(1), Z0(2));
 	FA1 : FAm
 		port map(X1(0), X1(1), X1(2), sleep, Z2(1), Z1(2));
 	FA2 : FAm

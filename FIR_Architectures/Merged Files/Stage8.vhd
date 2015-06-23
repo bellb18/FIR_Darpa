@@ -3,9 +3,7 @@ use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 entity Merged_S8 is
 	port(X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15 : in  dual_rail_logic_vector(5 downto 0);
-
 		 sleep                   : in  std_logic;
-
 		 Z0, Z1, Z2, Z3, Z4, Z5, Z6, Z7, Z8, Z9, Z10, Z11, Z12, Z13, Z14, Z15 : out dual_rail_logic_vector(3 downto 0));
 end;
 
@@ -24,18 +22,19 @@ architecture struct of Merged_S8 is
 			COUT  : OUT dual_rail_logic;
 			S     : OUT dual_rail_logic);
 	end component;
-	signal  Z16 : dual_rail_logic_vector (2 downto 0);
+	signal  temp_carry : dual_rail_logic_vector (1 downto 0);
 begin
 	Z0a : for i in 0 to 2 generate
-		Z0(i) <= X0(i);
+		Z0(i) <= X0(i + 3);
 	end generate;
+	Z1(0) <= X1(5);
 	
 	FA0 : FAm
-		port map(X0(3), X0(4), X0(5), sleep, Z1(1), Z0(3));
-	HA1 : HAm
-		port map(X1(1), X1(2), sleep, Z2(0), Z1(1));
+		port map(X0(0), X0(1), X0(2), sleep, Z1(1), Z0(3));
 	FA1 : FAm
-		port map(X1(3), X1(4), X1(5), sleep, Z2(1), Z1(2));
+		port map(X1(1), X1(2), X1(5), sleep, Z2(0), Z1(2));
+	HA1 : HAm
+		port map(X1(3), X1(4), sleep, Z2(1), Z1(3));
 	FA2Gen : for i in 0 to 1 generate
 		FA2 : FAm
 			port map(X2(3 * i), X2(3 * i + 1), X2(3 * i + 2), sleep, Z3(i), Z2(i + 2));
@@ -90,6 +89,6 @@ begin
 	end generate;
 	FA15Gen : for i in 0 to 1 generate
 		FA15 : FAm
-			port map(X15(3 * i), X15(3 * i + 1), X15(3 * i + 2), sleep, Z16(i), Z15(i + 2));
+			port map(X15(3 * i), X15(3 * i + 1), X15(3 * i + 2), sleep, temp_carry(i), Z15(i + 2));
 	end generate;
 end;

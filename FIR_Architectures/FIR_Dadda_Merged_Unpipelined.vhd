@@ -3,6 +3,8 @@ use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 use work.arraypack.all;
 use work.PPGen_pack.all;
+use IEEE.numeric_std.all;
+
 entity FIR_Merged_Unpipelined is
 	port(x        : in  dual_rail_logic_vector(9 downto 0);
 		 c        : in  CppType;
@@ -171,6 +173,16 @@ architecture arch of FIR_Merged_Unpipelined is
 			 ki, rst, sleep : in  std_logic;
 			 ko             : OUT std_logic);
 	end component;
+	
+	component RCA_genm is
+	generic(width : integer := 16);
+	port(
+		X    : in  dual_rail_logic_vector(width - 1 downto 0);
+		Y    : in  dual_rail_logic_vector(width - 1 downto 0);
+		sleep : in  std_logic;
+		S   : out dual_rail_logic_vector(width - 1 downto 0)
+	);
+	end component;
 
 	--type Xpptype is array (15 downto 0) of dual_rail_logic_vector(9 downto 0);
 	type Ktype is array (15 downto 0) of std_logic;
@@ -231,7 +243,7 @@ architecture arch of FIR_Merged_Unpipelined is
 	 signal S4_Z1, S4_Z2, S4_Z3, S4_Z4, S4_Z5, S4_Z6, S4_Z7, S4_Z8, S4_Z9, S4_Z10, S4_Z11, S4_Z12, S4_Z13, S4_Z14,
 	  S4_Z15 : dual_rail_logic_vector(18 downto 0);
 	
-	 -- Stages 5-11 signals
+	 -- Stages 5-10 signals
 	 signal S5_Z0, S5_Z1, S5_Z2, S5_Z3, S5_Z4, S5_Z5, S5_Z6, S5_Z7, S5_Z8, S5_Z9, S5_Z10, S5_Z11, S5_Z12, S5_Z13,
 	  S5_Z14, S5_Z15 : dual_rail_logic_vector(12 downto 0);	
 	 signal  S6_Z0, S6_Z1, S6_Z2, S6_Z3, S6_Z4, S6_Z5, S6_Z6, S6_Z7, S6_Z8, S6_Z9, S6_Z10, S6_Z11, S6_Z12, S6_Z13,
@@ -244,6 +256,8 @@ architecture arch of FIR_Merged_Unpipelined is
 	  S9_Z14, S9_Z15 : dual_rail_logic_vector(2 downto 0);
 	 signal S10_Z0, S10_Z1, S10_Z2, S10_Z3, S10_Z4, S10_Z5, S10_Z6, S10_Z7, S10_Z8, S10_Z9, S10_Z10, S10_Z11, S10_Z12,
 	  S10_Z13, S10_Z14, S10_Z15 : dual_rail_logic_vector(1 downto 0);
+	  
+	 signal RCA_X, RCA_Y, RCA_Z : dual_rail_logic_vector(15 downto 0);
 	 
 	 
 begin
@@ -329,27 +343,15 @@ begin
 		port map(S9_Z0, S9_Z1, S9_Z2, S9_Z3, S9_Z4, S9_Z5, S9_Z6, S9_Z7, S9_Z8, S9_Z9, S9_Z10, S9_Z11, S9_Z12, S9_Z13,
 	        S9_Z14, S9_Z15, sleep, S10_Z0, S10_Z1, S10_Z2, S10_Z3, S10_Z4, S10_Z5, S10_Z6, S10_Z7, S10_Z8, S10_Z9,
 	        S10_Z10, S10_Z11, S10_Z12, S10_Z13, S10_Z14, S10_Z15);
+	        
+	RCA_X <= S10_Z15(0) & S10_Z14(0) & S10_Z13(0) & S10_Z12(0) & S10_Z11(0) & S10_Z10(0) & S10_Z9(0) & S10_Z8(0) & S10_Z7(0)
+	        & S10_Z6(0) & S10_Z5(0) & S10_Z4(0) & S10_Z3(0) & S10_Z2(0) & S10_Z1(0) & S10_Z0(0);
+	RCA_Y <= S10_Z15(1) & S10_Z14(1) & S10_Z13(1) & S10_Z12(1) & S10_Z11(1) & S10_Z10(1) & S10_Z9(1) & S10_Z8(1) & S10_Z7(1)
+	        & S10_Z6(1) & S10_Z5(1) & S10_Z4(1) & S10_Z3(1) & S10_Z2(1) & S10_Z1(1) & S10_Z0(1);
+	        
+	RCA: RCA_genm
+		generic map(16)
+		port map(RCA_X, RCA_Y, sleep, RCA_Z);
 
---	GenMult : for i in 0 to 7 generate  -- 00.0000 0000 0000 001
---		Multa : Merged_Unpipelined
---			port map(Xarray(2 * i), c(2 * i), Xarray(2 * i + 1), c(2 * i + 1), sleep, S1(i));
---	end generate;
-
---	GenAdd1 : for i in 0 to 3 generate  -- 000.0000 0000 0000 00
---		Adda : CLA_genm
---			generic map(17)
---			port map(S1(2 * i), S1(2 * i + 1), sleep, S2(i));
---	end generate;
---
---	GenAdd2 : for i in 0 to 1 generate  -- 0000.0000 0000 0000 0
---		Adda : CLA_genm
---			generic map(18)
---			port map(S2(2 * i), S2(2 * i + 1), sleep, S3(i));
---	end generate;
-
---	FinalAdd : CLA_genm                 -- 00000.0000 0000 0000 000
---		generic map(19)
---		port map(S3(0), S3(1), sleep, S4);
---
---	y <= S4(15 downto 5);
+	y <= RCA_Z(15 downto 5);
 end arch;

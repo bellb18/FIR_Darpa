@@ -207,90 +207,63 @@ begin
 		Z15ANDa : and2im
 			port map(X(i)(9), C(i)(6), sleep, Z15(i));
 	end generate;
-		Gen6t9: for i in 0 to 111 generate
-			inva : if(i mod 7 = 0) generate
-				Z6(i).rail1 <= Z6_temp(i).rail0;
-				Z6(i).rail0 <= Z6_temp(i).rail1;
-				Z7(i).rail1 <= Z7_temp(i).rail0;
-				Z7(i).rail0 <= Z7_temp(i).rail1;
-				Z8(i).rail1 <= Z8_temp(i).rail0;
-				Z8(i).rail0 <= Z8_temp(i).rail1;
-				Z9(i).rail1 <= Z9_temp(i).rail0;
-				Z9(i).rail0 <= Z9_temp(i).rail1;	
-			end generate;
-			notinva : if(i mod 7 /= 0) generate
-				Z6(i) <= Z6_temp(i);
-				Z7(i) <= Z7_temp(i);
-				Z8(i) <= Z8_temp(i);
-			end generate;
-			invb : if(i mod 7 - 1 = 0) generate
-				Z9(i).rail1 <= Z9_temp(i).rail0;
-				Z9(i).rail0 <= Z9_temp(i).rail1;
-			end generate;
-			notinvb : if (i mod 7 - 1 /= 0) and (i mod 7 /= 0) generate
-				Z9(i) <= Z9_temp(i);
-			end generate;
-		end generate;
+	Gen6to8: for i in 0 to 95 generate
+		Z6(i) <= Z6_temp(i);
+		Z7(i) <= Z7_temp(i);
+		Z8(i) <= Z8_temp(i);
+	end generate;
+	Inv6to9: for i in 96 to 111 generate
+		Z6(i).rail1 <= Z6_temp(i).rail0;
+		Z6(i).rail0 <= Z6_temp(i).rail1;
+		Z7(i).rail1 <= Z7_temp(i).rail0;
+		Z7(i).rail0 <= Z7_temp(i).rail1;
+		Z8(i).rail1 <= Z8_temp(i).rail0;
+		Z8(i).rail0 <= Z8_temp(i).rail1;
+		Z9(i).rail1 <= Z9_temp(i).rail0;
+		Z9(i).rail0 <= Z9_temp(i).rail1;
+	end generate;
+	Inv9t14a: for i in 0 to 15 generate
+		Z9(i).rail1 <= Z9_temp(i).rail0;
+		Z9(i).rail0 <= Z9_temp(i).rail1;
+		Z10(i).rail1 <= Z10_temp(i).rail0;
+		Z10(i).rail0 <= Z10_temp(i).rail1;
+		Z11(i).rail1 <= Z11_temp(i).rail0;
+		Z11(i).rail0 <= Z11_temp(i).rail1;
+		Z12(i).rail1 <= Z12_temp(i).rail0;
+		Z12(i).rail0 <= Z12_temp(i).rail1;
+		Z13(i).rail1 <= Z13_temp(i).rail0;
+		Z13(i).rail0 <= Z13_temp(i).rail1;
+		Z14(i).rail1 <= Z14_temp(i).rail0;
+		Z14(i).rail0 <= Z14_temp(i).rail1;
+	end generate;
+	Inv10to14: for i in 0 to 15 generate
+		Z10(i + 80).rail1 <= Z10_temp(i + 80).rail0;
+		Z10(i + 80).rail0 <= Z10_temp(i + 80).rail1;
+		Z11(i + 64).rail1 <= Z11_temp(i + 64).rail0;
+		Z11(i + 64).rail0 <= Z11_temp(i + 64).rail1;
+		Z12(i + 48).rail1 <= Z12_temp(i + 48).rail0;
+		Z12(i + 48).rail0 <= Z12_temp(i + 48).rail1;
+		Z13(i + 32).rail1 <= Z13_temp(i + 32).rail0;
+		Z13(i + 32).rail0 <= Z13_temp(i + 32).rail1;
+		Z14(i + 16).rail1 <= Z14_temp(i + 16).rail0;
+		Z14(i + 16).rail0 <= Z14_temp(i + 16).rail1;
+	end generate;
+	Gen9: for i in 16 to 95 generate
+		Z9(i) <= Z9_temp(i);
+	end generate;
+	Gen10: for i in 16 to 79 generate
+		Z10(i) <= Z10_temp(i);
+	end generate;
+	Gen11: for i in 16 to 63 generate
+		Z11(i) <= Z11_temp(i);
+	end generate;
+	Gen12: for i in 16 to 47 generate
+		Z12(i) <= Z12_temp(i);
+	end generate;
+	Gen13: for i in 16 to 31 generate
+		Z13(i) <= Z13_temp(i);
+	end generate;
+	
 		
-		Gen10: for i in 0 to 95 generate
-			inva : if(i mod 6 = 0) generate
-				Z10(i).rail1 <= Z10_temp(i).rail0;
-				Z10(i).rail0 <= Z10_temp(i).rail1;	
-			end generate;
-			invb : if(i mod 6 - 1 = 0) generate
-				Z10(i).rail1 <= Z10_temp(i).rail0;
-				Z10(i).rail0 <= Z10_temp(i).rail1;
-			end generate;
-			notinvb : if (i mod 6 - 1 /= 0) and (i mod 6 /= 0) generate
-				Z10(i) <= Z10_temp(i);
-			end generate;
-		end generate;
-		
-		Gen11: for i in 0 to 79 generate
-			inva : if(i mod 5 = 0) generate
-				Z11(i).rail1 <= Z11_temp(i).rail0;
-				Z11(i).rail0 <= Z11_temp(i).rail1;	
-			end generate;
-			invb : if(i mod 5 - 1 = 0) generate
-				Z11(i).rail1 <= Z11_temp(i).rail0;
-				Z11(i).rail0 <= Z11_temp(i).rail1;
-			end generate;
-			notinvb : if (i mod 5 - 1 /= 0) and (i mod 5 /= 0) generate
-				Z11(i) <= Z11_temp(i);
-			end generate;
-		end generate;
-		
-		Gen12: for i in 0 to 63 generate
-			inva : if(i mod 4 = 0) generate
-				Z12(i).rail1 <= Z12_temp(i).rail0;
-				Z12(i).rail0 <= Z12_temp(i).rail1;	
-			end generate;
-			invb : if(i mod 4 - 1 = 0) generate
-				Z12(i).rail1 <= Z12_temp(i).rail0;
-				Z12(i).rail0 <= Z12_temp(i).rail1;
-			end generate;
-			notinvb : if (i mod 4 - 1 /= 0) and (i mod 4 /= 0) generate
-				Z12(i) <= Z12_temp(i);
-			end generate;
-		end generate;
-		
-		Gen13: for i in 0 to 47 generate
-			inva : if(i mod 3 = 0) generate
-				Z13(i).rail1 <= Z13_temp(i).rail0;
-				Z13(i).rail0 <= Z13_temp(i).rail1;	
-			end generate;
-			invb : if(i mod 3 - 1 = 0) generate
-				Z13(i).rail1 <= Z13_temp(i).rail0;
-				Z13(i).rail0 <= Z13_temp(i).rail1;
-			end generate;
-			notinvb : if (i mod 3 - 1 /= 0) and (i mod 3 /= 0) generate
-				Z13(i) <= Z13_temp(i);
-			end generate;
-		end generate;
-		
-		InvGeng: for i in 0 to 31 generate
-			Z14(i).rail1 <= Z14_temp(i).rail0;
-			Z14(i).rail0 <= Z14_temp(i).rail1;
-		end generate;
 
 end;

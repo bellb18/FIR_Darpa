@@ -29,23 +29,23 @@ architecture arch of Merged_S7 is
 	
 begin
 	--Inputs to outputs directly
-	Z1(0) <= X1(0);
+	Z1(0) <= X1(8);
 	
 	Z0a: for i in 0 to 3 generate
-		Z0(i) <= X0(i);
+		Z0(i) <= X0(i + 5);
 	end generate;
 	
 	-- Adder logic
-	HA0 : HAm
-		port map(X0(4), X0(5), sleep, Z1(1), Z0(4));
 	FA0 : FAm
-		port map(X0(6), X0(7), X0(8), sleep, Z1(2), Z0(5));
-	HA1 : HAm
-		port map(X1(1), X1(2), sleep, Z2(0), Z1(3));
+		port map(X0(0), X0(1), X0(2), sleep, Z1(2), Z0(5));
+	HA0 : HAm
+		port map(X0(3), X0(4), sleep, Z1(1), Z0(4));
 	FA1Gen : for i in 0 to 1 generate
 		FA1 : FAm	
-			port map(X1(3 * i + 3), X1(3 * i + 4), X1(3 * i + 5), sleep, Z2(1 + i), Z1(4 + i));
+			port map(X1(3 * i), X1(3 * i + 1), X1(3 * i + 2), sleep, Z2(1 + i), Z1(4 + i));
 	end generate;
+	HA1 : HAm
+		port map(X1(6), X1(7), sleep, Z2(0), Z1(3));
 	FA2Gen : for i in 0 to 2 generate
 		FA2 : FAm
 			port map(X2(3 * i), X2(3 * i + 1), X2(3 * i + 2), sleep, Z3(i), Z2(3 + i));

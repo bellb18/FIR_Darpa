@@ -29,11 +29,11 @@ architecture arch of Merged_S10 is
 	
 begin
 	--Inputs to outputs directly
-	Z0(0) <= X0(0);
+	Z0(0) <= X0(2);
 	
 	-- Adder logic
 	HA0 : HAm
-		port map(X0(1), X0(2), sleep, Z1(0), Z0(1));
+		port map(X0(0), X0(1), sleep, Z1(0), Z0(1));
 	FA1 : FAm
 		port map(X1(0), X1(1), X1(2), sleep, Z2(0), Z1(1));
 	FA2 : FAm

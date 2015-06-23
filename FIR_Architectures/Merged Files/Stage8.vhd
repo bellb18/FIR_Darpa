@@ -32,7 +32,7 @@ begin
 	FA0 : FAm
 		port map(X0(0), X0(1), X0(2), sleep, Z1(1), Z0(3));
 	FA1 : FAm
-		port map(X1(1), X1(2), X1(5), sleep, Z2(0), Z1(2));
+		port map(X1(0), X1(1), X1(2), sleep, Z2(0), Z1(2));
 	HA1 : HAm
 		port map(X1(3), X1(4), sleep, Z2(1), Z1(3));
 	FA2Gen : for i in 0 to 1 generate

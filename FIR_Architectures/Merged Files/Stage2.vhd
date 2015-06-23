@@ -14,7 +14,7 @@ entity Merged_S2 is
 		 Z0                      : out dual_rail_logic_vector(15 downto 0);
 		 Z1                      : out dual_rail_logic_vector(31 downto 0);
 		 Z2, Z3, Z4, Z5, Z6, Z7, Z8, Z9, Z10, Z11, Z12, Z13, Z14 : out dual_rail_logic_vector(41 downto 0);
-		 Z15                     : out dual_rail_logic_vector(21 downto 0));
+		 Z15                     : out dual_rail_logic_vector(15 downto 0));
 end;
 
 architecture struct of Merged_S2 is

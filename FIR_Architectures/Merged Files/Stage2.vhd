@@ -5,14 +5,7 @@ entity Merged_S2 is
 	port(X0                      : in  dual_rail_logic_vector(15 downto 0);
 		 X1                      : in  dual_rail_logic_vector(31 downto 0);
 		 X2                      : in  dual_rail_logic_vector(47 downto 0);
-		 X3                      : in  dual_rail_logic_vector(63 downto 0);
-		 X4                      : in  dual_rail_logic_vector(79 downto 0);
-		 X5                      : in  dual_rail_logic_vector(95 downto 0);
-		 X6, X7, X8, X9          : in  dual_rail_logic_vector(111 downto 0);
-		 X10                     : in  dual_rail_logic_vector(96 downto 0);
-		 X11                     : in  dual_rail_logic_vector(79 downto 0);
-		 X12                     : in  dual_rail_logic_vector(63 downto 0);
-		 X13                     : in  dual_rail_logic_vector(48 downto 0);
+		 X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13 : in  dual_rail_logic_vector(62 downto 0);
 		 X14                     : in  dual_rail_logic_vector(31 downto 0);
 		 X15                     : in  dual_rail_logic_vector(15 downto 0);
 
@@ -20,14 +13,7 @@ entity Merged_S2 is
 
 		 Z0                      : out dual_rail_logic_vector(15 downto 0);
 		 Z1                      : out dual_rail_logic_vector(31 downto 0);
-		 Z2                      : out dual_rail_logic_vector(47 downto 0);
-		 Z3                      : out dual_rail_logic_vector(63 downto 0);
-		 Z4                      : out dual_rail_logic_vector(79 downto 0);
-		 Z5, Z6, Z7, Z8, Z9, Z10 : out dual_rail_logic_vector(93 downto 0);
-		 Z11                     : out dual_rail_logic_vector(89 downto 0);
-		 Z12                     : out dual_rail_logic_vector(63 downto 0);
-		 Z13                     : out dual_rail_logic_vector(48 downto 0);
-		 Z14                     : out dual_rail_logic_vector(31 downto 0);
+		 Z2, Z3, Z4, Z5, Z6, Z7, Z8, Z9, Z10, Z11, Z12, Z13, Z14 : out dual_rail_logic_vector(41 downto 0);
 		 Z15                     : out dual_rail_logic_vector(21 downto 0));
 end;
 

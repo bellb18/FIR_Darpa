@@ -58,7 +58,7 @@ begin
 	FA6 : FAm
 		port map(X6(0), X6(1), X6(2), sleep, Z7(1), Z6(2));
 	FA7 : FAm
-		port map(X7(0), X2(1), X2(2), sleep, Z8(1), Z7(2));
+		port map(X7(0), X7(1), X7(2), sleep, Z8(1), Z7(2));
 	FA8 : FAm
 		port map(X8(0), X8(1), X8(2), sleep, Z9(1), Z8(2));
 	FA9 : FAm

@@ -1,7 +1,6 @@
 Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
-use work.arraypack.all;
 use work.PPGen_pack.all;
 use IEEE.numeric_std.all;
 

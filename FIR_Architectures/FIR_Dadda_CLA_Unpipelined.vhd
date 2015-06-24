@@ -9,7 +9,7 @@ Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 use work.arraypack.all;
-entity FIR_Dadda_Unpipelined is
+entity FIR_Partially_Merged_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
 		 c     : in  array16;
 		 ki    : in  std_logic;
@@ -20,7 +20,7 @@ entity FIR_Dadda_Unpipelined is
 		 y     : out dual_rail_logic_vector(10 downto 0));
 end;
 
-architecture arch of FIR_Dadda_Unpipelined is
+architecture arch of FIR_Partially_Merged_Unpipelined is
 	component Merged_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
 		 y     : in  dual_rail_logic_vector(6 downto 0);

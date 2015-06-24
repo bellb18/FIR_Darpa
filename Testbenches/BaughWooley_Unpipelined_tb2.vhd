@@ -254,7 +254,27 @@ begin
 		end loop;
 		wait until is_null(P);
 		
+		s <= '0';
+		wait for 1 ns;
+		X   <= Int_to_DR(15, 10);
+		Y   <= Int_to_DR(-3, 7);
+		Xin := conv_std_logic_vector(15, 10);
+		Yin := conv_std_logic_vector(-3, 7);
+		wait until is_data(P);
+		wait for 2 ns;
+		s <= '1';
+		wait for 2 ns;
+		for i in 0 to 9 loop
+			X(i).rail1 <= '0';
+			X(i).rail0 <= '0';
+		end loop;
+		for i in 0 to 6 loop
+			Y(i).rail1 <= '0';
+			Y(i).rail0 <= '0';
+		end loop;
+		wait until is_null(P);
 		
+		s <= '0';
 		-- Go to all 1's at the end
 		for i in 0 to 9 loop
 			X(i).rail1 <= '1';

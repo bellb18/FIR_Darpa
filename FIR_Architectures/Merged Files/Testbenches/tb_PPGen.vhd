@@ -5,15 +5,15 @@ use ieee.numeric_std.all;
 use ieee.std_logic_arith.all;
 use work.ncl_signals.all;
 use work.functions.all;
-use work.PPGen_pack.all;
+use work.FIR_pack.all;
 use ieee.math_real.all;
 
 entity tb_PPGen is
 end;
 
 architecture arch of tb_PPGen is
-	signal X : XppType;
-	signal C : CppType;
+	signal X : XType;
+	signal C : CType;
 
 	signal s : std_logic;
 
@@ -32,8 +32,8 @@ architecture arch of tb_PPGen is
 	signal Z15            : dual_rail_logic_vector(15 downto 0);
 
 	component Merged_PPGen is
-		port(X              : in  XppType;
-			 C              : in  CppType;
+		port(X              : in  XType;
+			 C              : in  CType;
 			 sleep          : in  std_logic;
 			 Z0             : out dual_rail_logic_vector(15 downto 0);
 			 Z1             : out dual_rail_logic_vector(31 downto 0);

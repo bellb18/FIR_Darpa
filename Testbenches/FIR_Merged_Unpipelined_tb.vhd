@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 use ieee.std_logic_arith.all;
 use work.ncl_signals.all;
 use work.functions.all;
-use work.PPGen_pack.all;
+use work.FIR_pack.all;
 use ieee.math_real.all;
 
 entity tb_FIR_Merged_Unpipelined is
@@ -13,13 +13,13 @@ end;
 
 architecture arch of tb_FIR_Merged_Unpipelined is
 	signal X : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
-	signal C : CppType;
+	signal C : CType;
 	signal Y    : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 	
 component FIR_Merged_Unpipelined is
 	port(x        : in  dual_rail_logic_vector(9 downto 0);
-		 c        : in  CppType;
+		 c        : in  CType;
 		 ki       : in  std_logic;
 		 rst      : in  std_logic;
 		 sleep    : in  std_logic;

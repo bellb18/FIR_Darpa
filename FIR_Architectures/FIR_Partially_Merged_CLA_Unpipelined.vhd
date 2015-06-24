@@ -1,17 +1,10 @@
 Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
-package arraypack is
-	type array16 is array (15 downto 0) of dual_rail_logic_vector(6 downto 0);
-end package;
-
-Library IEEE;
-use IEEE.std_logic_1164.all;
-use work.ncl_signals.all;
-use work.arraypack.all;
+use work.FIR_pack.all;
 entity FIR_Partially_Merged_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
-		 c     : in  array16;
+		 c     : in  Ctype;
 		 ki    : in  std_logic;
 		 rst   : in  std_logic;
 		 sleep : in  std_logic;

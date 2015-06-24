@@ -1,24 +1,24 @@
 Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
-use work.PPGen_pack.all;
+use work.FIR_pack.all;
 use IEEE.numeric_std.all;
 
 entity FIR_Merged_Unpipelined is
-	port(x        : in  dual_rail_logic_vector(9 downto 0);
-		 c        : in  CppType;
+	port(X        : in  dual_rail_logic_vector(9 downto 0);
+		 C        : in  CType;
 		 ki       : in  std_logic;
 		 rst      : in  std_logic;
 		 sleep    : in  std_logic;
 		 ko       : out std_logic;
 		 sleepout : out std_logic;
-		 y        : out dual_rail_logic_vector(10 downto 0));
+		 Y        : out dual_rail_logic_vector(10 downto 0));
 end;
 
 architecture arch of FIR_Merged_Unpipelined is
 	component Merged_PPGen is
-	port(X              : in  XppType;
-		 C              : in  CppType;
+	port(X              : in  XType;
+		 C              : in  CType;
 		 sleep          : in  std_logic;
 		 Z0             : out dual_rail_logic_vector(15 downto 0);
 		 Z1             : out dual_rail_logic_vector(31 downto 0);
@@ -189,7 +189,7 @@ architecture arch of FIR_Merged_Unpipelined is
 	--type Stage2 is array (3 downto 0) of dual_rail_logic_vector(17 downto 0);
 	--type Stage3 is array (1 downto 0) of dual_rail_logic_vector(18 downto 0);
 
-	signal Xarray         : Xpptype;
+	signal Xarray         : Xtype;
 	signal karray, Sarray : Ktype;
 	--signal S1             : Stage1;
 	--signal S2             : Stage2;

@@ -4,7 +4,7 @@ use IEEE.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_arith.all;
 use work.ncl_signals.all;
-use work.arraypack.all;
+use work.FIR_pack.all;
 use work.functions.all;
 
 use ieee.math_real.all;
@@ -14,13 +14,13 @@ end;
 
 architecture arch of tb_FIR_Dadda_Unpipelined is
 	signal X : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
-	signal C : array16;
+	signal C : Ctype;
 	signal Y    : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 	
 component FIR_Dadda_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
-		 c     : in  array16;
+		 c     : in  Ctype;
 		 ki    : in  std_logic;
 		 rst   : in  std_logic;
 		 sleep : in  std_logic;

@@ -1,19 +1,11 @@
 Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
-package PPGen_pack is
-	type XppType is array (15 downto 0) of dual_rail_logic_vector(9 downto 0);
-	type CppType is array (15 downto 0) of dual_rail_logic_vector(6 downto 0);
-end package;
-
-Library IEEE;
-use IEEE.std_logic_1164.all;
-use work.ncl_signals.all;
 use IEEE.numeric_std.all;
-use work.PPGen_pack.all;
+use work.FIR_pack.all;
 entity Merged_PPGen is
-	port(X              : in  XppType;
-		 C              : in  CppType;
+	port(X              : in  XType;
+		 C              : in  CType;
 		 sleep          : in  std_logic;
 		 Z0             : out dual_rail_logic_vector(15 downto 0);
 		 Z1             : out dual_rail_logic_vector(31 downto 0);

@@ -8,16 +8,16 @@ use work.functions.all;
 use work.FIR_pack.all;
 use ieee.math_real.all;
 
-entity tb_FIR_Merged_Unpipelined is
+entity tb_FIR_Merged_RCA_Unpipelined is
 end;
 
-architecture arch of tb_FIR_Merged_Unpipelined is
+architecture arch of tb_FIR_Merged_RCA_Unpipelined is
 	signal X : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
 	signal C : CType;
 	signal Y    : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 	
-component FIR_Merged_Unpipelined is
+component FIR_Merged_RCA_Unpipelined is
 	port(x        : in  dual_rail_logic_vector(9 downto 0);
 		 c        : in  CType;
 		 ki       : in  std_logic;
@@ -29,7 +29,7 @@ component FIR_Merged_Unpipelined is
 end component;
 
 begin
-	CUT : FIR_Merged_Unpipelined
+	CUT : FIR_Merged_RCA_Unpipelined
 		port map(X, C, ki, rst, sleep, ko, sleepout, Y);
 
 	inputs : process

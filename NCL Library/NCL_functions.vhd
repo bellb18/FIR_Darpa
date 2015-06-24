@@ -4,9 +4,7 @@
 
 Library IEEE;
 use IEEE.std_logic_1164.all;
-use IEEE.std_logic_signed.all;
-use ieee.std_logic_arith.all;
-
+use IEEE.numeric_std.all;
 use work.ncl_signals.all;
 
 package functions is
@@ -167,7 +165,7 @@ variable Int_to_Std: std_logic_vector(size-1 downto 0);
 variable Std_to_Rail: DUAL_RAIL_LOGIC_VECTOR(size-1 downto 0);
 begin
 
-            Int_to_Std :=  conv_std_logic_vector(int, size);
+            Int_to_Std :=  std_logic_vector(to_signed(int, size));
 	    Std_to_Rail := to_DR(Int_to_Std);
     return Std_to_Rail;
 end Int_to_DR;

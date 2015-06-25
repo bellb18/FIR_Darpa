@@ -14,11 +14,13 @@ entity FIR_Partially_Merged_RCA_Unpipelined is
 end;
 
 architecture arch of FIR_Partially_Merged_RCA_Unpipelined is
-	component Dadda_Unpipelined is
-	port(x             : in  dual_rail_logic_vector(9 downto 0);
-		 y             : in  dual_rail_logic_vector(6 downto 0);
-		 sleep 		   : in  std_logic;
-		 p        : out dual_rail_logic_vector(15 downto 0));
+	component Merged_Unpipelined is
+	port(x     : in  dual_rail_logic_vector(9 downto 0);
+		 y     : in  dual_rail_logic_vector(6 downto 0);
+		 a     : in  dual_rail_logic_vector(9 downto 0);
+		 b     : in  dual_rail_logic_vector(6 downto 0);
+		 sleep : in  std_logic;
+		 p     : out dual_rail_logic_vector(15 downto 0));
 	end component;
 
 	component RCA_genm is
@@ -52,18 +54,16 @@ architecture arch of FIR_Partially_Merged_RCA_Unpipelined is
 	end component;
 	
 	type Ktype is array (15 downto 0) of std_logic;
-	type Stage1 is array (15 downto 0) of dual_rail_logic_vector(15 downto 0);
-	type Stage2 is array (7 downto 0) of dual_rail_logic_vector(15 downto 0);
-	type Stage3 is array (3 downto 0) of dual_rail_logic_vector(15 downto 0);
-	type Stage4 is array (1 downto 0) of dual_rail_logic_vector(15 downto 0);
+	type Stage1 is array (7 downto 0) of dual_rail_logic_vector(15 downto 0);
+	type Stage2 is array (3 downto 0) of dual_rail_logic_vector(15 downto 0);
+	type Stage3 is array (1 downto 0) of dual_rail_logic_vector(15 downto 0);
 	
 	signal Xarray : Xtype;
 	signal karray, Sarray : Ktype;
 	signal S1: Stage1;
 	signal S2: Stage2;
 	signal S3: Stage3;
-	signal S4: Stage4;
-	signal S5: dual_rail_logic_vector(15 downto 0);
+	signal S4: dual_rail_logic_vector(15 downto 0);
 	signal ko_temp: std_logic;
 
 begin
@@ -92,34 +92,28 @@ begin
 			);
 	end generate;
 	
-	GenMult: for i in 0 to 15 generate 
-		Multa: Dadda_Unpipelined
-			port map(Xarray(i), c(i), sleep, S1(i));
-	end generate;
-	
-	GenAdd1: for i in 0 to 7 generate 
-		Adda: RCA_genm
-		generic map(16)
-		port map(S1(2*i), S1(2*i + 1), sleep, S2(i));
+	GenMult: for i in 0 to 7 generate -- 00.0000 0000 0000 001
+		Multa: Merged_Unpipelined
+			port map(Xarray(2*i), c(2*i), Xarray(2*i + 1), c(2*i + 1), sleep, S1(i));
 	end generate;
 	
 	GenAdd2: for i in 0 to 3 generate
 		Adda: RCA_genm
 		generic map(16)
-		port map(S2(2*i), S2(2*i + 1), sleep, S3(i));
+		port map(S1(2*i), S1(2*i + 1), sleep, S2(i));
 	end generate;
 	
 	GenAdd3: for i in 0 to 1 generate
 		Adda: RCA_genm
 		generic map(16)
-		port map(S3(2*i), S3(2*i + 1), sleep, S4(i));
+		port map(S2(2*i), S2(2*i + 1), sleep, S3(i));
 	end generate;
 	
 	FinalAdd: RCA_genm
 		generic map(16) 
-		port map(S4(0), S4(1), sleep, S5);
+		port map(S3(0), S3(1), sleep, S4);
 	
-	y <= S5(15 downto 5);
+	y <= S4(15 downto 5);
 	
 	
 end arch;

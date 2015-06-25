@@ -20,17 +20,16 @@ architecture arch of FIR_Partially_Merged_CLA_Unpipelined is
 		 a     : in  dual_rail_logic_vector(9 downto 0);
 		 b     : in  dual_rail_logic_vector(6 downto 0);
 		 sleep : in  std_logic;
-		 p     : out dual_rail_logic_vector(16 downto 0));
+		 p     : out dual_rail_logic_vector(15 downto 0));
 	end component;
 
-	component CLA_genm is
-		generic(width : integer := 8);
-		port(
-			xi    : in  dual_rail_logic_vector(width - 1 downto 0);
-			yi    : in  dual_rail_logic_vector(width - 1 downto 0);
-			sleep : in  std_logic;
-			sum   : out dual_rail_logic_vector(width downto 0)
-		);
+	component CLA_16m is
+	port(
+		X    : in  dual_rail_logic_vector(15 downto 0);
+		Y    : in  dual_rail_logic_vector(15 downto 0);
+		sleep : in  std_logic;
+		S   : out dual_rail_logic_vector(15 downto 0)
+	);
 	end component;
 
 	component ShiftRegMTNCL is
@@ -54,16 +53,16 @@ architecture arch of FIR_Partially_Merged_CLA_Unpipelined is
 	
 	type Xtype is array (15 downto 0) of dual_rail_logic_vector(9 downto 0);
 	type Ktype is array (15 downto 0) of std_logic;
-	type Stage1 is array (7 downto 0) of dual_rail_logic_vector(16 downto 0);
-	type Stage2 is array (3 downto 0) of dual_rail_logic_vector(17 downto 0);
-	type Stage3 is array (1 downto 0) of dual_rail_logic_vector(18 downto 0);
+	type Stage1 is array (7 downto 0) of dual_rail_logic_vector(15 downto 0);
+	type Stage2 is array (3 downto 0) of dual_rail_logic_vector(15 downto 0);
+	type Stage3 is array (1 downto 0) of dual_rail_logic_vector(15 downto 0);
 	
 	signal Xarray : Xtype;
 	signal karray, Sarray : Ktype;
 	signal S1: Stage1;
 	signal S2: Stage2;
 	signal S3: Stage3;
-	signal S4: dual_rail_logic_vector(19 downto 0);
+	signal S4: dual_rail_logic_vector(15 downto 0);
 	signal ko_temp: std_logic;
 
 begin
@@ -92,25 +91,22 @@ begin
 			);
 	end generate;
 	
-	GenMult: for i in 0 to 7 generate -- 00.0000 0000 0000 001
+	GenMult: for i in 0 to 7 generate
 		Multa: Merged_Unpipelined
 			port map(Xarray(2*i), c(2*i), Xarray(2*i + 1), c(2*i + 1), sleep, S1(i));
 	end generate;
 	
-	GenAdd1: for i in 0 to 3 generate -- 000.0000 0000 0000 00
-		Adda: CLA_genm
-		generic map(17)
+	GenAdd1: for i in 0 to 3 generate
+		Adda: CLA_16m
 		port map(S1(2*i), S1(2*i + 1), sleep, S2(i));
 	end generate;
 	
-	GenAdd2: for i in 0 to 1 generate -- 0000.0000 0000 0000 0
-		Adda: CLA_genm
-		generic map(18)
+	GenAdd2: for i in 0 to 1 generate
+		Adda: CLA_16m
 		port map(S2(2*i), S2(2*i + 1), sleep, S3(i));
 	end generate;
 	
-	FinalAdd: CLA_genm -- 00000.0000 0000 0000 000
-		generic map(19)
+	FinalAdd: CLA_16m
 		port map(S3(0), S3(1), sleep, S4);
 	
 	y <= S4(15 downto 5);

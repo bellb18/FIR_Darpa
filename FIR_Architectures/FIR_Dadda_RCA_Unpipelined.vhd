@@ -107,6 +107,7 @@ begin
 		generic map(16)
 		port map(S2(2*i), S2(2*i + 1), sleep, S3(i));
 	end generate;
+
 	
 	GenAdd3: for i in 0 to 1 generate
 		Adda: RCA_genm

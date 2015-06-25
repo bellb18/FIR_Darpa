@@ -15,7 +15,7 @@ entity Merged_Unpipelined is
 		 a     : in  dual_rail_logic_vector(9 downto 0);
 		 b     : in  dual_rail_logic_vector(6 downto 0);
 		 sleep : in  std_logic;
-		 p     : out dual_rail_logic_vector(16 downto 0));
+		 p     : out dual_rail_logic_vector(15 downto 0));
 end;
 
 architecture arch of Merged_Unpipelined is
@@ -280,7 +280,7 @@ begin
 		FA5a : FAm
 			port map(sum_array1(5)(i), carry_array1(5)(i), carry_array1(6)(i), sleep, carry_array1(6)(i + 1), p(i));
 	end generate;
-	FA60a : FAm                         --P16
-		port map(carry_array1(4)(16), carry_array1(5)(16), carry_array1(6)(16), sleep, discard_carry, p(16));
+	--FA60a : FAm                         --P16
+		--port map(carry_array1(4)(16), carry_array1(5)(16), carry_array1(6)(16), sleep, discard_carry, p(16));
 
 end arch;

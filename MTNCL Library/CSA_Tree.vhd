@@ -7,7 +7,7 @@ use ieee.std_logic_1164.all;
 -- MTNCL Full Adder
 entity CSA_Tree is
 	port(
-		X   : IN  Xtype;
+		X   : IN  X16type;
 		sleep : in  std_logic;
 		COUT  : OUT dual_rail_logic_vector(15 downto 0);
 		S     : OUT dual_rail_logic_vector(15 downto 0));
@@ -19,7 +19,7 @@ architecture arch of CSA_Tree is
 		generic(width : integer := 16);
 		port(A, B, C : in dual_rail_logic_vector(width - 1 downto 0);
 			sleep : in std_logic;
-			Z0, Z1 : out dual_rail_logic_vector(width - 1 downto 0));
+			Cout, S : out dual_rail_logic_vector(width - 1 downto 0));
 	end component;
 	
 	type XarrayType is array(natural range <>) of dual_rail_logic_vector(15 downto 0);

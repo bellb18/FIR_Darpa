@@ -23,7 +23,7 @@ architecture arch of FIR_Dadda_CSA_Tree_Unpipelined is
 	
 	component CSA_Tree is
 	port(
-		X   : IN  Xtype;
+		X   : IN  X16type;
 		sleep : in  std_logic;
 		COUT  : OUT dual_rail_logic_vector(15 downto 0);
 		S     : OUT dual_rail_logic_vector(15 downto 0));
@@ -62,8 +62,8 @@ architecture arch of FIR_Dadda_CSA_Tree_Unpipelined is
 	
 	signal Xarray : Xtype;
 	signal karray, Sarray : Ktype;
-	signal S1: Xtype;
-	signal S2_Sums, S2_Cout, S3: dual_rail_logic_vector(15 downto 0);
+	signal S1: X16type;
+	signal S2a, S2b, S3: dual_rail_logic_vector(15 downto 0);
 	signal ko_temp: std_logic;
 
 begin
@@ -98,11 +98,11 @@ begin
 	end generate;
 	
 	Tree : CSA_Tree
-		port map(S1, sleep, S2_Cout, S2_Sums);
+		port map(S1, sleep, S2a, S2b);
 	
 	FinalAdd: RCA_genm 
 		generic map(16)
-		port map(S2_Cout, S2_Sums, sleep, S3);
+		port map(S2a, S2b, sleep, S3);
 	
 	y <= S3(15 downto 5);
 	

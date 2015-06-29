@@ -2,6 +2,9 @@ Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 use work.FIR_pack.all;
+
+-- Unfinished, not sure if worth creating another CSA tree since CSA_Tree takes in X16Type
+-- and there are only 8 arrays to add in the CSA tree because of partially merged logic
 entity FIR_Partially_Merged_CSA_Tree_Unpipelined is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
 		 c     : in  Ctype;
@@ -35,11 +38,12 @@ architecture arch of FIR_Partially_Merged_CSA_Tree_Unpipelined is
 
 	component CSA_Tree is
 	port(
-		X   : IN  Xtype;
+		X   : IN  X16type;
 		sleep : in  std_logic;
 		COUT  : OUT dual_rail_logic_vector(15 downto 0);
 		S     : OUT dual_rail_logic_vector(15 downto 0));
 	end component;
+
 	
 
 	component ShiftRegMTNCL is
@@ -65,8 +69,8 @@ architecture arch of FIR_Partially_Merged_CSA_Tree_Unpipelined is
 	
 	signal Xarray : Xtype;
 	signal karray, Sarray : Ktype;
-	signal S1: Xtype;
-	signal S2_Sums, S2_Cout, S3: dual_rail_logic_vector(15 downto 0);
+	signal S1: X16type;
+	signal S2a, S2b, S3: dual_rail_logic_vector(15 downto 0);
 	signal ko_temp: std_logic;
 
 begin
@@ -95,17 +99,18 @@ begin
 			);
 	end generate;
 	
+	-- Would currently only fill S1(0-7) and leave S1(8-15) empty
 	GenMult: for i in 0 to 7 generate 
 		Multa: Merged_Unpipelined
 			port map(Xarray(2*i), c(2*i), Xarray(2*i + 1), c(2*i + 1), sleep, S1(i));
 	end generate;
 	
 	Tree : CSA_Tree
-		port map(S1, sleep, S2_Cout, S2_Sums);
+		port map(S1, sleep, S2a, S2b);
 	
 	FinalAdd: RCA_genm
 		generic map(16) 
-		port map(S2_Cout, S2_Sums, sleep, S3);
+		port map(S2a, S2b, sleep, S3);
 	
 	y <= S3(15 downto 5);
 	

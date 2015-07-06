@@ -17,17 +17,19 @@ architecture arch of tb_CLA_add_16m is
 
 	signal sleep : std_logic;
 
-	component CLA_16m is
+	component RCA_genm is
+	generic(width : integer := 16);
 	port(
-		X    : in  dual_rail_logic_vector(15 downto 0);
-		Y    : in  dual_rail_logic_vector(15 downto 0);
+		X    : in  dual_rail_logic_vector(width - 1 downto 0);
+		Y    : in  dual_rail_logic_vector(width - 1 downto 0);
 		sleep : in  std_logic;
-		S   : out dual_rail_logic_vector(15 downto 0)
+		S   : out dual_rail_logic_vector(width - 1 downto 0)
 	);
 	end component;
 
 begin
-	DUT : CLA_16m
+	DUT : RCA_genm
+		generic map(16)
 		port map(X, Y, sleep, P);
 
 	inputs : process

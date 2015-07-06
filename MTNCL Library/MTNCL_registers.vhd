@@ -285,3 +285,81 @@ begin
 	ko       <= c1;
 
 end arch;
+
+----------------------------------------------------------- 
+--Pattern-delay shift-register 2 in MTNCL
+----------------------------------------------------------- 
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.ncl_signals.all;
+use work.functions.all;
+
+entity ShiftRegMTNCL2 is
+	generic(width : in integer    := 4;
+		    value : in bit_vector := "0110");
+	port(wrapin   : in  dual_rail_logic_vector(width - 1 downto 0);
+		 ki       : in  std_logic;
+		 rst      : in  std_logic;
+		 sleep    : in  std_logic;
+		 wrapout  : out dual_rail_logic_vector(width - 1 downto 0);
+		 sleepout : out std_logic;
+		 ko       : out std_logic);
+end ShiftRegMTNCL2;
+
+architecture arch of ShiftRegMTNCL2 is
+	component genregrstm is
+		generic(width : in integer    := 4;
+			    dn    : in bit        := '1';
+			    value : in bit_vector := "0110");
+		port(a     : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 rst   : in  std_logic;
+			 sleep : in  std_logic;
+			 z     : out dual_rail_logic_vector(width - 1 downto 0));
+	end component;
+
+	component compm is
+		generic(width : in integer := 4);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 ki, rst, sleep : in  std_logic;
+			 ko             : OUT std_logic);
+	end component;
+
+	component compdm is
+		generic(width : in integer := 4);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 ki, rst, sleep : in  std_logic;
+			 ko             : OUT std_logic);
+	end component;
+
+	signal wrap, out1, out2 : dual_rail_logic_vector(width - 1 downto 0);
+	signal c1, c2, c3    : std_logic;
+
+begin
+	Gregdata : genregrstm
+		generic map(width, '1', value)  ----reset to DATA
+		port map(wrapin, rst, c1, out1);
+	Gcompnull : compm                   -----reset to request for NULL
+		generic map(width)
+		port map(wrapin, c2, rst, sleep, c1);
+
+	Gregnull : genregrstm
+		generic map(width, '0', value)  --reset to NULL        
+		port map(out1, rst, c2, out2);
+	Gcompdata : compdm
+		generic map(width)
+		port map(out1, c3, rst, c1, c2); --reset to requrest for DATA
+		
+	Gregnullb : genregrstm
+		generic map(width, '0', value)  --reset to NULL        
+		port map(out2, rst, c3, wrap);
+	Gcompdatab : compdm
+		generic map(width)
+		port map(out2, ki, rst, c2, c3); --reset to requrest for DATA
+
+	wrapout <= wrap;
+
+	sleepout <= c3;
+	ko       <= c1;
+
+end arch;

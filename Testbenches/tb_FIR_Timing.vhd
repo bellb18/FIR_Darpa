@@ -17,7 +17,7 @@ architecture arch of tb_FIR_Timing_Unpipelined is
 	signal Y                            : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 
-	component FIR_Dadda_CSA_Tree_Unpipelined is
+	component FIR_Merged_RCA_2Stage is
 		port(X        : in  dual_rail_logic_vector(9 downto 0);
 			 C        : in  CType;
 			 ki       : in  std_logic;
@@ -29,7 +29,7 @@ architecture arch of tb_FIR_Timing_Unpipelined is
 	end component;
 
 begin
-	CUT : FIR_Dadda_CSA_Tree_Unpipelined
+	CUT : FIR_Merged_RCA_2Stage
 		port map(X, C, ki, rst, sleep, ko, sleepout, Y);
 
 	inputs : process
@@ -97,11 +97,6 @@ begin
 				X(i).rail0 <= '0';
 			end loop;
 			wait until ko = '1';
-		end loop;
-
-		for i in 0 to 9 loop
-			X(i).rail1 <= '1';
-			X(i).rail0 <= '0';
 		end loop;
 		wait;
 

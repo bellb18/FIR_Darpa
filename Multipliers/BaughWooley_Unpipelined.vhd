@@ -3,14 +3,14 @@ use ieee.std_logic_1164.all;
 use work.ncl_signals.all;
 
 
-entity BaughWooleyMult is
+entity BaughWooley_Unpipelined is
 	port(x             : in  dual_rail_logic_vector(9 downto 0);
 		 y             : in  dual_rail_logic_vector(6 downto 0);
 		 sleep 		   : in  std_logic;
 		 p        : out dual_rail_logic_vector(15 downto 0));
 end entity;
 
-architecture arch_BaughWooleyMult_NonPipe of BaughWooleyMult is
+architecture arch_BaughWooleyMult_NonPipe of BaughWooley_Unpipelined is
 
 	component CSAm is
 		port(
@@ -64,23 +64,6 @@ begin
 	zero.rail1 <= '0';
 	one.rail0 <= '0';
 	one.rail1 <= '1';
-
-	--Rows : for i in 0 to 5 generate
-		--Columns : for j in 0 to 10 generate
-			--firstCol: if j = 0 generate
-				--fCol : CSAm
-					--port map(X(j), Y(i), zero, zero, sleep, cout(i), result(j));
-				--end generate;
-			--middleCols : if j < 10 generate
-				--row : CSAm
-					--port map(X(j), Y(i), zero, zero, sleep, cout, sout);
-				--end generate;
-			--lastCol : if j = 10 generate
-				--lCol : CSAm_inv
-					--port map(X(j), Y(i), zero, one, sleep, cout, sout);
-				--end generate;
-		--end generate;
-	--end generate;
 	
 	-- CSA rows
 	firstRowfirstCol: CSAm

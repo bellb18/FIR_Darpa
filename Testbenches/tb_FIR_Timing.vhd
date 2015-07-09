@@ -17,7 +17,7 @@ architecture arch of tb_FIR_Timing_Unpipelined is
 	signal Y                            : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 
-	component FIR_Merged_RCA_2Stage is
+	component FIR_Dadda_RCA_2Stage is
 		port(X        : in  dual_rail_logic_vector(9 downto 0);
 			 C        : in  CType;
 			 ki       : in  std_logic;
@@ -29,7 +29,7 @@ architecture arch of tb_FIR_Timing_Unpipelined is
 	end component;
 
 begin
-	CUT : FIR_Merged_RCA_2Stage
+	CUT : FIR_Dadda_RCA_2Stage
 		port map(X, C, ki, rst, sleep, ko, sleepout, Y);
 
 	inputs : process
@@ -98,6 +98,11 @@ begin
 			end loop;
 			wait until ko = '1';
 		end loop;
+		
+		for i in 0 to 9 loop
+			X(i).rail1 <= '1';
+			X(i).rail0 <= '0';
+		end loop;
 		wait;
 
 	end process;
@@ -111,7 +116,10 @@ begin
 		if is_data(Y) then
 			ki   <= '0';
 			Yout := to_SL(Y);
-			if j >= 15 then
+			if j >= 15  and j < 100 then
+				write(s, string'("j = "));
+				write(s, integer'(j));
+				writeline(OUTPUT, s);
 				Correct := ((Xarray(j) + Xarray(j - 15)) * 0 + (Xarray(j - 1) + Xarray(j - 14)) * 0 + (Xarray(j - 2) + Xarray(j - 13)) * 1 - 2 * (Xarray(j - 3) + Xarray(j - 12)) + (Xarray(j - 4) + Xarray(j - 11)) * 2 + (Xarray(j - 5) + Xarray(j - 10)) * 0 - 7 * (Xarray(j
 								- 6) + Xarray(j - 9)) + (Xarray(j - 7) + Xarray(j - 8)) * 38) / 32;
 				if (abs (Correct - to_integer(signed(Yout))) >= 2) then

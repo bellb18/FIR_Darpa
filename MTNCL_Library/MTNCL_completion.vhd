@@ -172,6 +172,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.ncl_signals.all;
 use work.MTNCL_gates.all;
+use work.Sync_gates.all;
 entity compm is
   generic(width: in integer := 4);
    port(a: IN dual_rail_logic_vector(width-1 downto 0);
@@ -230,7 +231,8 @@ begin
   
   Gfgate: th22n_a
     port map(tko, ki, rst, ttko);
-  	ko <= NOT ttko;
+  INV1: INV_A
+  	port map(ttko, ko);
 
 
 
@@ -243,6 +245,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.MTNCL_gates.all;
 use work.ncl_signals.all;
+use work.Sync_gates.all;
 entity compdm is
   generic(width: in integer := 4);
    port(a: IN dual_rail_logic_vector(width-1 downto 0);
@@ -301,7 +304,8 @@ begin
   
   Gfgate: th22d_a
     port map(tko, ki, rst, ttko);
-    ko <= NOT ttko;
+  INV1: INV_A
+  	port map(ttko, ko);
 
 
 end arch;
@@ -314,6 +318,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.MTNCL_gates.all;
 use work.ncl_signals.all;
+use work.Sync_gates.all;
 entity comp1m is
   generic(width: in integer := 4);
    port(a: IN dual_rail_logic_vector(width-1 downto 0);
@@ -372,7 +377,8 @@ begin
   
   Gfgate: th33n_a
     port map(tko, ki, kin, rst, ttko);
-    ko <= NOT ttko;
+    INV1: INV_A
+  	port map(ttko, ko);
 
 
 
@@ -383,6 +389,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.MTNCL_gates.all;
 use work.ncl_signals.all;
+use work.Sync_gates.all;
 entity comp1dm is
   generic(width: in integer := 4);
    port(a: IN dual_rail_logic_vector(width-1 downto 0);
@@ -441,7 +448,8 @@ begin
   
   Gfgate: th33d_a
     port map(tko, ki, kin, rst, ttko);
-    ko <= NOT ttko;
+  INV1: INV_A
+  	port map(ttko, ko);
 
 
 

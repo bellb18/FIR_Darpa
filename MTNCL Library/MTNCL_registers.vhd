@@ -332,34 +332,121 @@ architecture arch of ShiftRegMTNCL2 is
 			 ko             : OUT std_logic);
 	end component;
 
-	signal wrap, out1, out2 : dual_rail_logic_vector(width - 1 downto 0);
-	signal c1, c2, c3    : std_logic;
+	signal wrap, out1, out2, out3 : dual_rail_logic_vector(width - 1 downto 0);
+	signal c1, c2, c3, c4    : std_logic;
+
+begin
+			
+	Gregnulla : genregrstm
+		generic map(width, '0', value)  --reset to NULL        
+		port map(wrapin, rst, c1, out1);
+	Gcompdataa : compdm
+		generic map(width)
+		port map(wrapin, c2, rst, sleep, c1); --reset to requrest for DATA
+			
+	Gregnullb : genregrstm
+		generic map(width, '0', value)  --reset to NULL        
+		port map(out1, rst, c2, out2);
+	Gcompdatab : compdm
+		generic map(width)
+		port map(out1, c3, rst, c1, c2); --reset to requrest for DATA
+	
+	Gregdatac : genregrstm
+		generic map(width, '1', value)  ----reset to DATA
+		port map(out2, rst, c3, out3);
+	Gcompnullc : compm                   -----reset to request for NULL
+		generic map(width)
+		port map(out2, c4, rst, c2, c3);
+
+	Gregnulld : genregrstm
+		generic map(width, '0', value)  --reset to NULL        
+		port map(out3, rst, c4, wrap);
+	Gcompdatad : compdm
+		generic map(width)
+		port map(out3, ki, rst, c3, c4); --reset to requrest for DATA
+
+	wrapout <= wrap;
+
+	sleepout <= c3;
+	ko       <= c1;
+
+end arch;
+
+----------------------------------------------------------- 
+--Pattern-delay shift-register 3 in MTNCL
+----------------------------------------------------------- 
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.ncl_signals.all;
+use work.functions.all;
+use work.MTNCL_gates.all;
+
+entity ShiftRegMTNCL3 is
+	generic(width : in integer    := 4;
+		    value : in bit_vector := "0110");
+	port(wrapin   : in  dual_rail_logic_vector(width - 1 downto 0);
+		 ki       : in  std_logic;
+		 rst      : in  std_logic;
+		 sleep    : in  std_logic;
+		 wrapout  : out dual_rail_logic_vector(width - 1 downto 0);
+		 sleepout : out std_logic;
+		 ko       : out std_logic);
+end ShiftRegMTNCL3;
+
+architecture arch of ShiftRegMTNCL3 is
+	component genregrstm is
+		generic(width : in integer    := 4;
+			    dn    : in bit        := '1';
+			    value : in bit_vector := "0110");
+		port(a     : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 rst   : in  std_logic;
+			 sleep : in  std_logic;
+			 z     : out dual_rail_logic_vector(width - 1 downto 0));
+	end component;
+
+	component compm is
+		generic(width : in integer := 4);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 ki, rst, sleep : in  std_logic;
+			 ko             : OUT std_logic);
+	end component;
+
+	component compdm is
+		generic(width : in integer := 4);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 ki, rst, sleep : in  std_logic;
+			 ko             : OUT std_logic);
+	end component;
+	
+	component INV_A is
+	port(a : in  std_logic;
+		 z : out std_logic);
+	end component;
+
+	signal wrap, r12 : dual_rail_logic_vector(width - 1 downto 0);
+	signal c1, c2, ki_not    : std_logic;
 
 begin
 	Gregdata : genregrstm
 		generic map(width, '1', value)  ----reset to DATA
-		port map(wrapin, rst, c1, out1);
+		port map(wrapin, rst, ki, r12);
 	Gcompnull : compm                   -----reset to request for NULL
 		generic map(width)
 		port map(wrapin, c2, rst, sleep, c1);
 
 	Gregnull : genregrstm
 		generic map(width, '0', value)  --reset to NULL        
-		port map(out1, rst, c2, out2);
+		port map(r12, rst, ki_not, wrap);
 	Gcompdata : compdm
 		generic map(width)
-		port map(out1, c3, rst, c1, c2); --reset to requrest for DATA
-		
-	Gregnullb : genregrstm
-		generic map(width, '0', value)  --reset to NULL        
-		port map(out2, rst, c3, wrap);
-	Gcompdatab : compdm
-		generic map(width)
-		port map(out2, ki, rst, c2, c3); --reset to requrest for DATA
+		port map(r12, ki, rst, c1, c2); --reset to requrest for DATA
 
+	--invm1: INV_A
+		--port map(ki, ki_not);
+	ki_not <= not ki;
 	wrapout <= wrap;
-
-	sleepout <= c3;
+	sleepout <= c2;
 	ko       <= c1;
 
 end arch;

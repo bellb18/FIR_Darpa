@@ -154,7 +154,7 @@ architecture arch of FIR_Merged_RCA_2Stage is
 	end component;
 	
 
-	component ShiftRegMTNCL is
+	component ShiftRegMTNCL3 is
 		generic(width : in integer    := 4;
 			    value : in bit_vector := "0110");
 		port(wrapin   : in  dual_rail_logic_vector(width - 1 downto 0);
@@ -199,7 +199,7 @@ architecture arch of FIR_Merged_RCA_2Stage is
 	signal Xarray         : Xtype;
 	signal karray, Sarray : Ktype;
 	signal sleep_shift : std_logic;
-	signal ko_temp, ko_pipe1, ko_OutReg        : std_logic;
+	signal ko_temp, ko_Pipe1, ko_OutReg        : std_logic;
 	
 	-- PP generation
 	signal PP_Z0, PP_Z15            	 : dual_rail_logic_vector(15 downto 0);
@@ -266,23 +266,23 @@ architecture arch of FIR_Merged_RCA_2Stage is
 	 
 begin
 	Xarray(0)  <= x;
-	karray(15) <= ko_pipe1;
+	karray(15) <= ko_Pipe1;
 	Sarray(0)  <= sleep;
 	sleep_shift   <= Sarray(15);
 	ko_temp    <= karray(0);
 	ko         <= ko_temp;
 
 	GenShiftReg : for i in 1 to 15 generate
-		Rega : ShiftRegMTNCL
+		Rega : ShiftRegMTNCL3
 			generic map(
 				width => 10,
 				value => "0000000000"
 			)
 			port map(
 				wrapin   => Xarray(i - 1),
-				ki       => karray(i),
+				ki       => karray(15),
 				rst      => rst,
-				sleep    => Sarray(i - 1),
+				sleep    => Sarray(0),
 				wrapout  => Xarray(i),
 				sleepout => Sarray(i),
 				ko       => karray(i - 1)
@@ -355,13 +355,13 @@ begin
 	
 	-- Pipeline Register
 	RCA_XY <= RCA_X & RCA_Y;
-	Comp1a: compm
+	Comp2a: compm
 		generic map(32)
 		port map(RCA_XY, ko_OutReg, rst, sleep_shift, ko_Pipe1);
-	Pipe1a: genregm
+	Pipe2a: genregm
 		generic map(16)
 		port map(RCA_X, ko_Pipe1, RCA_X_Reg);
-	Pipe1b: genregm
+	Pipe2b: genregm
 		generic map(16)
 		port map(RCA_Y, ko_Pipe1, RCA_Y_Reg);
 	        

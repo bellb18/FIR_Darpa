@@ -43,6 +43,13 @@ architecture arch of FIR_BaughWooley_RCA_Unpipelined is
 			 ko       : out std_logic);
 	end component;
 	
+	component genregm is
+	generic(width : in integer :=4);
+	port(a		: IN dual_rail_logic_vector(width - 1 downto 0);
+		 sleep	: IN std_logic;
+		 z		: out dual_rail_logic_vector(width - 1 downto 0));
+	end component;	
+	
 	component compm is
     generic(width: in integer := 4);
     port(a: IN dual_rail_logic_vector(width-1 downto 0);
@@ -63,14 +70,16 @@ architecture arch of FIR_BaughWooley_RCA_Unpipelined is
 	signal S3: Stage3;
 	signal S4: Stage4;
 	signal S5: dual_rail_logic_vector(15 downto 0);
-	signal ko_temp: std_logic;
+	signal ko_temp, ko_OutReg: std_logic;
+	signal S5_Z_Reg: dual_rail_logic_vector(15 downto 0);
+	signal sleep_shift: std_logic;
 
 begin
 
 	Xarray(0) <= x;
-	karray(15) <= ki;
+	karray(15) <= ko_OutReg;
 	Sarray(0) <= sleep;
-	sleepout <= Sarray(15);
+	sleep_shift <= Sarray(15);
 	ko_temp <= karray(0);
 	ko <= ko_temp;
 	
@@ -93,32 +102,40 @@ begin
 	
 	GenMult: for i in 0 to 15 generate 
 		Multa: BaughWooleyMult
-			port map(Xarray(i), c(i), sleep, S1(i));
+			port map(Xarray(i), c(i), sleep_shift, S1(i));
 	end generate;
 	
 	GenAdd1: for i in 0 to 7 generate 
 		Adda: RCA_genm
 		generic map(16)
-		port map(S1(2*i), S1(2*i + 1), sleep, S2(i));
+		port map(S1(2*i), S1(2*i + 1), sleep_shift, S2(i));
 	end generate;
 	
 	GenAdd2: for i in 0 to 3 generate
 		Adda: RCA_genm
 		generic map(16)
-		port map(S2(2*i), S2(2*i + 1), sleep, S3(i));
+		port map(S2(2*i), S2(2*i + 1), sleep_shift, S3(i));
 	end generate;
 	
 	GenAdd3: for i in 0 to 1 generate
 		Adda: RCA_genm
 		generic map(16)
-		port map(S3(2*i), S3(2*i + 1), sleep, S4(i));
+		port map(S3(2*i), S3(2*i + 1), sleep_shift, S4(i));
 	end generate;
 	
 	FinalAdd: RCA_genm 
 		generic map(16)
-		port map(S4(0), S4(1), sleep, S5);
-	
-	y <= S5(15 downto 5);
-	
+		port map(S4(0), S4(1), sleep_shift, S5);
+
+	--Output Register
+	CompOut: compm
+		generic map(16)
+		port map(S5, ki, rst, sleep_shift, ko_OutReg);
+	OutReg: genregm
+		generic map(16)
+		port map(S5, ko_OutReg, S5_Z_Reg);
+			
+	y <= S5_Z_Reg(15 downto 5);
+	sleepout <= ko_OutReg;
 	
 end arch;

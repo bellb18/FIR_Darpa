@@ -41,6 +41,13 @@ architecture arch of FIR_BaughWooley_CLA_Unpipelined is
 			 sleepout : out std_logic;
 			 ko       : out std_logic);
 	end component;
+
+	component genregm is
+	generic(width : in integer :=4);
+	port(a		: IN dual_rail_logic_vector(width - 1 downto 0);
+		 sleep	: IN std_logic;
+		 z		: out dual_rail_logic_vector(width - 1 downto 0));
+	end component;
 	
 	component compm is
     generic(width: in integer := 4);
@@ -62,7 +69,9 @@ architecture arch of FIR_BaughWooley_CLA_Unpipelined is
 	signal S3: Stage3;
 	signal S4: Stage4;
 	signal S5: dual_rail_logic_vector(15 downto 0);
-	signal ko_temp: std_logic;
+	signal ko_temp, ko_OutReg: std_logic;
+	signal S5_Z_Reg: dual_rail_logic_vector(15 downto 0);
+
 
 begin
 
@@ -112,8 +121,18 @@ begin
 	
 	FinalAdd: CLA_16m 
 		port map(S4(0), S4(1), sleep, S5);
+
+
+	--Output Register
+	CompOut: compm
+		generic map(16)
+		port map(S5, ki, rst, sleep, ko_OutReg);
+	OutReg: genregm
+		generic map(16)
+		port map(S5, ko_OutReg, S5_Z_Reg);
+
 	
-	y <= S5(15 downto 5);
-	
+	y <= S5_Z_Reg(15 downto 5);
+	sleepout <= ko_OutReg;
 	
 end arch;

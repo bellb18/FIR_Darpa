@@ -166,6 +166,13 @@ architecture arch of FIR_Merged_RCA_Unpipelined is
 			 ko       : out std_logic);
 	end component;
 
+	component genregm is
+	generic(width : in integer :=4);
+	port(a		: IN dual_rail_logic_vector(width - 1 downto 0);
+		 sleep	: IN std_logic;
+		 z		: out dual_rail_logic_vector(width - 1 downto 0));
+	end component;
+
 	component compm is
 		generic(width : in integer := 4);
 		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
@@ -195,7 +202,7 @@ architecture arch of FIR_Merged_RCA_Unpipelined is
 	--signal S2             : Stage2;
 	--signal S3             : Stage3;
 	--signal S4             : dual_rail_logic_vector(19 downto 0);
-	signal ko_temp        : std_logic;
+	signal ko_temp, ko_OutReg        : std_logic;
 	
 	-- PP generation
 	signal PP_Z0, PP_Z15            	 : dual_rail_logic_vector(15 downto 0);
@@ -257,11 +264,11 @@ architecture arch of FIR_Merged_RCA_Unpipelined is
 	  S10_Z13, S10_Z14, S10_Z15 : dual_rail_logic_vector(1 downto 0);
 	  
 	 signal RCA_X, RCA_Y, RCA_Z : dual_rail_logic_vector(15 downto 0);
-	 
+	 signal RCA_Z_Reg : dual_rail_logic_vector(15 downto 0);
 	 
 begin
 	Xarray(0)  <= x;
-	karray(15) <= ki;
+	karray(15) <= ko_OutReg;
 	Sarray(0)  <= sleep;
 	sleepout   <= Sarray(15);
 	ko_temp    <= karray(0);
@@ -352,5 +359,17 @@ begin
 		generic map(16)
 		port map(RCA_X, RCA_Y, sleep, RCA_Z);
 
-	y <= RCA_Z(15 downto 5);
+
+	--Output Register
+	CompOut: compm
+		generic map(16)
+		port map(RCA_Z, ki, rst, sleep, ko_OutReg);
+	OutReg: genregm
+		generic map(16)
+		port map(RCA_Z, ko_OutReg, RCA_Z_Reg);
+
+
+	y <= RCA_Z_Reg(15 downto 5);
+	sleepout <= ko_OutReg;
+	
 end arch;

@@ -45,6 +45,13 @@ architecture arch of FIR_Partially_Merged_RCA_Unpipelined is
 			 sleepout : out std_logic;
 			 ko       : out std_logic);
 	end component;
+
+	component genregm is
+	generic(width : in integer :=4);
+	port(a		: IN dual_rail_logic_vector(width - 1 downto 0);
+		 sleep	: IN std_logic;
+		 z		: out dual_rail_logic_vector(width - 1 downto 0));
+	end component;
 	
 	component compm is
     generic(width: in integer := 4);
@@ -64,7 +71,8 @@ architecture arch of FIR_Partially_Merged_RCA_Unpipelined is
 	signal S2: Stage2;
 	signal S3: Stage3;
 	signal S4: dual_rail_logic_vector(15 downto 0);
-	signal ko_temp: std_logic;
+	signal ko_temp, ko_OutReg: std_logic;
+	signal S4_Z_Reg: dual_rail_logic_vector(15 downto 0);
 
 begin
 
@@ -113,7 +121,15 @@ begin
 		generic map(16) 
 		port map(S3(0), S3(1), sleep, S4);
 	
-	y <= S4(15 downto 5);
+	--Output Register
+	CompOut: compm
+		generic map(16)
+		port map(S4, ki, rst, sleep, ko_OutReg);
+	OutReg: genregm
+		generic map(16)
+		port map(S4, ko_OutReg, S4_Z_Reg);	
 	
+	y <= S4_Z_Reg(15 downto 5);
+	sleepout <= ko_OutReg;
 	
 end arch;

@@ -154,7 +154,7 @@ architecture arch of FIR_Merged_RCA_2Stage is
 	end component;
 	
 
-	component ShiftRegMTNCL3 is
+	component ShiftRegMTNCL is
 		generic(width : in integer    := 4;
 			    value : in bit_vector := "0110");
 		port(wrapin   : in  dual_rail_logic_vector(width - 1 downto 0);
@@ -273,7 +273,7 @@ begin
 	ko         <= ko_temp;
 
 	GenShiftReg : for i in 1 to 15 generate
-		Rega : ShiftRegMTNCL3
+		Rega : ShiftRegMTNCL
 			generic map(
 				width => 10,
 				value => "0000000000"

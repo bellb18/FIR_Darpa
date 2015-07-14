@@ -203,6 +203,7 @@ architecture arch of FIR_Merged_RCA_Unpipelined is
 	--signal S3             : Stage3;
 	--signal S4             : dual_rail_logic_vector(19 downto 0);
 	signal ko_temp, ko_OutReg        : std_logic;
+	signal sleep_shift: std_logic;
 	
 	-- PP generation
 	signal PP_Z0, PP_Z15            	 : dual_rail_logic_vector(15 downto 0);
@@ -270,7 +271,7 @@ begin
 	Xarray(0)  <= x;
 	karray(15) <= ko_OutReg;
 	Sarray(0)  <= sleep;
-	sleepout   <= Sarray(15);
+	sleep_shift   <= Sarray(15);
 	ko_temp    <= karray(0);
 	ko         <= ko_temp;
 
@@ -292,62 +293,62 @@ begin
 	end generate;
 	
 	PP : Merged_PPGen
-		port map(Xarray, c, sleep, PP_Z0, PP_Z1, PP_Z2, PP_Z3, PP_Z4, PP_Z5, PP_Z6, PP_Z7, PP_Z8, PP_Z9, PP_Z10, PP_Z11, 
+		port map(Xarray, c, sleep_shift, PP_Z0, PP_Z1, PP_Z2, PP_Z3, PP_Z4, PP_Z5, PP_Z6, PP_Z7, PP_Z8, PP_Z9, PP_Z10, PP_Z11, 
 			PP_Z12, PP_Z13, PP_Z14, PP_Z15);
 	
 	Stage0 : Merged_S0
 		port map(PP_Z0, PP_Z1, PP_Z2, PP_Z3, PP_Z4, PP_Z5, PP_Z6, PP_Z7, PP_Z8, PP_Z9, PP_Z10, PP_Z11, 
-			PP_Z12, PP_Z13, PP_Z14, PP_Z15, sleep, S0_Z0, S0_Z1, S0_Z2, S0_Z3, S0_Z4, S0_Z5, S0_Z6, S0_Z7, S0_Z8, S0_Z9,
+			PP_Z12, PP_Z13, PP_Z14, PP_Z15, sleep_shift, S0_Z0, S0_Z1, S0_Z2, S0_Z3, S0_Z4, S0_Z5, S0_Z6, S0_Z7, S0_Z8, S0_Z9,
 			S0_Z10, S0_Z11, S0_Z12, S0_Z13, S0_Z14, S0_Z15);
 			
 	Stage1 : Merged_S1
 		port map(S0_Z0, S0_Z1, S0_Z2, S0_Z3, S0_Z4, S0_Z5, S0_Z6, S0_Z7, S0_Z8, S0_Z9, S0_Z10, S0_Z11, S0_Z12,
-			S0_Z13, S0_Z14, S0_Z15, sleep, S1_Z0, S1_Z1, S1_Z2, S1_Z3, S1_Z4, S1_Z5, S1_Z6, S1_Z7, S1_Z8, S1_Z9,
+			S0_Z13, S0_Z14, S0_Z15, sleep_shift, S1_Z0, S1_Z1, S1_Z2, S1_Z3, S1_Z4, S1_Z5, S1_Z6, S1_Z7, S1_Z8, S1_Z9,
 			S1_Z10, S1_Z11, S1_Z12, S1_Z13, S1_Z14, S1_Z15);
 			
 	Stage2: Merged_S2
 		port map(S1_Z0, S1_Z1, S1_Z2, S1_Z3, S1_Z4, S1_Z5, S1_Z6, S1_Z7, S1_Z8, S1_Z9, S1_Z10, S1_Z11, S1_Z12, 
-			S1_Z13, S1_Z14, S1_Z15, sleep, S2_Z0, S2_Z1, S2_Z2, S2_Z3, S2_Z4, S2_Z5, S2_Z6, S2_Z7, S2_Z8, S2_Z9, 
+			S1_Z13, S1_Z14, S1_Z15, sleep_shift, S2_Z0, S2_Z1, S2_Z2, S2_Z3, S2_Z4, S2_Z5, S2_Z6, S2_Z7, S2_Z8, S2_Z9, 
 			S2_Z10, S2_Z11, S2_Z12, S2_Z13, S2_Z14, S2_Z15);
 			
 	Stage3: Merged_S3
 		port map(S2_Z0, S2_Z1, S2_Z2, S2_Z3, S2_Z4, S2_Z5, S2_Z6, S2_Z7, S2_Z8, S2_Z9, S2_Z10, S2_Z11, S2_Z12, S2_Z13,
-			S2_Z14, S2_Z15, sleep, S3_Z0, S3_Z1, S3_Z2, S3_Z3, S3_Z4, S3_Z5, S3_Z6, S3_Z7, S3_Z8, S3_Z9, S3_Z10, S3_Z11,
+			S2_Z14, S2_Z15, sleep_shift, S3_Z0, S3_Z1, S3_Z2, S3_Z3, S3_Z4, S3_Z5, S3_Z6, S3_Z7, S3_Z8, S3_Z9, S3_Z10, S3_Z11,
 		    S3_Z12, S3_Z13, S3_Z14, S3_Z15);
 		    
 	Stage4: Merged_S4
 		port map(S3_Z0, S3_Z1, S3_Z2, S3_Z3, S3_Z4, S3_Z5, S3_Z6, S3_Z7, S3_Z8, S3_Z9, S3_Z10, S3_Z11,
-		    S3_Z12, S3_Z13, S3_Z14, S3_Z15, sleep, S4_Z0, S4_Z1, S4_Z2, S4_Z3, S4_Z4, S4_Z5, S4_Z6, S4_Z7, S4_Z8, S4_Z9,
+		    S3_Z12, S3_Z13, S3_Z14, S3_Z15, sleep_shift, S4_Z0, S4_Z1, S4_Z2, S4_Z3, S4_Z4, S4_Z5, S4_Z6, S4_Z7, S4_Z8, S4_Z9,
 		    S4_Z10, S4_Z11, S4_Z12, S4_Z13, S4_Z14, S4_Z15);
 		    
 	Stage5: Merged_S5
 		port map(S4_Z0, S4_Z1, S4_Z2, S4_Z3, S4_Z4, S4_Z5, S4_Z6, S4_Z7, S4_Z8, S4_Z9, S4_Z10, S4_Z11, S4_Z12, 
-			S4_Z13, S4_Z14, S4_Z15, sleep, S5_Z0, S5_Z1, S5_Z2, S5_Z3, S5_Z4, S5_Z5, S5_Z6, S5_Z7, S5_Z8, S5_Z9, S5_Z10,
+			S4_Z13, S4_Z14, S4_Z15, sleep_shift, S5_Z0, S5_Z1, S5_Z2, S5_Z3, S5_Z4, S5_Z5, S5_Z6, S5_Z7, S5_Z8, S5_Z9, S5_Z10,
 			S5_Z11, S5_Z12, S5_Z13, S5_Z14, S5_Z15);
 			
 	Stage6: Merged_S6
 		port map(S5_Z0, S5_Z1, S5_Z2, S5_Z3, S5_Z4, S5_Z5, S5_Z6, S5_Z7, S5_Z8, S5_Z9, S5_Z10, S5_Z11, S5_Z12, S5_Z13,
-			S5_Z14, S5_Z15, sleep, S6_Z0, S6_Z1, S6_Z2, S6_Z3, S6_Z4, S6_Z5, S6_Z6, S6_Z7, S6_Z8, S6_Z9, S6_Z10,
+			S5_Z14, S5_Z15, sleep_shift, S6_Z0, S6_Z1, S6_Z2, S6_Z3, S6_Z4, S6_Z5, S6_Z6, S6_Z7, S6_Z8, S6_Z9, S6_Z10,
 			S6_Z11, S6_Z12, S6_Z13, S6_Z14, S6_Z15);
 	
 	Stage7: Merged_S7
 		port map(S6_Z0, S6_Z1, S6_Z2, S6_Z3, S6_Z4, S6_Z5, S6_Z6, S6_Z7, S6_Z8, S6_Z9, S6_Z10, S6_Z11, S6_Z12, S6_Z13,
-	        S6_Z14, S6_Z15, sleep, S7_Z0, S7_Z1, S7_Z2, S7_Z3, S7_Z4, S7_Z5, S7_Z6, S7_Z7, S7_Z8, S7_Z9, S7_Z10, S7_Z11,
+	        S6_Z14, S6_Z15, sleep_shift, S7_Z0, S7_Z1, S7_Z2, S7_Z3, S7_Z4, S7_Z5, S7_Z6, S7_Z7, S7_Z8, S7_Z9, S7_Z10, S7_Z11,
 	        S7_Z12, S7_Z13, S7_Z14, S7_Z15);
 	  
 	Stage8: Merged_S8
 		port map(S7_Z0, S7_Z1, S7_Z2, S7_Z3, S7_Z4, S7_Z5, S7_Z6, S7_Z7, S7_Z8, S7_Z9, S7_Z10, S7_Z11, S7_Z12, S7_Z13, 
-	        S7_Z14, S7_Z15, sleep, S8_Z0, S8_Z1, S8_Z2, S8_Z3, S8_Z4, S8_Z5, S8_Z6, S8_Z7, S8_Z8, S8_Z9, S8_Z10, S8_Z11,
+	        S7_Z14, S7_Z15, sleep_shift, S8_Z0, S8_Z1, S8_Z2, S8_Z3, S8_Z4, S8_Z5, S8_Z6, S8_Z7, S8_Z8, S8_Z9, S8_Z10, S8_Z11,
 	        S8_Z12, S8_Z13, S8_Z14, S8_Z15);
 	      
 	Stage9: Merged_S9
 		port map(S8_Z0, S8_Z1, S8_Z2, S8_Z3, S8_Z4, S8_Z5, S8_Z6, S8_Z7, S8_Z8, S8_Z9, S8_Z10, S8_Z11, S8_Z12, S8_Z13, 
-	        S8_Z14, S8_Z15, sleep, S9_Z0, S9_Z1, S9_Z2, S9_Z3, S9_Z4, S9_Z5, S9_Z6, S9_Z7, S9_Z8, S9_Z9, S9_Z10, S9_Z11,
+	        S8_Z14, S8_Z15, sleep_shift, S9_Z0, S9_Z1, S9_Z2, S9_Z3, S9_Z4, S9_Z5, S9_Z6, S9_Z7, S9_Z8, S9_Z9, S9_Z10, S9_Z11,
 	        S9_Z12, S9_Z13, S9_Z14, S9_Z15);
 	        
 	Stage10: Merged_S10
 		port map(S9_Z0, S9_Z1, S9_Z2, S9_Z3, S9_Z4, S9_Z5, S9_Z6, S9_Z7, S9_Z8, S9_Z9, S9_Z10, S9_Z11, S9_Z12, S9_Z13,
-	        S9_Z14, S9_Z15, sleep, S10_Z0, S10_Z1, S10_Z2, S10_Z3, S10_Z4, S10_Z5, S10_Z6, S10_Z7, S10_Z8, S10_Z9,
+	        S9_Z14, S9_Z15, sleep_shift, S10_Z0, S10_Z1, S10_Z2, S10_Z3, S10_Z4, S10_Z5, S10_Z6, S10_Z7, S10_Z8, S10_Z9,
 	        S10_Z10, S10_Z11, S10_Z12, S10_Z13, S10_Z14, S10_Z15);
 	        
 	RCA_X <= S10_Z15(0) & S10_Z14(0) & S10_Z13(0) & S10_Z12(0) & S10_Z11(0) & S10_Z10(0) & S10_Z9(0) & S10_Z8(0) & S10_Z7(0)
@@ -357,13 +358,13 @@ begin
 	        
 	RCA: RCA_genm
 		generic map(16)
-		port map(RCA_X, RCA_Y, sleep, RCA_Z);
+		port map(RCA_X, RCA_Y, sleep_shift, RCA_Z);
 
 
 	--Output Register
 	CompOut: compm
 		generic map(16)
-		port map(RCA_Z, ki, rst, sleep, ko_OutReg);
+		port map(RCA_Z, ki, rst, sleep_shift, ko_OutReg);
 	OutReg: genregm
 		generic map(16)
 		port map(RCA_Z, ko_OutReg, RCA_Z_Reg);

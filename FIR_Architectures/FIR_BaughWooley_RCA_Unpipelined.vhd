@@ -14,7 +14,7 @@ entity FIR_BaughWooley_RCA_Unpipelined is
 end;
 
 architecture arch of FIR_BaughWooley_RCA_Unpipelined is
-	component BaughWooleyMult is
+	component BaughWooley_Unpipelined is
 	port(x             : in  dual_rail_logic_vector(9 downto 0);
 		 y             : in  dual_rail_logic_vector(6 downto 0);
 		 sleep 		   : in  std_logic;
@@ -101,7 +101,7 @@ begin
 	end generate;
 	
 	GenMult: for i in 0 to 15 generate 
-		Multa: BaughWooleyMult
+		Multa: BaughWooley_Unpipelined
 			port map(Xarray(i), c(i), sleep_shift, S1(i));
 	end generate;
 	

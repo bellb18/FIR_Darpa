@@ -66,11 +66,11 @@ architecture arch of Merged_Unpipelined_CLA is
 	);
 	end component;
 
-	type Ctype is array (6 downto 0) of dual_rail_logic_vector(16 downto 0);
+	type Ctype2 is array (5 downto 0) of dual_rail_logic_vector(16 downto 0);
 	type InType is array (9 downto 0) of dual_rail_logic_vector(6 downto 0);
 
-	signal carry_array1, carry_array2, sum_array1, sum_array2 : Ctype;
-	signal carry_array3, carry_array4, sum_array3, sum_array4 : Ctype;
+	signal carry_array1, carry_array2, sum_array1, sum_array2 : Ctype2;
+	signal carry_array3, carry_array4, sum_array3, sum_array4 : Ctype2;
 	signal discard_carry                                      : dual_rail_logic;
 	signal temp_input_array1, temp_input_array2               : InType;
 	signal input_array1, input_array2                         : InType;

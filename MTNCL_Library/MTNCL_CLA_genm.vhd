@@ -452,7 +452,7 @@ begin
 		);
 
 	---Middle Stages---
-	GenFA : for i in 1 to 4 - 2 generate
+	GenFA : for i in 1 to 2 generate
 		GFA : FAm
 			port map(
 				CIN   => carry(i),

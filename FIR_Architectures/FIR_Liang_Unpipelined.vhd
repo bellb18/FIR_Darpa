@@ -8,7 +8,7 @@ entity FIR_Liang_Unpipelined is
 			 C        : in  CType;
 			 ki       : in  std_logic;
 			 rst      : in  std_logic;
-			 sleepin    : in  std_logic;
+			 sleep    : in  std_logic;
 			 ko       : out std_logic;
 			 sleepout : out std_logic;
 			 Y        : out dual_rail_logic_vector(10 downto 0));
@@ -98,11 +98,11 @@ begin
 	end generate GenMult;
 	
 	Mult0: Dadda_Pipelined
-	port map(X, c(0), koa(1), sleepin, rst, sleepa(1), kox(0), A(1));
+	port map(X, c(0), koa(1), sleep, rst, sleepa(1), kox(0), A(1));
 	
 	ShiftReg0: ShiftRegMTNCL
 	generic map(10, "0000000000")
-	port map(X, koxr(1), rst, sleepin, Xin(1), sleepr(1), kor(0));
+	port map(X, koxr(1), rst, sleep, Xin(1), sleepr(1), kor(0));
 	
 	GenReg: for i in 13 downto 1 generate
 	ShiftReg: ShiftRegMTNCL

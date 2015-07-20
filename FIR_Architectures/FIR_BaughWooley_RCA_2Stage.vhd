@@ -8,7 +8,7 @@ entity FIR_BaughWooley_RCA_2Stage is
 		 c     : in  Ctype;
 		 ki    : in  std_logic;
 		 rst   : in  std_logic;
-		 sleepin : in  std_logic;
+		 sleep : in  std_logic;
 		 ko    : out std_logic;
 		 sleepout : out std_logic;
 		 y     : out dual_rail_logic_vector(10 downto 0));
@@ -78,7 +78,7 @@ begin
 
 	Xarray(0) <= x;
 	karray(15) <= ko_Pipe1;
-	Sarray(0) <= sleepin;
+	Sarray(0) <= sleep;
 	sleep_shift <= Sarray(15);
 	ko_temp <= karray(0);
 	ko <= ko_temp;

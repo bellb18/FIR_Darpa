@@ -4,14 +4,14 @@ use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 use work.FIR_pack.all;
 entity FIR_Liang_Unpipelined is
-		port(X        : in  dual_rail_logic_vector(9 downto 0);
-			 C        : in  CType;
+		port(x        : in  dual_rail_logic_vector(9 downto 0);
+			 c        : in  CType;
 			 ki       : in  std_logic;
 			 rst      : in  std_logic;
 			 sleep    : in  std_logic;
 			 ko       : out std_logic;
 			 sleepout : out std_logic;
-			 Y        : out dual_rail_logic_vector(10 downto 0));
+			 y        : out dual_rail_logic_vector(10 downto 0));
 end;
 
 architecture arch of FIR_Liang_Unpipelined is
@@ -68,7 +68,7 @@ architecture arch of FIR_Liang_Unpipelined is
 
 
 type Ytype is array (1 to 15) of DUAL_RAIL_LOGIC_VECTOR(15 downto 0);
-signal Xin: Xtype;
+signal Xarray: Xtype;
 signal A: Ytype;
 signal B: Ytype;
 signal sleepax: std_logic_vector(15 downto 1);
@@ -94,7 +94,7 @@ begin
 	
 	GenMult: for i in 15 downto 1 generate
 	Mult: Dadda_Pipelined
-	port map(Xin(i), c(i), koa(i), sleepr(i), rst, sleepx(i), kox(i), B(i));
+	port map(Xarray(i), c(i), koa(i), sleepr(i), rst, sleepx(i), kox(i), B(i));
 	end generate GenMult;
 	
 	Mult0: Dadda_Pipelined
@@ -102,17 +102,17 @@ begin
 	
 	ShiftReg0: ShiftRegMTNCL
 	generic map(10, "0000000000")
-	port map(X, koxr(1), rst, sleep, Xin(1), sleepr(1), kor(0));
+	port map(x, koxr(1), rst, sleep, Xarray(1), sleepr(1), kor(0));
 	
 	GenReg: for i in 13 downto 1 generate
 	ShiftReg: ShiftRegMTNCL
 	generic map(10, "0000000000")
-	port map(Xin(i), koxr(i+1), rst, sleepr(i), Xin(i+1), sleepr(i+1), kor(i));
+	port map(Xarray(i), koxr(i+1), rst, sleepr(i), Xarray(i+1), sleepr(i+1), kor(i));
 	end generate GenReg;
 	
 	ShiftReglast: ShiftRegMTNCL
 	generic map(10, "0000000000")
-	port map(Xin(14), kox(15), rst, sleepr(14), Xin(15), sleepr(15), kor(14));
+	port map(Xarray(14), kox(15), rst, sleepr(14), Xarray(15), sleepr(15), kor(14));
 	
 	THngate: for i in 15 downto 1 generate
 	THout: th22n_a

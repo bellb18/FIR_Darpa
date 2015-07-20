@@ -5,14 +5,14 @@ use work.FIR_pack.all;
 use IEEE.numeric_std.all;
 
 entity FIR_Merged_RCA_Unpipelined is
-	port(X        : in  dual_rail_logic_vector(9 downto 0);
-		 C        : in  CType;
+	port(x        : in  dual_rail_logic_vector(9 downto 0);
+		 c        : in  CType;
 		 ki       : in  std_logic;
 		 rst      : in  std_logic;
 		 sleep    : in  std_logic;
 		 ko       : out std_logic;
 		 sleepout : out std_logic;
-		 Y        : out dual_rail_logic_vector(10 downto 0));
+		 y        : out dual_rail_logic_vector(10 downto 0));
 end;
 
 architecture arch of FIR_Merged_RCA_Unpipelined is

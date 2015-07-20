@@ -5,7 +5,7 @@ use work.FIR_pack.all;
 use IEEE.numeric_std.all;
 
 entity FIR_Merged_RCA_Unpipelined2 is
-	port(X        : in  dual_rail_logic_vector(9 downto 0);
+	port(x        : in  dual_rail_logic_vector(9 downto 0);
 		 C        : in  CType;
 		 ki       : in  std_logic;
 		 rst      : in  std_logic;
@@ -259,7 +259,7 @@ end component;
 begin
 
 	Shift : FastShiftReg 
-		port map(X, ki, rst, Xarray, sleepout, ko);
+		port map(x, ki, rst, Xarray, sleepout, ko);
 	
 	PP : Merged_PPGen
 		port map(Xarray, c, sleep, PP_Z0, PP_Z1, PP_Z2, PP_Z3, PP_Z4, PP_Z5, PP_Z6, PP_Z7, PP_Z8, PP_Z9, PP_Z10, PP_Z11, 

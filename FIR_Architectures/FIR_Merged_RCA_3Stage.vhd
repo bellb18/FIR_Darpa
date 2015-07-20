@@ -5,14 +5,14 @@ use work.FIR_pack.all;
 use IEEE.numeric_std.all;
 
 entity FIR_Merged_RCA_3Stage is
-	port(X        : in  dual_rail_logic_vector(9 downto 0);
-		 C        : in  CType;
+	port(x        : in  dual_rail_logic_vector(9 downto 0);
+		 c        : in  CType;
 		 ki       : in  std_logic;
 		 rst      : in  std_logic;
 		 sleep    : in  std_logic;
 		 ko       : out std_logic;
 		 sleepout : out std_logic;
-		 Y        : out dual_rail_logic_vector(10 downto 0));
+		 y        : out dual_rail_logic_vector(10 downto 0));
 end;
 
 architecture arch of FIR_Merged_RCA_3Stage is
@@ -311,7 +311,7 @@ begin
 		port map(ko_Pipe1_Array, sleep_shift, ko_Pipe1);
 	
 	PP : Merged_PPGen
-		port map(Xtemp, C, ko_Pipe1, PP_Z0, PP_Z1, PP_Z2, PP_Z3, PP_Z4, PP_Z5, PP_Z6, PP_Z7, PP_Z8, PP_Z9, PP_Z10, PP_Z11, 
+		port map(Xtemp, c, ko_Pipe1, PP_Z0, PP_Z1, PP_Z2, PP_Z3, PP_Z4, PP_Z5, PP_Z6, PP_Z7, PP_Z8, PP_Z9, PP_Z10, PP_Z11, 
 			PP_Z12, PP_Z13, PP_Z14, PP_Z15);
 	
 	Stage0 : Merged_S0

@@ -215,6 +215,147 @@ begin
 
 end arch;
 
+----------------------------------------------------^M
+-- Definition of register in MTNCL with even stages
+----------------------------------------------------^M
+
+Library IEEE;
+use IEEE.std_logic_1164.all;
+use work.ncl_signals.all;
+entity Eregm is
+  generic(width: in integer := 8);
+  port(x: in dual_rail_logic_vector(width-1 downto 0);
+    ki, rst, sleep: in std_logic;
+    y: out dual_rail_logic_vector(width-1 downto 0);
+    sleepout: out std_logic;
+    ko: out std_logic);
+end;
+
+architecture arch of Eregm is
+
+  
+    component regm is 
+        port(a: in dual_rail_logic; 
+         sleep:in std_logic;
+             z: out dual_rail_logic ); 
+    end component; 
+  
+    component compm is
+     generic(width: in integer := 4);
+     port(a: IN dual_rail_logic_vector(width-1 downto 0);
+          ki, rst, sleep: in std_logic;
+          ko: OUT std_logic);
+  end component;
+
+  
+  signal regmid : dual_rail_logic_vector(width-1 downto 0);
+  signal komid, kor: std_logic;
+
+  begin
+
+        
+  Genreg0:    for i in 0 to width-1 generate  
+   Gsreg0: regm 
+    port map(x(i),  kor, regmid(i));
+
+  end generate;
+      
+     Gencomp0: compm
+       generic map(width)
+       port map(x, komid, rst, sleep, kor);
+
+  Genreg1:    for i in 0 to width-1 generate  
+   Gsreg1: regm 
+    port map(regmid(i), komid, y(i));
+
+  end generate;
+      
+     Gencomp1: compm
+       generic map(width)
+       port map(regmid, ki, rst, kor, komid);
+
+  ko <= kor;
+  sleepout <= komid;
+    
+ end arch;
+
+
+
+----------------------------------------------------^M
+-- Definition of register in MTNCL with odd stages 
+----------------------------------------------------^M
+
+Library IEEE;
+use IEEE.std_logic_1164.all;
+use work.ncl_signals.all;
+entity Oregm is
+  generic(width: in integer := 8);
+  port(x: in dual_rail_logic_vector(width-1 downto 0);
+    ki, rst, sleep: in std_logic;
+    y: out dual_rail_logic_vector(width-1 downto 0);
+    sleepout: out std_logic;
+    ko: out std_logic);
+end;
+
+architecture arch of Oregm is
+
+  
+    component regm is 
+        port(a: in dual_rail_logic; 
+         sleep:in std_logic;
+             z: out dual_rail_logic ); 
+    end component; 
+  
+    component compm is
+     generic(width: in integer := 4);
+     port(a: IN dual_rail_logic_vector(width-1 downto 0);
+          ki, rst, sleep: in std_logic;
+          ko: OUT std_logic);
+  end component;
+
+  
+  signal regmid1, regmid2: dual_rail_logic_vector(width-1 downto 0);
+  signal komid1, kor, komid2: std_logic;
+
+  begin
+
+        
+  Genreg0:    for i in 0 to width-1 generate  
+   Gsreg0: regm 
+    port map(x(i),  kor, regmid1(i));
+
+  end generate;
+      
+     Gencomp0: compm
+       generic map(width)
+       port map(x, komid1, rst, sleep, kor);
+
+  Genreg1:    for i in 0 to width-1 generate  
+   Gsreg1: regm 
+    port map(regmid1(i), komid1, regmid2(i));
+
+  end generate;
+      
+     Gencomp1: compm
+       generic map(width)
+       port map(regmid1, komid2, rst, kor, komid1);
+
+  Genreg2:    for i in 0 to width-1 generate  
+   Gsreg2: regm 
+    port map(regmid2(i), komid2, y(i));
+
+  end generate;
+      
+     Gencomp2: compm
+       generic map(width)
+       port map(regmid2, ki, rst, komid1, komid2);
+
+  ko <= kor;
+  sleepout <= komid2;
+    
+ end arch;
+
+
 ----------------------------------------------------------- 
 --Pattern-delay shift-register in MTNCL
 ----------------------------------------------------------- 
@@ -450,3 +591,87 @@ begin
 	ko       <= c1;
 
 end arch;
+
+----------------------------------------------------------- 
+--Pattern-delay shift-register 4 in MTNCL
+----------------------------------------------------------- 
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.ncl_signals.all;
+use work.functions.all;
+use work.MTNCL_gates.all;
+
+entity ShiftRegMTNCL4 is
+	generic(width : in integer    := 4;
+		    value : in bit_vector := "0110");
+	port(wrapin   : in  dual_rail_logic_vector(width - 1 downto 0);
+		 ki       : in  std_logic;
+		 rst      : in  std_logic;
+		 sleep    : in  std_logic;
+		 wrapout  : out dual_rail_logic_vector(width - 1 downto 0);
+		 sleepout : out std_logic;
+		 ko       : out std_logic);
+end ShiftRegMTNCL4;
+
+architecture arch of ShiftRegMTNCL4 is
+	component genregrstm is
+		generic(width : in integer    := 4;
+			    dn    : in bit        := '1';
+			    value : in bit_vector := "0110");
+		port(a     : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 rst   : in  std_logic;
+			 sleep : in  std_logic;
+			 z     : out dual_rail_logic_vector(width - 1 downto 0));
+	end component;
+
+	component compm is
+		generic(width : in integer := 4);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 ki, rst, sleep : in  std_logic;
+			 ko             : OUT std_logic);
+	end component;
+
+	component compdm is
+		generic(width : in integer := 4);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 ki, rst, sleep : in  std_logic;
+			 ko             : OUT std_logic);
+	end component;
+	
+    component Eregm is
+		generic(width: in integer := 8);
+		port(x: in dual_rail_logic_vector(width-1 downto 0);
+		ki, rst, sleep: in std_logic;
+		y: out dual_rail_logic_vector(width-1 downto 0);
+		sleepout: out std_logic;
+		ko: out std_logic);
+	end component;
+
+	signal wrap, wrapbuf, r12 : dual_rail_logic_vector(width - 1 downto 0);
+	signal c1, c2, kibuf    : std_logic;
+
+begin
+	Gregdata : genregrstm
+		generic map(width, '1', value)  ----reset to DATA
+		port map(wrapin, rst, c1, r12);
+	Gcompnull : compm                   -----reset to request for NULL
+		generic map(width)
+		port map(wrapin, c2, rst, sleep, c1);
+
+	Gregnull : genregrstm
+		generic map(width, '0', value)  --reset to NULL        
+		port map(r12, rst, c2, wrap);
+	Gcompdata : compdm
+		generic map(width)
+		port map(r12, kibuf, rst, c1, c2); --reset to requrest for DATA
+
+	Gbuf: Eregm
+		generic map(width)
+		port map(wrap, ki, rst, c2, wrapbuf, sleepout, kibuf);
+		
+	wrapout <= wrapbuf;
+	ko       <= c1;
+
+end arch;
+

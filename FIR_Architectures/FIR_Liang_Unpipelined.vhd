@@ -40,7 +40,7 @@ architecture arch of FIR_Liang_Unpipelined is
 	);
 	end component;
 
-	component ShiftRegMTNCL is
+	component ShiftRegMTNCL4 is
 		generic(width : in integer    := 4;
 			    value : in bit_vector := "0110");
 		port(wrapin   : in  dual_rail_logic_vector(width - 1 downto 0);
@@ -100,17 +100,17 @@ begin
 	Mult0: Dadda_Pipelined
 	port map(X, c(0), koa(1), sleep, rst, sleepa(1), kox(0), A(1));
 	
-	ShiftReg0: ShiftRegMTNCL
+	ShiftReg0: ShiftRegMTNCL4
 	generic map(10, "0000000000")
 	port map(x, koxr(1), rst, sleep, Xarray(1), sleepr(1), kor(0));
 	
 	GenReg: for i in 13 downto 1 generate
-	ShiftReg: ShiftRegMTNCL
+	ShiftReg: ShiftRegMTNCL4
 	generic map(10, "0000000000")
 	port map(Xarray(i), koxr(i+1), rst, sleepr(i), Xarray(i+1), sleepr(i+1), kor(i));
 	end generate GenReg;
 	
-	ShiftReglast: ShiftRegMTNCL
+	ShiftReglast: ShiftRegMTNCL4
 	generic map(10, "0000000000")
 	port map(Xarray(14), kox(15), rst, sleepr(14), Xarray(15), sleepr(15), kor(14));
 	

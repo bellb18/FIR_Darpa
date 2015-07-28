@@ -9,7 +9,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use work.MTNCL_gates.all;
 use work.ncl_signals.all;
-entity RCA_Pipelined_genm is
+entity RCA_Pipelined_genm_outreg is
 	generic(width : integer := 16);
 	port(
 		X    : in  dual_rail_logic_vector(width - 1 downto 0);
@@ -23,7 +23,7 @@ entity RCA_Pipelined_genm is
 	);
 end;
 
-architecture arch of RCA_Pipelined_genm is
+architecture arch of RCA_Pipelined_genm_outreg is
 	component HAm
 		port(X, Y    : in  dual_rail_logic;
 			 sleep   : in  std_logic;
@@ -53,17 +53,13 @@ architecture arch of RCA_Pipelined_genm is
 			 ko             : OUT std_logic);
 	end component;
 
-	component th22d_a is
-	port(a   : in  std_logic;
-		 b   : in  std_logic;
-		 rst : in  std_logic;
-		 z   : out std_logic);
-	end component;
-
 	signal carry : dual_rail_logic_vector(width downto 0);
 	signal ko_OutReg : std_logic;
-
+	signal sReg : dual_rail_logic_vector(width - 1 downto 0);
+	
 begin
+	
+	ko <= ko_OutReg;
 	
 	HAa : HAm
 		port map(X(0), Y(0), sleepIn, carry(0), sReg(0));

@@ -6,13 +6,13 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity bufm_a is
+entity bufferm_a is
 	port(a : in  std_logic;
 		 s : in  std_logic;
 		 z : out std_logic);
-end bufm_a;
+end bufferm_a;
 
-architecture arch of bufm_a is
+architecture arch of bufferm_a is
 begin
 	bufx0 : process(a, s)
 	begin

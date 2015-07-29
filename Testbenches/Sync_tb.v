@@ -1,4 +1,4 @@
-`timescale 1 ns/1 ns
+`timescale 100 ps/100 ps
 
 module fir_sync_tb;
 
@@ -6,126 +6,190 @@ reg	rst = 1'b1;
 reg	clk = 1'b1;
 
 always begin
-  #10  clk = ~clk;
+  #50  clk = ~clk;
 end
 
 initial begin
-	#50 rst = 1'b0;
+	#40 rst = 1'b0;
 end
 
-reg	[9:0] data_in;
+integer data_in;
 wire	[10:0] data_out;
-wire  [9:0] x [0:99];
+integer x [0:99];
 
-assign x[0] = -36;
-assign x[1] = -480;
-assign x[2] = 486;
-assign x[3] = 294;
-assign x[4] = -49;
-assign x[5] = -243;
-assign x[6] = -162;
-assign x[7] = -424;
-assign x[8] = -58;
-assign x[9] = -253; 
-assign x[10] = 283;
-assign x[11] = -235; 
-assign x[12] = 501; 
-assign x[13] = 104; 
-assign x[14] = 352; 
-assign x[15] = -337; 
-assign x[16] = 474; 
-assign x[17] = -60; 
-assign x[18] = 84; 
-assign x[19] = -25; 
-assign x[20] = 140; 
-assign x[21] = -481; 
-assign x[22] = 211; 
-assign x[23] = 178; 
-assign x[24] = -289; 
-assign x[25] = 491; 
-assign x[26] = -386; 
-assign x[27] = 90; 
-assign x[28] = -511; 
-assign x[29] = -283; 
-assign x[30] = -41; 
-assign x[31] = 437; 
-assign x[32] = 107; 
-assign x[33] = -423; 
-assign x[34] = -118; 
-assign x[35] = -52; 
-assign x[36] = 510; 
-assign x[37] = -84;
-assign x[38] = 329;
-assign x[39] = -223; 
-assign x[40] = -244; 
-assign x[41] = 145; 
-assign x[42] = 369; 
-assign x[43] = -115; 
-assign x[44] = 486; 
-assign x[45] = 354; 
-assign x[46] = -218; 
-assign x[47] = -106; 
-assign x[48] = -185; 
-assign x[49] = -107; 
-assign x[50] = 92; 
-assign x[51] = -37; 
-assign x[52] = -62; 
-assign x[53] = -509; 
-assign x[54] = 395; 
-assign x[55] = -425; 
-assign x[56] = -509; 
-assign x[57] = 157; 
-assign x[58] = -466; 
-assign x[59] = 49; 
-assign x[60] = 508; 
-assign x[61] = -305; 
-assign x[62] = -205; 
-assign x[63] = -325; 
-assign x[64] = -153; 
-assign x[65] = -108; 
-assign x[66] = -286; 
-assign x[67] = 409; 
-assign x[68] = 420; 
-assign x[69] = 440; 
-assign x[70] = -263; 
-assign x[71] = 465; 
-assign x[72] = 281; 
-assign x[73] = -120; 
-assign x[74] = 416; 
-assign x[75] = -92; 
-assign x[76] = 380; 
-assign x[77] = 10; 
-assign x[78] = 365; 
-assign x[79] = 471; 
-assign x[80] = 382; 
-assign x[81] = 338; 
-assign x[82] = -164; 
-assign x[83] = 200; 
-assign x[84] = 298; 
-assign x[85] = -390; 
-assign x[86] = -324; 
-assign x[87] = 448; 
-assign x[88] = -422; 
-assign x[89] = -138; 
-assign x[90] = -482; 
-assign x[91] = 511; 
-assign x[92] = -457; 
-assign x[93] = 424; 
-assign x[94] = 89; 
-assign x[95] = -227; 
-assign x[96] = 210; 
-assign x[97] = -156; 
-assign x[98] = 320; 
-assign x[99] = -127;
+initial begin
+x[0] = -36;
+x[1] = -480;
+x[2] = 486;
+x[3] = 294;
+x[4] = -49;
+x[5] = -243;
+x[6] = -162;
+x[7] = -424;
+x[8] = -58;
+x[9] = -253; 
+x[10] = 283;
+x[11] = -235; 
+x[12] = 501; 
+x[13] = 104; 
+x[14] = 352; 
+x[15] = -337; 
+x[16] = 474; 
+x[17] = -60; 
+x[18] = 84; 
+x[19] = -25; 
+x[20] = 140; 
+x[21] = -481; 
+x[22] = 211; 
+x[23] = 178; 
+x[24] = -289; 
+x[25] = 491; 
+x[26] = -386; 
+x[27] = 90; 
+x[28] = -511; 
+x[29] = -283; 
+x[30] = -41; 
+x[31] = 437; 
+x[32] = 107; 
+x[33] = -423; 
+x[34] = -118; 
+x[35] = -52; 
+x[36] = 510; 
+x[37] = -84;
+x[38] = 329;
+x[39] = -223; 
+x[40] = -244; 
+x[41] = 145; 
+x[42] = 369; 
+x[43] = -115; 
+x[44] = 486; 
+x[45] = 354; 
+x[46] = -218; 
+x[47] = -106; 
+x[48] = -185; 
+x[49] = -107; 
+x[50] = 92; 
+x[51] = -37; 
+x[52] = -62; 
+x[53] = -509; 
+x[54] = 395; 
+x[55] = -425; 
+x[56] = -509; 
+x[57] = 157; 
+x[58] = -466; 
+x[59] = 49; 
+x[60] = 508; 
+x[61] = -305; 
+x[62] = -205; 
+x[63] = -325; 
+x[64] = -153; 
+x[65] = -108; 
+x[66] = -286; 
+x[67] = 409; 
+x[68] = 420; 
+x[69] = 440; 
+x[70] = -263; 
+x[71] = 465; 
+x[72] = 281; 
+x[73] = -120; 
+x[74] = 416; 
+x[75] = -92; 
+x[76] = 380; 
+x[77] = 10; 
+x[78] = 365; 
+x[79] = 471; 
+x[80] = 382; 
+x[81] = 338; 
+x[82] = -164; 
+x[83] = 200; 
+x[84] = 298; 
+x[85] = -390; 
+x[86] = -324; 
+x[87] = 448; 
+x[88] = -422; 
+x[89] = -138; 
+x[90] = -482; 
+x[91] = 511; 
+x[92] = -457; 
+x[93] = 424; 
+x[94] = 89; 
+x[95] = -227; 
+x[96] = 210; 
+x[97] = -156; 
+x[98] = 320; 
+x[99] = -127;
+end
+
+integer c_0 = 0;
+integer c_1 = 0;
+integer c_2 = 1;
+integer c_3 = -2;
+integer c_4 = 2;
+integer c_5 = 0;
+integer c_6 = 7;
+integer c_7 = 38;
+integer c_8 = 38;
+integer c_9 = -7;
+integer c_10 = 0;
+integer c_11 = 2;
+integer c_12 = -2;
+integer c_13 = 1;
+integer c_14 = 0;
+integer c_15 = 0;
+
+reg	[16:0]	dout_reg;
+wire	[10:0]  dout_test;
 
 integer i = 0;
+assign dout_test[10:0] = dout_reg[15:5];
+reg signed [9:0]	din_reg [15:0];
 
 always @(posedge clk) begin
-	i <= (i + 1) % 100;
+	if (rst) begin
+		for (i = 0; i < 16; i = i + 1) begin
+			din_reg[i] <= 0;
+		end
+	end
+	else begin
+		din_reg[0] <= data_in[9:0];
+		din_reg[1] <= din_reg[0];
+		din_reg[2] <= din_reg[1];
+		din_reg[3] <= din_reg[2];
+		din_reg[4] <= din_reg[3];
+		din_reg[5] <= din_reg[4];
+		din_reg[6] <= din_reg[5];
+		din_reg[7] <= din_reg[6];
+		din_reg[8] <= din_reg[7];
+		din_reg[9] <= din_reg[8];
+		din_reg[10] <= din_reg[9];
+		din_reg[11] <= din_reg[10];
+		din_reg[12] <= din_reg[11];
+		din_reg[13] <= din_reg[12];
+		din_reg[14] <= din_reg[13];
+		din_reg[15] <= din_reg[14];
+	end
 end
 
 always @(posedge clk) begin
-	data_in <= x[i];
+
+	              dout_reg <= din_reg[0] * c_0 + din_reg[1] * c_1 + din_reg[2] * c_2 + din_reg[3] * c_3 
+			+ din_reg[4] * c_4 + din_reg[5] * c_5 + din_reg[6] * c_6 + din_reg[7] * c_7 
+			+ din_reg[8] * c_8 + din_reg[9] * c_9 + din_reg[10] * c_10 + din_reg[11] * c_11
+			+ din_reg[12] * c_12 + din_reg[13] * c_13 + din_reg[14] * c_14 + din_reg[15] * c_15;
+end
+
+integer j = 0;
+always @(posedge clk) begin
+	if (rst) begin
+		j <= 0;
+	end
+	else begin
+		j <= (j + 1) % 100;
+	end
+end
+
+always @(negedge clk) begin
+	data_in <= x[j];
 end
 
 

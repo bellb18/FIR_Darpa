@@ -7,31 +7,32 @@ module fir_sync (
 
 input		clk;
 input		rst;
-input	[9:0]	din;
+input	signed [9:0]	din;
 
-parameter c_0  = 1;
-parameter c_1  = 1;
-parameter c_2  = 1;
-parameter c_3  = 1;
-parameter c_4  = 11;
-parameter c_5  = 1;
-parameter c_6  = 1;
-parameter c_7  = 1;
-parameter c_8  = 1;
-parameter c_9  = 1;
-parameter c_10 = 1;
-parameter c_11 = 1;
-parameter c_12 = 1;
-parameter c_13 = 1;
-parameter c_14 = 1;
-parameter c_15 = 1;
+parameter c_0  = 0;
+parameter c_1  = 0;
+parameter c_2  = 0;
+parameter c_3  = 0;
+parameter c_4  = 0;
+parameter c_5  = 0;
+parameter c_6  = 0;
+parameter c_7  = 0;
+parameter c_8  = 0;
+parameter c_9  = 0;
+parameter c_10 = 0;
+parameter c_11 = 0;
+parameter c_12 = 0;
+parameter c_13 = 0;
+parameter c_14 = 0;
+parameter c_15 = 0;
 
-output	[10:0]	dout;
+output	signed [10:0]	dout;
 
-reg	[9:0]	din_reg [0:15];
-reg	[16:0]	dout_reg;
+reg	signed [9:0]	din_reg [0:15];
+reg	signed [16:0]	dout_reg;
 
 parameter size = 16;
+integer size = 16;
 
 integer  i;
 assign dout[10:0] = dout_reg[15:5];

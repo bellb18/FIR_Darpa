@@ -79,9 +79,9 @@ architecture arch of Dadda_Pipelined3 is
 	signal B, B_reg : dual_rail_logic_vector(14 downto 0);
 	signal A_B : dual_rail_logic_vector(30 downto 0);
 	signal E, E_reg : dual_rail_logic_vector(19 downto 0);
-	signal F, F_reg : dual_rail_logic_vector(14 downto 0);
-	signal G, G_reg : dual_rail_logic_vector(12 downto 0);
-	signal E_F_G : dual_rail_logic_vector(47 downto 0);
+	signal F, F_reg : dual_rail_logic_vector(17 downto 0);
+	signal G, G_reg : dual_rail_logic_vector(14 downto 0);
+	signal E_F_G : dual_rail_logic_vector(52 downto 0);
 
 begin
 	--Input registers
@@ -173,8 +173,8 @@ begin
 
 
 	E <= input_array(9)(5) & carry_array1(1)(11 downto 6) & input_array(0)(3) & input_array(2)(0) & carry_array1(1)(13) & sum_array1(1)(12) & sum_array1(1)(11 downto 6) & sum_array1(1)(5) & input_array(2)(2) & input_array(3)(0);
-	F <= input_array(8)(6) & input_array(6)(6) & input_array(0)(4) & input_array(1)(1) & input_array(9)(4) & carry_array2(1)(12) & carry_array2(1)(11 downto 6) & carry_array1(1)(5) & input_array(1)(3) & input_array(2)(1);
-	G <= input_array(7)(6) & input_array(0)(5) & input_array(1)(2) & input_array(8)(5) & carry_array1(1)(12) & sum_array2(1)(11 downto 6) & sum_array2(1)(5) & sum_array1(1)(4);
+	F <= input_array(0)(1) & input_array(1)(0) & input_array(9)(6) & input_array(8)(6) & input_array(6)(6) & input_array(0)(4) & input_array(1)(1) & input_array(9)(4) & carry_array2(1)(12) & carry_array2(1)(11 downto 6) & carry_array1(1)(5) & input_array(1)(3) & input_array(2)(1);
+	G <= input_array(0)(0) & input_array(0)(2) & input_array(7)(6) & input_array(0)(5) & input_array(1)(2) & input_array(8)(5) & carry_array1(1)(12) & sum_array2(1)(11 downto 6) & sum_array2(1)(5) & sum_array1(1)(4);
 	E_F_G <= E & F & G;
 	
 	-- Pipeline Register
@@ -182,13 +182,13 @@ begin
 		generic map(20)
 		port map(E, ko_pipe2, E_reg);
 	Pipe2Reg2 : genregm 
-		generic map(15)
+		generic map(18)
 		port map(F, ko_pipe2, F_reg);
 	Pipe2Reg3 : genregm
-		generic map (13)
+		generic map (15)
 		port map(G, ko_pipe2, G_reg);
 	Pipe2Comp1 : compm
-		generic map(48)
+		generic map(53)
 		port map(E_F_G, ko_Pipe1, rst, koSig, ko_pipe2);
 
 
@@ -243,8 +243,8 @@ begin
 		port map(carry_array1(2)(14), E_reg(19),
 			     F_reg(14), ko_pipe2, carry_array1(3)(15), sum_array1(3)(14));
 			     
-	A <= input_array(9)(6) & sum_array1(3)(14 downto 3) & input_array(0)(2) & input_array(1)(0) & input_array(0)(0);
-	B <= carry_array1(3)(15 downto 3) & sum_array1(3)(2) & input_array(0)(1);
+	A <= F_reg(15) & sum_array1(3)(14 downto 3) & G_reg(13) & F_reg(16) & G_reg(14);
+	B <= carry_array1(3)(15 downto 3) & sum_array1(3)(2) & F_reg(17);
 	A_B <= A & B;
 	
 	-- Pipeline Register

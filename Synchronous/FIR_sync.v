@@ -9,22 +9,22 @@ input		clk;
 input		rst;
 input	signed [9:0]	din;
 
-parameter c_0  = 0;
-parameter c_1  = 0;
-parameter c_2  = 0;
-parameter c_3  = 0;
-parameter c_4  = 0;
-parameter c_5  = 0;
-parameter c_6  = 0;
-parameter c_7  = 0;
-parameter c_8  = 0;
-parameter c_9  = 0;
-parameter c_10 = 0;
-parameter c_11 = 0;
-parameter c_12 = 0;
-parameter c_13 = 0;
-parameter c_14 = 0;
-parameter c_15 = 0;
+integer signed c_0  = 0;
+integer signed c_1  = 0;
+integer signed c_2  = 1;
+integer signed c_3  = -2;
+integer signed c_4  = 2;
+integer signed c_5  = 0;
+integer signed c_6  = -7;
+integer signed c_7  = 38;
+integer signed c_8  = 38;
+integer signed c_9  = -7;
+integer signed c_10 = 0;
+integer signed c_11 = 2;
+integer signed c_12 = -2;
+integer signed c_13 = 1;
+integer signed c_14 = 0;
+integer signed c_15 = 0;
 
 output	signed [10:0]	dout;
 

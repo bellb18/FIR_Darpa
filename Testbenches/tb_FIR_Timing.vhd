@@ -17,7 +17,7 @@ architecture arch of tb_FIR_Timing_Unpipelined is
 	signal Y                            : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 
-	component FIR_Liang_Pipelined is
+	component FIR_Liang_Unpipelined_wo_reg is
 		port(X        : in  dual_rail_logic_vector(9 downto 0);
 			 C        : in  CType;
 			 ki       : in  std_logic;
@@ -29,7 +29,7 @@ architecture arch of tb_FIR_Timing_Unpipelined is
 	end component;
 
 begin
-	CUT : FIR_Liang_Pipelined
+	CUT : FIR_Liang_Unpipelined_wo_reg
 		port map(X, C, ki, rst, sleep, ko, sleepout, Y);
 
 	inputs : process

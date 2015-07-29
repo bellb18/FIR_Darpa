@@ -25,6 +25,19 @@ architecture arch of FIR_Liang_Pipelined is
 		 ko 	  : out std_logic;
 		 p     : out dual_rail_logic_vector(15 downto 0));
 	end component;
+	
+	component Carry_Select_16bm is
+	port(
+		X    : in  dual_rail_logic_vector(15 downto 0);
+		Y    : in  dual_rail_logic_vector(15 downto 0);
+		ki	 : in std_logic;
+		sleepIn : in  std_logic;
+		rst  : in std_logic;
+		sleepOut : out std_logic;
+		ko 	     : out std_logic;
+		S   : out dual_rail_logic_vector(15 downto 0)
+	);
+end component;
 
 	component RCA_Pipelined_genm is
 	generic(width : integer := 16);
@@ -82,13 +95,11 @@ signal koxr: std_logic_vector(14 downto 0);
 signal output: dual_rail_logic_vector(15 downto 0);
 
 begin
-	ADDER15: RCA_Pipelined_genm
-	generic map(16)
+	ADDER15: Carry_Select_16bm
 	port map(A(15), B(15), ki, sleepax(15), rst, sleepout, koa(15), output);
 	
 	GenAdder: for i in 14 downto 1 generate
-	ADDER: RCA_Pipelined_genm
-	generic map(16)
+	ADDER: Carry_Select_16bm
 	port map(A(i), B(i), koa(i + 1), sleepax(i), rst, sleepa(i+1), koa(i), A(i+1));
 	end generate GenAdder;
 	

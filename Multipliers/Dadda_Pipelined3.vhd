@@ -75,9 +75,13 @@ architecture arch of Dadda_Pipelined3 is
 	signal inputYReg : dual_rail_logic_vector(6 downto 0);
 	signal ko_OutReg, koX, koY, koSig, ko_pipe1, ko_pipe2 : std_logic;
 	signal pReg : dual_rail_logic_vector(15 downto 0);
-	signal A, A_reg, E, E_reg : dual_rail_logic_vector(15 downto 0);
-	signal B, B_reg, F, F_reg : dual_rail_logic_vector(14 downto 0);
-	signal A_B, E_F : dual_rail_logic_vector(30 downto 0);
+	signal A, A_reg : dual_rail_logic_vector(15 downto 0);
+	signal B, B_reg : dual_rail_logic_vector(14 downto 0);
+	signal A_B : dual_rail_logic_vector(30 downto 0);
+	signal E, E_reg : dual_rail_logic_vector(19 downto 0);
+	signal F, F_reg : dual_rail_logic_vector(14 downto 0);
+	signal G, G_reg : dual_rail_logic_vector(12 downto 0);
+	signal E_F_G : dual_rail_logic_vector(47 downto 0);
 
 begin
 	--Input registers
@@ -168,72 +172,76 @@ begin
 		port map(input_array(9)(3), input_array(8)(4), input_array(7)(5), koSig, carry_array1(1)(13), sum_array1(1)(12));
 
 
-	E <= input_array(9)(6) & sum_array1(1)(12 downto 5) & input_array(2)(2) & input_array(3)(0) & input_array(0)(0);
-	F <= carry_array1(1)(13 downto 5) & sum_array1(1)(4) & input_array(2)(1);
-	E_F <= E & F;
+	E <= input_array(9)(5) & carry_array1(1)(11 downto 6) & input_array(0)(3) & input_array(2)(0) & carry_array1(1)(13) & sum_array1(1)(12) & sum_array1(1)(11 downto 6) & sum_array1(1)(5) & input_array(2)(2) & input_array(3)(0);
+	F <= input_array(8)(6) & input_array(6)(6) & input_array(0)(4) & input_array(1)(1) & input_array(9)(4) & carry_array2(1)(12) & carry_array2(1)(11 downto 6) & carry_array1(1)(5) & input_array(1)(3) & input_array(2)(1);
+	G <= input_array(7)(6) & input_array(0)(5) & input_array(1)(2) & input_array(8)(5) & carry_array1(1)(12) & sum_array2(1)(11 downto 6) & sum_array2(1)(5) & sum_array1(1)(4);
+	E_F_G <= E & F & G;
 	
 	-- Pipeline Register
 	Pipe2Reg1 : genregm 
-		generic map(16)
+		generic map(20)
 		port map(E, ko_pipe2, E_reg);
 	Pipe2Reg2 : genregm 
 		generic map(15)
 		port map(F, ko_pipe2, F_reg);
+	Pipe2Reg3 : genregm
+		generic map (13)
+		port map(G, ko_pipe2, G_reg);
 	Pipe2Comp1 : compm
-		generic map(31)
-		port map(E_F, ko_Pipe1, rst, koSig, ko_pipe2);
+		generic map(48)
+		port map(E_F_G, ko_Pipe1, rst, koSig, ko_pipe2);
 
 
 	-- 2nd Stage - All columns will have 3pp or less
 	HA23a : HAm                         -- P3
-		port map(input_array(3)(0), input_array(2)(1), ko_pipe2,
+		port map(E_reg(0), F_reg(0), ko_pipe2,
 			     carry_array1(2)(4), sum_array1(2)(3));
 	FA24a : FAm                         -- P4
-		port map(sum_array1(1)(4), input_array(2)(2), input_array(1)(3),
+		port map(G_reg(0), E_reg(1), F_reg(1),
 			     ko_pipe2, carry_array1(2)(5), sum_array1(2)(4));
 	FA25a : FAm                         -- P5
-		port map(sum_array2(1)(5), sum_array1(1)(5), carry_array1(1)(5),
+		port map(G_reg(1), E_reg(2), F_reg(2),
 			     ko_pipe2, carry_array1(2)(6), sum_array1(2)(5));
 	FAGen2a : for i in 1 to 6 generate  -- P6-P11
 		FA2a : FAm
-			port map(sum_array2(1)(i + 5), sum_array1(1)(i + 5), carry_array2(1)(i + 5),
+			port map(G_reg(i + 1), E_reg(i + 2), F_reg(i + 2),
 				     ko_pipe2, carry_array1(2)(i + 6), sum_array1(2)(i + 5));
 	end generate;
 	FA212a : FAm                        -- P12
-		port map(sum_array1(1)(12), carry_array2(1)(12), carry_array1(1)(12),
+		port map(E_reg(9), F_reg(9), G_reg(8),
 			     ko_pipe2, carry_array1(2)(13), sum_array1(2)(12));
 	FA213a : FAm                        -- P13
-		port map(carry_array1(1)(13), input_array(9)(4), input_array(8)(5),
+		port map(E_reg(10), F_reg(10), G_reg(9),
 			     ko_pipe2, carry_array1(2)(14), sum_array1(2)(13));
 			     
 	-- 3rd Stage - All columns will have 2pp or less
 	HA32a : HAm                         -- P2
-		port map(input_array(2)(0), input_array(1)(1), ko_pipe2,
+		port map(E_reg(11), F_reg(11), ko_pipe2,
 			     carry_array1(3)(3), sum_array1(3)(2));
 	FA33a : FAm                         -- P3
-		port map(sum_array1(2)(3), input_array(1)(2), input_array(0)(3),
+		port map(sum_array1(2)(3), G_reg(10), E_reg(12),
 			     ko_pipe2, carry_array1(3)(4), sum_array1(3)(3));
 	FA34a : FAm                         -- P4
-		port map(sum_array1(2)(4), carry_array1(2)(4), input_array(0)(4),
+		port map(sum_array1(2)(4), carry_array1(2)(4), F_reg(12),
 			     ko_pipe2, carry_array1(3)(5), sum_array1(3)(4));
 	FA35a : FAm                         -- P5
-		port map(sum_array1(2)(5), carry_array1(2)(5), input_array(0)(5),
+		port map(sum_array1(2)(5), carry_array1(2)(5), G_reg(11),
 			     ko_pipe2, carry_array1(3)(6), sum_array1(3)(5));
 	FAGen3a : for i in 1 to 6 generate  -- P6-P11
 		FA3a : FAm
-			port map(carry_array1(2)(i + 5), carry_array1(1)(i + 5),
+			port map(carry_array1(2)(i + 5), E_reg(i + 12),
 				     sum_array1(2)(i + 5), ko_pipe2, carry_array1(3)(i + 6), sum_array1(3)(i + 5));
 	end generate;
 
 	FA312a : FAm                        -- P12
 		port map(sum_array1(2)(12), carry_array1(2)(12),
-			     input_array(6)(6), ko_pipe2, carry_array1(3)(13), sum_array1(3)(12));
+			     F_reg(13), ko_pipe2, carry_array1(3)(13), sum_array1(3)(12));
 	FA313a : FAm                        -- P13
 		port map(sum_array1(2)(13), carry_array1(2)(13),
-			     input_array(7)(6), ko_pipe2, carry_array1(3)(14), sum_array1(3)(13));
+			     G_reg(12), ko_pipe2, carry_array1(3)(14), sum_array1(3)(13));
 	FA314a : FAm                        -- P14
-		port map(carry_array1(2)(14), input_array(9)(5),
-			     input_array(8)(6), ko_pipe2, carry_array1(3)(15), sum_array1(3)(14));
+		port map(carry_array1(2)(14), E_reg(19),
+			     F_reg(14), ko_pipe2, carry_array1(3)(15), sum_array1(3)(14));
 			     
 	A <= input_array(9)(6) & sum_array1(3)(14 downto 3) & input_array(0)(2) & input_array(1)(0) & input_array(0)(0);
 	B <= carry_array1(3)(15 downto 3) & sum_array1(3)(2) & input_array(0)(1);

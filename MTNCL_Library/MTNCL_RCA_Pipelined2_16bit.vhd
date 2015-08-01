@@ -109,7 +109,7 @@ begin
 		
 	-- Assign reg3_input bits
 	reg3_inputGen: for i in 0 to 7 generate
-		reg3_input(i) <= reg2_output(i);
+		reg3_input(i) <= reg2_output(i + 16);
 		reg3_input(i + 8) <= FA_sum1(i);
 	end generate;
 	

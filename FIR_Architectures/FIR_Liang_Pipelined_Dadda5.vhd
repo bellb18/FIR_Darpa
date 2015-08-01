@@ -19,7 +19,7 @@ architecture arch of FIR_Liang_Pipelined_Dadda5 is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
 		 y     : in  dual_rail_logic_vector(6 downto 0);
 		 ki    : in std_logic;
-		 sleepIn : in  std_logic;
+		 sleep : in  std_logic;
 		 rst      : in  std_logic;
 		 sleepOut : out std_logic;
 		 ko 	  : out std_logic;
@@ -31,7 +31,7 @@ architecture arch of FIR_Liang_Pipelined_Dadda5 is
 			X    : in  dual_rail_logic_vector(15 downto 0);
 			Y    : in  dual_rail_logic_vector(15 downto 0);
 			ki	 : in std_logic;
-			sleepIn : in  std_logic;
+			sleep : in  std_logic;
 			rst  : in std_logic;
 			sleepOut : out std_logic;
 			ko 	     : out std_logic;

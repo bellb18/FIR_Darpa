@@ -17,7 +17,7 @@ architecture arch of tb_FIR_Timing is
 	signal Y                            : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 
-	component FIR_Liang_Pipelined_Dadda7 is
+	component FIR_Liang_Pipelined_Dadda8 is
 		port(X        : in  dual_rail_logic_vector(9 downto 0);
 			 C        : in  CType;
 			 ki       : in  std_logic;
@@ -29,7 +29,7 @@ architecture arch of tb_FIR_Timing is
 	end component;
 
 begin
-	CUT : FIR_Liang_Pipelined_Dadda7
+	CUT : FIR_Liang_Pipelined_Dadda8
 		port map(X, C, ki, rst, sleep, ko, sleepout, Y);
 
 	inputs : process
@@ -97,7 +97,7 @@ begin
 				X(i).rail0 <= '0';
 			end loop;
 			wait until ko = '1';
-			wait for 10 ns;
+			wait for 1 ns;
 		end loop;
 		wait;
 

@@ -64,29 +64,19 @@ architecture arch of Dadda_Pipelined_RCAPiped3 is
 		 z   : out std_logic);
 	end component;
 	
-	component PipeRegm is
-	generic(width : in integer := 4);
-	port(a     : IN  dual_rail_logic_vector(width - 1 downto 0);
-		 ki, rst, sleep : in std_logic;
-		 sleepout, ko : out  std_logic;
-		 z     : out dual_rail_logic_vector(width - 1 downto 0));
-	end component;
-	
 
 	type Ctype is array (4 downto 0) of dual_rail_logic_vector(16 downto 0);
 	type InType is array (9 downto 0) of dual_rail_logic_vector(6 downto 0);
 
 	signal carry_array1, carry_array2, sum_array1, sum_array2 : Ctype;
-	signal sleep_RCA, ko_RCA                                     : std_logic;
 	signal temp_input_array, input_array                      : InType;
-	signal A, A_reg, A_temp, OUTPUT1 : dual_rail_logic_vector(15 downto 0);
-	signal B, B_reg, B_temp : dual_rail_logic_vector(14 downto 0);
-	signal A_B, A_B_temp : dual_rail_logic_vector(30 downto 0);
-	signal Pipe_RCA_In, Pipe_RCA_Out : dual_rail_logic_vector(24 downto 0);
 	signal inputXReg : dual_rail_logic_vector(9 downto 0);
 	signal inputYReg : dual_rail_logic_vector(6 downto 0);
-	signal ko_OutReg, koX, koY, koSig, ko_pipe1, ko_pipe2 : std_logic;
+	signal ko_OutReg, koX, koY, koSig, ko_pipe1, ko_pipe1b : std_logic;
 	signal pReg : dual_rail_logic_vector(15 downto 0);
+	signal A, A_reg, A2 : dual_rail_logic_vector(15 downto 0);
+	signal B, B_reg, B2 : dual_rail_logic_vector(14 downto 0);
+	signal A_B, A2_B2 : dual_rail_logic_vector(30 downto 0);
 
 begin
 	--Input registers
@@ -98,10 +88,10 @@ begin
 		port map(y, koSig, inputYReg);
 	inCompX : compm
 		generic map(10)
-		port map(x, ko_OutReg, rst, sleep, koX);
+		port map(x, ko_pipe1b, rst, sleep, koX);
 	inCompY : compm
 		generic map(7)
-		port map(y, ko_OutReg, rst, sleep, koY);
+		port map(y, ko_pipe1b, rst, sleep, koY);
 	andKO : th22d_a
 		port map(koX, koY, rst, koSig);
 	sleepOut <= ko_OutReg;
@@ -226,35 +216,35 @@ begin
 	FA314a : FAm                        -- P14
 		port map(carry_array1(2)(14), input_array(9)(5),
 			     input_array(8)(6), koSig, carry_array1(3)(15), sum_array1(3)(14));
-
+			     
 	A <= input_array(9)(6) & sum_array1(3)(14 downto 3) & input_array(0)(2) & input_array(1)(0) & input_array(0)(0);
 	B <= carry_array1(3)(15 downto 3) & sum_array1(3)(2) & input_array(0)(1);
 	A_B <= A & B;
 	
-	-- Pipeline Register 2
+	-- Pipeline Register
 	Pipe1Reg1 : genregm 
 		generic map(16)
-		port map(A, ko_pipe2, A_temp);
+		port map(A, ko_pipe1b, A2);
 	Pipe1Reg2 : genregm 
 		generic map(15)
-		port map(B, ko_pipe2, B_temp);
+		port map(B, ko_pipe1b, B2);
 	PipeComp1 : compm
 		generic map(31)
-		port map(A_B, ko_pipe1, rst, koSig, ko_pipe2);
+		port map(A_B, ko_pipe1, rst, koSig, ko_pipe1b);
 		
-	A_B_temp <= A_temp & B_temp;
-	
-	-- Pipeline Register
+	A2_B2 <= A2 & B2;
+		
 	Pipe1Reg3 : genregm 
 		generic map(16)
-		port map(A_temp, ko_pipe1, A_reg);
+		port map(A2, ko_pipe1, A_reg);
 	Pipe1Reg4 : genregm 
 		generic map(15)
-		port map(B_temp, ko_pipe1, B_reg);
+		port map(B2, ko_pipe1, B_reg);
 	PipeComp2 : compm
 		generic map(31)
-		port map(A_B_temp, ko_OutReg, rst, ko_pipe2, ko_pipe1);
-		
+		port map(A2_B2, ko_OutReg, rst, ko_pipe1b, ko_pipe1);
+	
+
 	-- Final Adder (Carry Propagate)
 	pReg(0) <= A_reg(0);
 	HA51a : HAm                         --P1
@@ -275,7 +265,7 @@ begin
 		port map(pReg, ko_OutReg, p);
 	outComp : compm
 		generic map(16)
-		port map(pReg, ki, rst, sleep_RCA, ko_OutReg);
+		port map(pReg, ki, rst, ko_pipe1, ko_OutReg);
 	
 
 end arch;

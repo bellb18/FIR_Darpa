@@ -84,3 +84,31 @@ begin
 
 
 end archmsbx0;
+
+-----------------------------------------
+-- Definition of MUXm
+-----------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use work.ncl_signals.all;
+use work.functions.all;
+use work.MTNCL_gates.all;
+
+entity MUXm is
+  port(A: in dual_rail_logic;
+       B: in dual_rail_logic;
+       S: in dual_rail_logic;
+       sleep: in std_logic;
+       Z   : out dual_rail_logic);
+end MUXm;
+
+architecture arch of MUXm is
+
+begin
+
+    MUXG1: thxor0m_a
+    	port map(A.rail0, S.rail0, S.rail1, B.rail0, sleep, Z.rail0);
+    MUXG2: thxor0m_a
+    	port map(S.rail0, A.rail1, S.rail1, B.rail1, sleep, Z.rail1);
+
+end arch;

@@ -26,7 +26,7 @@ architecture arch of FIR_Liang_Pipelined_Dadda6 is
 		 p     : out dual_rail_logic_vector(15 downto 0));
 	end component;
 
-	component RCA_Pipelined_16b is
+	component Carry_Select_16bm is
 		port(
 			X    : in  dual_rail_logic_vector(15 downto 0);
 			Y    : in  dual_rail_logic_vector(15 downto 0);
@@ -80,11 +80,11 @@ signal koxr: std_logic_vector(14 downto 0);
 signal output: dual_rail_logic_vector(15 downto 0);
 
 begin
-	ADDER15: RCA_Pipelined_16b
+	ADDER15: Carry_Select_16bm
 	port map(A(15), B(15), ki, sleepax(15), rst, sleepout, koa(15), output);
 	
 	GenAdder: for i in 14 downto 1 generate
-	ADDER: RCA_Pipelined_16b
+	ADDER: Carry_Select_16bm
 	port map(A(i), B(i), koa(i + 1), sleepax(i), rst, sleepa(i+1), koa(i), A(i+1));
 	end generate GenAdder;
 	

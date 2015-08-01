@@ -9,20 +9,21 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use work.MTNCL_gates.all;
 use work.ncl_signals.all;
-entity RCA_Pipelined_16b is
+entity RCA_inoutRegs_genm is
+	generic(width : integer := 16);
 	port(
-		X    : in  dual_rail_logic_vector(15 downto 0);
-		Y    : in  dual_rail_logic_vector(15 downto 0);
+		X    : in  dual_rail_logic_vector(width - 1 downto 0);
+		Y    : in  dual_rail_logic_vector(width - 1 downto 0);
 		ki	 : in std_logic;
 		sleepIn : in  std_logic;
 		rst  : in std_logic;
 		sleepOut : out std_logic;
 		ko 	     : out std_logic;
-		S   : out dual_rail_logic_vector(15 downto 0)
+		S   : out dual_rail_logic_vector(width - 1 downto 0)
 	);
 end;
 
-architecture arch of RCA_Pipelined_16b is
+architecture arch of RCA_inoutRegs_genm is
 	component HAm
 		port(X, Y    : in  dual_rail_logic;
 			 sleep   : in  std_logic;
@@ -40,14 +41,14 @@ architecture arch of RCA_Pipelined_16b is
 	
 	component genregm is
 	generic(width : in integer := 4);
-	port(a     : IN  dual_rail_logic_vector(15 downto 0);
+	port(a     : IN  dual_rail_logic_vector(width - 1 downto 0);
 		 sleep : in  std_logic;
-		 z     : out dual_rail_logic_vector(15 downto 0));
+		 z     : out dual_rail_logic_vector(width - 1 downto 0));
 	end component;
 
 	component compm is
 		generic(width : in integer := 4);
-		port(a              : IN  dual_rail_logic_vector(15 downto 0);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
 			 ki, rst, sleep : in  std_logic;
 			 ko             : OUT std_logic);
 	end component;
@@ -59,24 +60,24 @@ architecture arch of RCA_Pipelined_16b is
 		 z   : out std_logic);
 	end component;
 
-	signal carry : dual_rail_logic_vector(16 downto 0);
-	signal inputXReg, inputYReg, sReg : dual_rail_logic_vector(15 downto 0);
+	signal carry : dual_rail_logic_vector(width downto 0);
+	signal inputXReg, inputYReg, sReg : dual_rail_logic_vector(width - 1 downto 0);
 	signal ko_OutReg, koX, koY, koSig : std_logic;
 
 begin
 	
 	-- Input Registers
 	inRegX : genregm 
-		generic map(16)
+		generic map(width)
 		port map(X, koSig, inputXReg);
 	inRegY : genregm 
-		generic map(16)
+		generic map(width)
 		port map(Y, koSig, inputYReg);
 	inCompX : compm
-		generic map(16)
+		generic map(width)
 		port map(X, ko_OutReg, rst, sleepIn, koX);
 	inCompY : compm
-		generic map(16)
+		generic map(width)
 		port map(Y, ko_OutReg, rst, sleepIn, koY);
 	andKO : th22d_a
 		port map(koX, koY, rst, koSig);
@@ -85,17 +86,10 @@ begin
 	
 	HAa : HAm
 		port map(inputXReg(0), inputYReg(0), koSig, carry(0), sReg(0));
-	FAGenmA : for i in 1 to 7 generate
+	FAGenm : for i in 1 to width - 1 generate
 		FAa : FAm
 			port map(inputXReg(i), inputYReg(i), carry(i - 1), koSig, carry(i), sReg(i));
 	end generate;
-	
-	FAGenmB : for i in 8 to 15 generate
-		FAa : FAm
-			port map(inputXReg(i), inputYReg(i), carry(i - 1), koSig, carry(i), sReg(i));
-	end generate;
-	
-	
 	
 	-- Output Register
 	outReg : genregm 

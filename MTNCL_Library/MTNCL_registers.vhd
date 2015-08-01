@@ -6,6 +6,7 @@
 --genregm - Generic sized no-reset register
 --genregrstm - Generic sized resettable register
 --ShiftRegMTNCL - Pattern delay shift register
+--PipeReg - Register for Pipelineing
 ----------------------------------------------------------
 
 ----------------------------------------------------------- 
@@ -147,6 +148,57 @@ begin
 
 	end generate;
 
+end arch;
+
+-- Pipelining Register
+library ieee;
+use ieee.std_logic_1164.all;
+use work.ncl_signals.all;
+
+entity PipeRegm is
+	generic(width : in integer := 4);
+	port(a     : IN  dual_rail_logic_vector(width - 1 downto 0);
+		 ki, rst, sleep : in std_logic;
+		 sleepout, ko : out  std_logic;
+		 z     : out dual_rail_logic_vector(width - 1 downto 0));
+end PipeRegm;
+
+architecture arch of PipeRegm is
+	component genregm is
+	generic(width : in integer := 4);
+	port(a     : IN  dual_rail_logic_vector(width - 1 downto 0);
+		 sleep : in  std_logic;
+		 z     : out dual_rail_logic_vector(width - 1 downto 0));
+	end component;
+	
+	component compm is
+		generic(width : in integer := 4);
+		port(a              : IN  dual_rail_logic_vector(width - 1 downto 0);
+			 ki, rst, sleep : in  std_logic;
+			 ko             : OUT std_logic);
+	end component;
+	
+	signal temp : dual_rail_logic_vector(width - 1 downto 0);
+	signal k_Reg1, k_Reg2 : std_logic;
+
+begin
+	Reg1 : genregm
+		generic map(width)
+		port map(a, k_reg1, temp);
+	Comp1 : compm
+		generic map(width)
+		port map(a, k_reg2, rst, sleep, k_reg1);
+	
+	Reg2 : genregm
+		generic map(width)
+		port map(temp, k_reg2, z);
+	Comp2 : compm
+		generic map(width)
+		port map(temp, ki, rst, k_reg1, k_reg2);
+		
+	sleepout <= k_reg2;
+	ko <= k_reg1;
+		
 end arch;
 
 ----------------------------------------------------------- 

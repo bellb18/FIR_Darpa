@@ -40,7 +40,6 @@ architecture arch of Dadda_Boolean_Unpipelined is
 	type InType is array (9 downto 0) of std_logic_vector(6 downto 0);
 
 	signal carry_array1, carry_array2, sum_array1, sum_array2 : Ctype;
-	signal discard_carry, one                                      : std_logic;
 	signal temp_input_array, input_array                      : InType;
 
 begin
@@ -146,6 +145,8 @@ begin
 	FA314a : FA                        -- P14
 		port map(carry_array1(2)(14), input_array(9)(5), input_array(8)(6), carry_array1(3)(15), sum_array1(3)(14));
 
+	
+	
 	-- Final Adder (Carry Propagate)
 	p(0) <= input_array(0)(0);
 	HA51a : HA                         --P1

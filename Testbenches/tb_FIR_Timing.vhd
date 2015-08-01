@@ -8,16 +8,16 @@ use ieee.math_real.all;
 use std.textio.all;
 use ieee.std_logic_textio.all;
 
-entity tb_FIR_Timing_Unpipelined is
+entity tb_FIR_Timing is
 end;
 
-architecture arch of tb_FIR_Timing_Unpipelined is
+architecture arch of tb_FIR_Timing is
 	signal X                            : DUAL_RAIL_LOGIC_VECTOR(9 downto 0);
 	signal C                            : CType;
 	signal Y                            : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 
-	component FIR_Liang_Pipelined_Dadda4 is
+	component FIR_Liang_Pipelined_Dadda7 is
 		port(X        : in  dual_rail_logic_vector(9 downto 0);
 			 C        : in  CType;
 			 ki       : in  std_logic;
@@ -29,7 +29,7 @@ architecture arch of tb_FIR_Timing_Unpipelined is
 	end component;
 
 begin
-	CUT : FIR_Liang_Pipelined_Dadda4
+	CUT : FIR_Liang_Pipelined_Dadda7
 		port map(X, C, ki, rst, sleep, ko, sleepout, Y);
 
 	inputs : process

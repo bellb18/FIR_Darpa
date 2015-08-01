@@ -14,7 +14,7 @@ entity RCA_Pipelined_16b is
 		X    : in  dual_rail_logic_vector(15 downto 0);
 		Y    : in  dual_rail_logic_vector(15 downto 0);
 		ki	 : in std_logic;
-		sleepIn : in  std_logic;
+		sleep : in  std_logic;
 		rst  : in std_logic;
 		sleepOut : out std_logic;
 		ko 	     : out std_logic;
@@ -74,10 +74,10 @@ begin
 		port map(Y, koSig, inputYReg);
 	inCompX : compm
 		generic map(16)
-		port map(X, ko_OutReg, rst, sleepIn, koX);
+		port map(X, ko_OutReg, rst, sleep, koX);
 	inCompY : compm
 		generic map(16)
-		port map(Y, ko_OutReg, rst, sleepIn, koY);
+		port map(Y, ko_OutReg, rst, sleep, koY);
 	andKO : th22d_a
 		port map(koX, koY, rst, koSig);
 	sleepOut <= ko_OutReg;

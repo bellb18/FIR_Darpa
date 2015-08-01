@@ -5,7 +5,7 @@ entity Dadda_Pipelined_RCAPiped is
 	port(x     : in  dual_rail_logic_vector(9 downto 0);
 		 y     : in  dual_rail_logic_vector(6 downto 0);
 		 ki    : in std_logic;
-		 sleepIn : in  std_logic;
+		 sleep : in  std_logic;
 		 rst      : in  std_logic;
 		 sleepOut : out std_logic;
 		 ko 	  : out std_logic;
@@ -108,10 +108,10 @@ begin
 		port map(y, koSig, inputYReg);
 	inCompX : compm
 		generic map(10)
-		port map(x, ko_pipe2, rst, sleepIn, koX);
+		port map(x, ko_pipe2, rst, sleep, koX);
 	inCompY : compm
 		generic map(7)
-		port map(y, ko_pipe2, rst, sleepIn, koY);
+		port map(y, ko_pipe2, rst, sleep, koY);
 	andKO : th22d_a
 		port map(koX, koY, rst, koSig);
 	sleepOut <= ko_OutReg;

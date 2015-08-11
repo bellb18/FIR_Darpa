@@ -110,7 +110,7 @@ begin
 	
 	GenMult: for i in 0 to 15 generate 
 		Multa: Dadda_Unpipelined
-			port map(Xarray(i), c(i), sleep_shift, S1(i));
+			port map(Xarray(i), c(i), Sarray(i), S1(i));
 	end generate;
 	
 	GenAdd1: for i in 0 to 7 generate 

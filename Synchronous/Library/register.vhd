@@ -119,6 +119,6 @@ architecture arch of reg_gen_sleep is
 begin
 	Gen1 : for i in 0 to width - 1 generate
 		RegA : reg_sleep
-			port map(D(i), clk, rst, Q(i));
+			port map(D(i), clk, rst, sleep, Q(i));
 	end generate;
 end arch;

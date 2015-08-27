@@ -102,6 +102,7 @@ entity reg_gen_sleep is
 		D   : in  std_logic_vector(width - 1 downto 0);
 		clk : in  std_logic;
 		rst : in  std_logic;
+		sleep : in std_logic;
 		Q   : out std_logic_vector(width - 1 downto 0));
 end reg_gen_sleep;
 
@@ -111,6 +112,7 @@ architecture arch of reg_gen_sleep is
 			D   : in  std_logic;
 			clk : in  std_logic;
 			rst : in  std_logic;
+			sleep : in std_logic;
 			Q   : out std_logic);
 	end component;
 

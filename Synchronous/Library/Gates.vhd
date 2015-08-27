@@ -225,7 +225,7 @@ begin
 	P1 : process(a, b, s, sleep)
 	begin
 		if (sleep = '1') then
-			z <= 0 after 1 ns;
+			z <= '0' after 1 ns;
 		elsif(s = '1') then
 			z <= b after 1 ns;
 		else

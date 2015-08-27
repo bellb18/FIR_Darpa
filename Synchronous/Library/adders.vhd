@@ -19,6 +19,56 @@ begin
 	end process;
 end arch;
 
+Library IEEE;
+use IEEE.std_logic_1164.all;
+-- Boolean Full Adder with Sleep Input
+entity FA_Sleep is
+	port(
+		X     : IN  std_logic;
+		Y     : IN  std_logic;
+		CIN   : IN  std_logic;
+		SLEEP : IN	std_logic;
+		COUT  : OUT std_logic;
+		S     : OUT std_logic);
+  end FA_Sleep;
+
+architecture arch of FA_Sleep is
+	component XOR2_Sleep is
+		port(a, b  : in  std_logic;
+			 sleep : in std_logic;
+			 z : out std_logic);
+	end component;
+	
+	component AND2_Sleep is
+		port(a, b  : in std_logic;
+			 sleep : in std_logic;
+			 z : out std_logic);
+	end component;
+	
+	component OR2_Sleep is
+		port(a, b  : in std_logic;
+			 sleep : in std_logic;
+			 z : out std_logic);
+	end component;
+
+	signal S1 : std_logic;
+	signal C1, C2, C3 : std_logic;
+	
+begin
+		xor_0 : XOR2_Sleep
+			port map(X, Y, SLEEP, S1);
+		xor_1 : XOR2_Sleep
+			port map(S1, CIN, SLEEP, S);
+		and_0 : AND2_Sleep
+			port map(X, Y, SLEEP, C1);
+		or_1  : OR2_Sleep
+			port map(X, Y, SLEEP, C2);
+		and_3 : AND2_Sleep
+			port map(C2, CIN, SLEEP, C3);
+		or_2  : OR2_Sleep
+			port map(C1, C3, SLEEP, COUT);	
+end arch;
+
 -- Boolean Half Adder
 Library IEEE;
 use IEEE.std_logic_1164.all;
@@ -39,6 +89,37 @@ begin
   end process;
 end arch;
 
+-- Boolean Half Adder with Sleep Input
+Library IEEE;
+use IEEE.std_logic_1164.all;
+entity HA_Sleep is
+  port(
+    X       : IN std_logic;
+    Y       : IN std_logic;
+    SLEEP	: IN std_logic;
+    COUT    : OUT std_logic;
+    S       : OUT std_logic);
+  end HA_Sleep;
+
+architecture arch of HA_Sleep is
+	component XOR2_Sleep is
+		port(a, b  : in std_logic;
+			 sleep : in std_logic;
+			 z : out std_logic);
+	end component;
+	
+	component AND2_Sleep is
+		port(a, b  : in std_logic;
+			 sleep : in std_logic;
+			 z : out std_logic);
+	end component;
+begin
+	and_0 : AND2_Sleep
+		port map(X, Y, SLEEP, COUT);
+    xor_0 : XOR2_Sleep
+    	port map(X, Y, SLEEP, S);
+end arch;
+
 -- Boolean Full Adder with 1
 Library IEEE;
 use IEEE.std_logic_1164.all;
@@ -57,6 +138,48 @@ begin
     S     <= not (X xor Y);
     COUT  <= X or Y;
   end process;
+end arch;
+
+-- Boolean Full Adder with 1 and Sleep Input
+Library IEEE;
+use IEEE.std_logic_1164.all;
+entity FA1_Sleep is
+  port(
+    X       : IN  std_logic;
+    Y       : IN  std_logic;
+    SLEEP	: IN  std_logic;
+    COUT    : OUT std_logic;
+    S       : OUT std_logic);
+  end FA1_Sleep;
+
+architecture arch of FA1_Sleep is
+	component XOR2_Sleep is
+		port(a, b  : in std_logic;
+			 sleep : in std_logic;
+			 z : out std_logic);
+	end component;
+	
+	component INV_A_Sleep is
+		port(a : in std_logic;
+			 sleep : in std_logic; 
+			 z : out std_logic);
+	end component;
+		
+	component OR2_Sleep is
+		port(a, b  : in std_logic;
+			 sleep : in std_logic;
+			 z : out std_logic);
+	end component;
+
+	signal S0	: std_logic;
+	
+begin
+	xor_0 : XOR2_Sleep
+		port map(X, Y, SLEEP, S0);
+	inv_1 : INV_A_Sleep
+		port map(S0, SLEEP, S);
+    or_0  : OR2_Sleep
+    	port map(X, Y, SLEEP, COUT);
 end arch;
 
 -- Boolean Half Adder with 1

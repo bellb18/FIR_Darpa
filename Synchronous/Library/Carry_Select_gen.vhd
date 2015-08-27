@@ -55,40 +55,32 @@ architecture arch of Carry_Select_16b is
 	end component;
 
 	signal carryA, carry1, carry0     : std_logic_vector(7 downto 0);
-	signal inputXReg, inputYReg, sReg : std_logic_vector(15 downto 0);
+	signal sReg : std_logic_vector(15 downto 0);
 	signal sReg0, sReg1               : std_logic_vector(7 downto 0);
 
 begin
 
-	-- Input Registers
-	inRegX : reg_gen
-		generic map(16)
-		port map(X, clk, rst, inputXReg);
-	inRegY : reg_gen
-		generic map(16)
-		port map(Y, clk, rst, inputYReg);
-
 	HAa : HA
-		port map(inputXReg(0), inputYReg(0), carryA(0), sReg(0));
+		port map(X(0), Y(0), carryA(0), sReg(0));
 	FAGen1m : for i in 1 to 7 generate
 		FAa : FA
-			port map(inputXReg(i), inputYReg(i), carryA(i - 1), carryA(i), sReg(i));
+			port map(X(i), Y(i), carryA(i - 1), carryA(i), sReg(i));
 	end generate;
 
 	-- Carry = 0
 	HAb : HA
-		port map(inputXReg(8), inputYReg(8), carry0(0), sReg0(0));
+		port map(X(8), Y(8), carry0(0), sReg0(0));
 	FAGen2m : for i in 1 to 7 generate
 		FAa : FA
-			port map(inputXReg(i + 8), inputYReg(i + 8), carry0(i - 1), carry0(i), sReg0(i));
+			port map(X(i + 8), Y(i + 8), carry0(i - 1), carry0(i), sReg0(i));
 	end generate;
 
 	-- Carry = 1
 	FAa : FA1
-		port map(inputXReg(8), inputYReg(8), carry1(0), sReg1(0));
+		port map(X(8), Y(8), carry1(0), sReg1(0));
 	FAGen3m : for i in 1 to 7 generate
 		FAa : FA
-			port map(inputXReg(i + 8), inputYReg(i + 8), carry1(i - 1), carry1(i), sReg1(i));
+			port map(X(i + 8), Y(i + 8), carry1(i - 1), carry1(i), sReg1(i));
 	end generate;
 
 	-- Multiplex

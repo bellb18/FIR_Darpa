@@ -60,40 +60,32 @@ architecture arch of Carry_Select_16b_Sleep is
 	end component;
 
 	signal carryA, carry1, carry0     : std_logic_vector(7 downto 0);
-	signal inputXReg, inputYReg, sReg : std_logic_vector(15 downto 0);
+	signal sReg : std_logic_vector(15 downto 0);
 	signal sReg0, sReg1               : std_logic_vector(7 downto 0);
 
 begin
 
-	-- Input Registers
-	inRegX : reg_gen_sleep
-		generic map(16)
-		port map(X, clk, rst, sleep, inputXReg);
-	inRegY : reg_gen_sleep
-		generic map(16)
-		port map(Y, clk, rst, sleep, inputYReg);
-
 	HAa : HA_Sleep
-		port map(inputXReg(0), inputYReg(0), sleep, carryA(0), sReg(0));
+		port map(X(0), Y(0), sleep, carryA(0), sReg(0));
 	FAGen1m : for i in 1 to 7 generate
 		FAa : FA_Sleep
-			port map(inputXReg(i), inputYReg(i), carryA(i - 1), sleep, carryA(i), sReg(i));
+			port map(X(i), Y(i), carryA(i - 1), sleep, carryA(i), sReg(i));
 	end generate;
 
 	-- Carry = 0
 	HAb : HA_Sleep
-		port map(inputXReg(8), inputYReg(8), sleep, carry0(0), sReg0(0));
+		port map(X(8), Y(8), sleep, carry0(0), sReg0(0));
 	FAGen2m : for i in 1 to 7 generate
 		FAa : FA_Sleep
-			port map(inputXReg(i + 8), inputYReg(i + 8), carry0(i - 1), sleep, carry0(i), sReg0(i));
+			port map(X(i + 8), Y(i + 8), carry0(i - 1), sleep, carry0(i), sReg0(i));
 	end generate;
 
 	-- Carry = 1
 	FAa : FA1_Sleep
-		port map(inputXReg(8), inputYReg(8), sleep, carry1(0), sReg1(0));
+		port map(X(8), Y(8), sleep, carry1(0), sReg1(0));
 	FAGen3m : for i in 1 to 7 generate
 		FAa : FA_Sleep
-			port map(inputXReg(i + 8), inputYReg(i + 8), carry1(i - 1), sleep, carry1(i), sReg1(i));
+			port map(X(i + 8), Y(i + 8), carry1(i - 1), sleep, carry1(i), sReg1(i));
 	end generate;
 
 	-- Multiplex

@@ -59,14 +59,12 @@ begin
 			port map(X, Y, SLEEP, S1);
 		xor_1 : XOR2_Sleep
 			port map(S1, CIN, SLEEP, S);
-		and_0 : AND2_Sleep
+		nand_0 : NAND2_Sleep
 			port map(X, Y, SLEEP, C1);
-		or_1  : OR2_Sleep
-			port map(X, Y, SLEEP, C2);
-		and_3 : AND2_Sleep
-			port map(C2, CIN, SLEEP, C3);
-		or_2  : OR2_Sleep
-			port map(C1, C3, SLEEP, COUT);	
+		nand_1 : NAND2_Sleep
+			port map(S1, CIN, SLEEP, C2);
+		nand_2  : NAND2_Sleep
+			port map(C1, C2, SLEEP, COUT);	
 end arch;
 
 -- Boolean Half Adder

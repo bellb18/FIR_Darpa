@@ -37,32 +37,17 @@ entity reg_sleep is
 end reg_sleep;
 
 architecture arch of reg_sleep is
-	component INV_A_Sleep is
-	port(a : in  std_logic;
-		 sleep : in std_logic;
-		 z : out std_logic);
-	end component;
-	
-	component NAND2_Sleep is
-		port(a, b  : in std_logic;
-			 sleep : in std_logic;
-			 z : out std_logic);
-	end component;
-
-	signal na0, na1, na2, na3 : std_logic;
-	signal n0 : std_logic;
 	
 begin
-	inv_0  : INV_A_Sleep
-		port map(D, sleep, n0);
-	nand_0 : NAND2_Sleep
-		port map(D, clk, sleep, na0);
-	nand_1 : NAND2_Sleep
-		port map(n0, clk, sleep, na1);
-	nand_2 : NAND2_Sleep
-		port map(na0, na3, sleep, Q);
-	nand_3 : NAND2_Sleep
-		port map(na1, na2, sleep, na3);
+	process(clk, rst, sleep) begin
+		if(rst = '1') then
+			Q <= '0';
+		elsif(sleep = '1') then
+			Q <= '0';
+		elsif(clk'event and clk = '1') then
+			Q <= D;
+		end if;
+	end process;
 end arch;
 
 

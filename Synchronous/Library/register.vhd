@@ -32,6 +32,7 @@ entity reg_sleep is
 		D   : in  std_logic;
 		clk : in  std_logic;
 		rst : in  std_logic;
+		sleep : in std_logic;
 		Q   : out std_logic);
 end reg_sleep;
 
@@ -53,15 +54,15 @@ architecture arch of reg_sleep is
 	
 begin
 	inv_0  : INV_A_Sleep
-		port map(D, rst, n0);
+		port map(D, sleep, n0);
 	nand_0 : NAND2_Sleep
-		port map(D, clk, rst, na0);
+		port map(D, clk, sleep, na0);
 	nand_1 : NAND2_Sleep
-		port map(n0, clk, rst, na1);
+		port map(n0, clk, sleep, na1);
 	nand_2 : NAND2_Sleep
-		port map(na0, na3, rst, Q);
+		port map(na0, na3, sleep, Q);
 	nand_3 : NAND2_Sleep
-		port map(na1, na2, rst, na3);
+		port map(na1, na2, sleep, na3);
 end arch;
 
 

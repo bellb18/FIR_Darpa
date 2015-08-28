@@ -701,7 +701,9 @@ architecture arch of ShiftRegMTNCL4 is
 	end component;
 
 	signal wrap, wrapbuf, r12 : dual_rail_logic_vector(width - 1 downto 0);
+	signal wrapbuf_0		: dual_rail_logic_vector(width - 1 downto 0);
 	signal c1, c2, kibuf    : std_logic;
+	signal kibuf_1,	sleepout_0	: std_logic;
 
 begin
 	Gregdata : genregrstm
@@ -720,7 +722,11 @@ begin
 
 	Gbuf: Eregm
 		generic map(width)
-		port map(wrap, ki, rst, c2, wrapbuf, sleepout, kibuf);
+		port map(wrap, kibuf_1, rst, c2, wrapbuf_0, sleepout_0, kibuf);
+		
+	Gbuf_1 : Eregm
+		generic map(width)
+		port map(wrapbuf_0, ki, rst, sleepout_0, wrapbuf, sleepout, kibuf_1);
 		
 	wrapout <= wrapbuf;
 	ko       <= c1;

@@ -52,10 +52,10 @@ begin
                 		state <= detect;
             		end if;
             	when sleep=>
-            		if reg_out > 1 then
-                		state <= idle;
-            		else
+            		if reg_out > 15 then
                 		state <= sleep;
+            		else
+                		state <= detect;
             		end if;
 			end case;
 		end if;

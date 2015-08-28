@@ -50,6 +50,12 @@ architecture arch of FA_Sleep is
 			 sleep : in std_logic;
 			 z : out std_logic);
 	end component;
+	
+	component NAND2_Sleep is
+	port(a, b: in  std_logic;
+		 sleep : in std_logic;
+		 z : out std_logic);
+	end component;
 
 	signal S1 : std_logic;
 	signal C1, C2, C3 : std_logic;

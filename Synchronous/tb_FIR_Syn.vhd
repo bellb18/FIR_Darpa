@@ -20,13 +20,13 @@ architecture arch of tb_FIR_Syn is
 		 cin_0, cin_1, cin_2, cin_3, cin_4, cin_5, cin_6, cin_7, cin_8, cin_9, cin_10, cin_11, cin_12, cin_13, cin_14, cin_15 : in  std_logic_vector(6 downto 0);
 		 clk                                                                                                                  : in  std_logic;
 		 rst                                                                                                                  : in  std_logic;
-		 sleep                                                                                                                : in  std_logic;		
+		 --sleep                                                                                                                : in  std_logic;		
 		 y                                                                                                                    : out std_logic_vector(10 downto 0));
 	end component;
 
 begin
 	CUT : FIR_Liang_Sync_PowerGating
-		port map(X, C(0), C(1), C(2), C(3), C(4), C(5), C(6), C(7), C(8), C(9), C(10), C(11), C(12), C(13), C(14), C(15), clk, rst, sleep, Y);
+		port map(X, C(0), C(1), C(2), C(3), C(4), C(5), C(6), C(7), C(8), C(9), C(10), C(11), C(12), C(13), C(14), C(15), clk, rst, Y);
 
 	inputs : process
 
@@ -52,7 +52,7 @@ begin
 		X <= "0000000000";
 		rst   <= '1';
 		clk <= '0';
-		sleep <= '0';
+		--sleep <= '0';
 		wait for 2 ns;
 		clk <= '1';
 		wait for 2 ns;

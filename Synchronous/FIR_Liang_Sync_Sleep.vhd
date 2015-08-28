@@ -7,7 +7,7 @@ entity FIR_Liang_Sync_Sleep is
 		 cin_0, cin_1, cin_2, cin_3, cin_4, cin_5, cin_6, cin_7, cin_8, cin_9, cin_10, cin_11, cin_12, cin_13, cin_14, cin_15 : in  std_logic_vector(6 downto 0);
 		 clk                                                                                                                  : in  std_logic;
 		 rst                                                                                                                  : in  std_logic;
-		 --sleep                                                                                                                : in  std_logic;
+		 sleep                                                                                                                : in  std_logic;
 		 y                                                                                                                    : out std_logic_vector(10 downto 0));
 end;
 
@@ -50,34 +50,49 @@ architecture arch of FIR_Liang_Sync_Sleep is
 			output   : out  std_logic);
 	end component;
 	
-
+	type Stage1 is array (15 downto 0) of STD_LOGIC_VECTOR(15 downto 0);
+	type Stage2 is array (7 downto 0) of STD_LOGIC_VECTOR(15 downto 0);
+	type Stage3 is array (3 downto 0) of STD_LOGIC_VECTOR(15 downto 0);
+	type Stage4 is array (1 downto 0) of STD_LOGIC_VECTOR(15 downto 0);
 	type Ytype is array (1 to 15) of STD_LOGIC_VECTOR(15 downto 0);
 	signal Xarray : XtypeSync;
-	signal A      : Ytype;
-	signal B      : Ytype;
 	signal output : std_logic_vector(15 downto 0);
 	signal c	  : CtypeSync;
-	signal sleep : std_logic;
+	--signal sleep : std_logic;
+	-- Stages for the different adders
+	signal S1	  : Stage1;
+	signal S2     : Stage2;
+	signal S3     : Stage3;
+	signal S4     : Stage4;
 
 begin
-	detector : sleep_detector
-		port map(clk, x, rst, sleep);
+	--detector : sleep_detector
+		--port map(clk, x, rst, sleep);
 	
-	ADDER15 : Carry_Select_16b_Sleep
-		port map(A(15), B(15), clk, rst, sleep, output);
+	Xarray(0) <= x;
+	
+	GenAdd1: for i in 0 to 7 generate 
+		Adder: Carry_Select_16b_sleep
+		port map(S1(2*i), S1(2*i + 1), clk, rst, sleep, S2(i));
+	end generate;
+	
+	GenAdd2: for i in 0 to 3 generate
+		Adder: Carry_Select_16b_sleep
+		port map(S2(2*i), S2(2*i + 1), clk, rst, sleep, S3(i));
+	end generate;
 
-	GenAdder : for i in 14 downto 1 generate
-		ADDER : Carry_Select_16b_Sleep
-			port map(A(i), B(i), clk, rst, sleep, A(i + 1));
-	end generate GenAdder;
+	GenAdd3: for i in 0 to 1 generate
+		Adder: Carry_Select_16b_sleep
+		port map(S3(2*i), S3(2*i + 1), clk, rst, sleep, S4(i));
+	end generate;
+	
+	FinalAdder: Carry_Select_16b_sleep
+		port map(S4(0), S4(1), clk, rst, sleep, output);
 
-	GenMult : for i in 15 downto 1 generate
+	GenMult : for i in 15 downto 0 generate
 		Mult : Dadda_Pipelined_Sync_Sleep
-			port map(Xarray(i), c(i), clk, rst, sleep, B(i));
+			port map(Xarray(i), c(i), clk, rst, sleep, S1(i));
 	end generate GenMult;
-
-	Mult0 : Dadda_Pipelined_Sync_Sleep
-		port map(X, c(0), clk, rst, sleep, A(1));
 
 	ShiftReg0 : reg_gen_sleep
 		generic map(10)

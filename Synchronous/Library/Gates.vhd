@@ -14,9 +14,9 @@ begin
 	bufx0 : process(a)
 	begin
 		if a = '1' then
-			z <= '0' after 1 ns;
+			z <= '0';
 		else
-			z <= '1' after 2 ns;
+			z <= '1';
 		end if;
 	end process;
 end arch;
@@ -38,9 +38,9 @@ begin
 	bufx0 : process(a, Sleep)
 	begin
 		if sleep = '1' or a = '1' then
-			z <= '0' after 1 ns;
+			z <= '0';
 		else
-			z <= '1' after 2 ns;
+			z <= '1';
 		end if;
 	end process;
 end arch;
@@ -58,7 +58,7 @@ end AND2;
 
 architecture arch of AND2 is
 begin
-	z <= a and b after 1 ns;
+	z <= a and b;
 end arch;
 
 ----------------------------------------------------------- 
@@ -77,9 +77,9 @@ architecture arch of AND2_Sleep is
 begin
 	and2_sleep : Process(a, b, sleep) begin
 	if (sleep = '1') then
-		z <= '0' after 1 ns;
+		z <= '0';
 	else
-		z <= a and b after 1 ns;
+		z <= a and b;
 	end if;
 	end Process;
 end arch;
@@ -97,7 +97,7 @@ end OR2;
 
 architecture arch of OR2 is
 begin
-	z <= a or b after 1 ns;
+	z <= a or b;
 end arch;
 
 ----------------------------------------------------------- 
@@ -114,7 +114,13 @@ end OR2_Sleep;
 
 architecture arch of OR2_Sleep is
 begin
-	z <= (not sleep) and (a or b) after 1 ns;
+	or2_sleep : Process(a, b, sleep) begin
+		if (sleep = '1') then
+			z <= '0';
+		else
+			z <= a or b ;
+		end if;
+	end process;
 end arch;
 
 ----------------------------------------------------------- 
@@ -133,9 +139,9 @@ architecture arch of NAND2_Sleep is
 begin
 	nand2_sleep : Process(a, b, sleep) begin
 	if (sleep = '1') then
-		z <= '0' after 1 ns;
+		z <= '0';
 	else
-		z <= not (a and b) after 1 ns;
+		z <= a nand b;
 	end if;
 	end Process;
 end arch;
@@ -155,9 +161,9 @@ architecture arch of XOR2 is
 begin
 	xor2 : Process(a, b) begin
 	if (a = b) then
-		z <= '0' after 1 ns;
+		z <= '0';
 	else
-		z <= '1' after 2 ns;
+		z <= '1';
 	end if;
 	end Process;
 end arch;
@@ -178,9 +184,9 @@ architecture arch of XOR2_Sleep is
 begin
 	xor2 : Process(a, b, sleep) begin
 	if (a = b) or (sleep = '1') then
-		z <= '0' after 1 ns;
+		z <= '0';
 	else
-		z <= '1' after 2 ns;
+		z <= '1';
 	end if;
 	end Process;
 end arch;
@@ -201,9 +207,9 @@ begin
 	P1 : process(a, b, s)
 	begin
 		if(s = '1') then
-			z <= b after 1 ns;
+			z <= b;
 		else
-			z <= a after 1 ns;
+			z <= a;
 		end if;
 	end process;
 end arch;
@@ -225,11 +231,11 @@ begin
 	P1 : process(a, b, s, sleep)
 	begin
 		if (sleep = '1') then
-			z <= '0' after 1 ns;
+			z <= '0';
 		elsif(s = '1') then
-			z <= b after 1 ns;
+			z <= b;
 		else
-			z <= a after 1 ns;
+			z <= a;
 		end if;
 	end process;
 end arch;

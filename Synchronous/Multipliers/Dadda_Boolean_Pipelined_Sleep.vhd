@@ -15,6 +15,12 @@ architecture arch of Dadda_Pipelined_Sync_Sleep is
 			 SLEEP     : in  std_logic;
 			 COUT, S   : out std_logic);
 	end component;
+	
+	component INV_A_Sleep is
+	port(a : in  std_logic;
+		 sleep : in std_logic;
+		 z : out std_logic);
+	end component;
 
 	component HA_Sleep is
 		port(
@@ -88,10 +94,12 @@ begin
 		end generate;
 	end generate;
 	InvGena : for i in 0 to 8 generate
-		input_array(i)(6) <= not temp_input_array(i)(6);
+		Inv1 : INV_A_Sleep
+			port map(temp_input_array(i)(6), sleep, input_array(i)(6));
 	end generate;
 	InvGenb : for i in 0 to 5 generate
-		input_array(9)(i) <= not temp_input_array(9)(i);
+		Inv2 : INV_A_Sleep
+			port map(temp_input_array(9)(i), sleep, input_array(9)(i));
 	end generate;
 	input_array(9)(6) <= temp_input_array(9)(6);
 

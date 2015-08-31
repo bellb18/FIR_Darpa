@@ -39,18 +39,6 @@ architecture arch of FA_Sleep is
 			 z : out std_logic);
 	end component;
 	
-	component AND2_Sleep is
-		port(a, b  : in std_logic;
-			 sleep : in std_logic;
-			 z : out std_logic);
-	end component;
-	
-	component OR2_Sleep is
-		port(a, b  : in std_logic;
-			 sleep : in std_logic;
-			 z : out std_logic);
-	end component;
-	
 	component NAND2_Sleep is
 	port(a, b: in  std_logic;
 		 sleep : in std_logic;

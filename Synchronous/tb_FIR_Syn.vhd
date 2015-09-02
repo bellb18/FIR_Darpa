@@ -13,9 +13,9 @@ architecture arch of tb_FIR_Syn is
 	signal X                            : std_LOGIC_VECTOR(9 downto 0);
 	signal C                            : CTypeSync;
 	signal Y                            : std_LOGIC_VECTOR(10 downto 0);
-	signal clk, rst, sleep : std_logic;
+	signal clk, rst : std_logic;
 
-	component FIR_Liang_Sync_PowerGating is
+	component FIR_Liang_Sync_Sleep is
 	port(x                                                                                                                    : in  std_logic_vector(9 downto 0);
 		 cin_0, cin_1, cin_2, cin_3, cin_4, cin_5, cin_6, cin_7, cin_8, cin_9, cin_10, cin_11, cin_12, cin_13, cin_14, cin_15 : in  std_logic_vector(6 downto 0);
 		 clk                                                                                                                  : in  std_logic;
@@ -25,7 +25,7 @@ architecture arch of tb_FIR_Syn is
 	end component;
 
 begin
-	CUT : FIR_Liang_Sync_PowerGating
+	CUT : FIR_Liang_Sync_Sleep
 		port map(X, C(0), C(1), C(2), C(3), C(4), C(5), C(6), C(7), C(8), C(9), C(10), C(11), C(12), C(13), C(14), C(15), clk, rst, Y);
 
 	inputs : process
@@ -59,21 +59,14 @@ begin
 		rst <= '0';
 		wait for 10 ns;
 
-		for i in 0 to 99 loop
+		for i in 0 to 299 loop
 			clk <= '0';
 			X <= std_logic_vector(to_signed(Xarray(i), 10));
 			wait for 10 ns;
 			clk <= '1';
 			wait for 10 ns;
 		end loop;
-		
-		for i in 0 to 99 loop
-			clk <= '0';
-			wait for 10 ns;
-			clk <= '1';
-			wait for 10 ns;
-		end loop;
-		wait;
+
 		
 	end process;
 
@@ -83,11 +76,13 @@ begin
 		variable count   : integer := 0;
 		variable s       : line;
 	begin
-		if j >= 15 and count < 100 then
+		if j >= 15 and count < 300 then
 			Correct := ((Xarray(j) + Xarray(j - 15)) * 0 + (Xarray(j - 1) + Xarray(j - 14)) * 0 + (Xarray(j - 2) + Xarray(j - 13)) * 1 - 2 * (Xarray(j - 3) + Xarray(j - 12)) + (Xarray(j - 4) + Xarray(j - 11)) * 2 + (Xarray(j - 5) + Xarray(j - 10)) * 0 - 7 * (Xarray(j
 							- 6) + Xarray(j - 9)) + (Xarray(j - 7) + Xarray(j - 8)) * 38) / 32;
 			if (abs (Correct - to_integer(signed(Y))) >= 2) then
-				write(s, string'("Error: "));
+				write(s, string'("j="));
+				write(s, integer'(j));
+				write(s, string'(" -- Error: "));
 				write(s, std_logic_vector'(Y));
 				write(s, string'(" /= "));
 				write(s, integer'(Correct));

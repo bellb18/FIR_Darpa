@@ -7,7 +7,7 @@ entity FIR_Liang_Sync_Sleep is
 		 cin_0, cin_1, cin_2, cin_3, cin_4, cin_5, cin_6, cin_7, cin_8, cin_9, cin_10, cin_11, cin_12, cin_13, cin_14, cin_15 : in  std_logic_vector(6 downto 0);
 		 clk                                                                                                                  : in  std_logic;
 		 rst                                                                                                                  : in  std_logic;
-		 sleep                                                                                                                : in  std_logic;
+		 --sleep                                                                                                                : in  std_logic;
 		 y                                                                                                                    : out std_logic_vector(10 downto 0));
 end;
 
@@ -58,7 +58,7 @@ architecture arch of FIR_Liang_Sync_Sleep is
 	signal Xarray : XtypeSync;
 	signal output : std_logic_vector(15 downto 0);
 	signal c	  : CtypeSync;
-	--signal sleep : std_logic;
+	signal sleep : std_logic;
 	-- Stages for the different adders
 	signal S1	  : Stage1;
 	signal S2     : Stage2;
@@ -66,8 +66,8 @@ architecture arch of FIR_Liang_Sync_Sleep is
 	signal S4     : Stage4;
 
 begin
-	--detector : sleep_detector
-		--port map(clk, x, rst, sleep);
+	detector : sleep_detector
+		port map(clk, x, rst, sleep);
 	
 	Xarray(0) <= x;
 	

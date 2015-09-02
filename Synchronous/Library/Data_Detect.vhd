@@ -46,7 +46,7 @@ begin
                 		state <= idle;
 					end if;
             	when detect =>
-            		if reg_out > 15 then
+            		if reg_out > 14 then
                 		state <= sleep;
             		else
                 		state <= detect;

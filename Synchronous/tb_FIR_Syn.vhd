@@ -62,9 +62,9 @@ begin
 		for i in 0 to 299 loop
 			clk <= '0';
 			X <= std_logic_vector(to_signed(Xarray(i), 10));
-			wait for 10 ns;
+			wait for 1322 ps;
 			clk <= '1';
-			wait for 10 ns;
+			wait for 1322 ps;
 		end loop;
 
 		

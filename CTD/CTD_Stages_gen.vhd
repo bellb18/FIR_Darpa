@@ -44,8 +44,8 @@ architecture arch of CTD_Stages_genm is
 
 	-- Signal Declarations
 	type CTDXtype is array (0 to size - 1) of DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
-	signal s1_sleepout, s1_ko, s2_sleepout1, s2_sleepout2, s2_ko1, s2_ko2 : std_logic;
-	signal s1_out, s2_out, s2_in : dual_rail_logic_vector(10 downto 0);
+	signal s1_sleepout, s1_ko, s2_sleepout1, s3_sleepout, s2_sleepout2, s2_ko1, s2_ko2 : std_logic;
+	signal s1_out, s2_out, s3_out, s2_in : dual_rail_logic_vector(10 downto 0);
 	signal Xarray : CTDXtype;
 	signal karray, sarray : std_logic_vector(size - 1 downto 0);
 
@@ -83,36 +83,29 @@ begin
 			port map(s2_sleepout2, sleep, skip.RAIL1, sleepout);
 	end generate;
 	
-	-- For Size > 2  FIX EVERYTHING
---	S3: if (size > 2) generate
---		RegFirst : ShiftRegMTNCL
---			generic map(11, "00000000000")
---			port map(Xarray(0), ki, rst, sleep, Xarray(1), sarray(X'length - 1), karray(0));
---		Mko : Mux
---			port map(s2_ko, ki, skip.RAIL1, ko);
---			
---		RegMidGen : for i in 1 to X'length - 2 generate
---			RegMid: ShiftRegMTNCL
---				generic map(11, "00000000000")
---				port map(Xarray(i), karray(i), rst, sleep, Xarray(i + 1), sarray(i + 1), karray(i));
---		end generate;
---		
---		RegLast : ShiftRegMTNCL
---			generic map(11, "00000000000")
---			port map(Xarray(X'length - 1), ki, rst, sleep, s2_out, s2_sleepout, s2_ko);
---		MData : MUX_genm
---			generic map(11)
---			port map(s2_out, X, skip, sleep, Z); -- Is this sleep wrong?
---		MSleep : MUX
---			port map(s2_sleepout, sleep, skip.RAIL1, sleepout);
---	end generate;
---	
---	
---	Xarray(15) <= X;
---	GenReg8 : for i in 15 downto 8 generate
---		ShiftReg : ShiftRegMTNCL
---			generic map(11, "0000000000")
---			port map(Xarray(i), karray(i - 1), rst, sarray(i), Xarray(i - 1), sarray(i - 1), karray(i));
---	end generate;
+	-- For Size > 2
+	S3: if (size > 2) generate
+		RegFirst : ShiftRegMTNCL
+			generic map(11, "00000000000")
+			port map(Xarray(0), karray(1), rst, sleep, Xarray(1), sarray(1), karray(0));
+		Mko : Mux
+			port map(karray(0), ki, skip.RAIL1, ko);
+			
+		RegMidGen : for i in 1 to size - 2 generate
+			RegMid: ShiftRegMTNCL
+				generic map(11, "00000000000")
+				port map(Xarray(i), karray(i + 1), rst, sarray(i), Xarray(i + 1), sarray(i + 1), karray(i));
+		end generate;
+		
+		RegLast : ShiftRegMTNCL
+			generic map(11, "00000000000")
+			port map(Xarray(size - 1), ki, rst, sarray(size - 1), s3_out, s3_sleepout, karray(size - 1));
+		MData : MUX_genm
+			generic map(11)
+			port map(s3_out, X, skip, sleep, Z); -- Is this sleep wrong?
+		MSleep : MUX
+			port map(s3_sleepout, sleep, skip.RAIL1, sleepout);
+	end generate;
+	
 
 end arch;

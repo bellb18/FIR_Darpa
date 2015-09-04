@@ -4,7 +4,7 @@ Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 entity CTD_genm is
-	port(X        : in  dual_rail_logic_vector(11 downto 0);
+	port(X        : in  dual_rail_logic_vector(10 downto 0);
 		 skip     : in  dual_rail_logic_vector(3 downto 0);
 		 ki       : in  std_logic;
 		 sleepIn  : in  std_logic;

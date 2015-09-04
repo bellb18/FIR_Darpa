@@ -34,7 +34,7 @@ architecture arch of tb_CTD_Stages_gen is
 
 begin
 	CUT : CTD_Stages_genm
-		generic map(5)
+		generic map(8)
 		port map(X, skip, ki, sleep, rst, sleepout, ko, Z);
 
 	inputs : process
@@ -75,7 +75,7 @@ begin
 			sleep <= '1';
 			wait for 1 ns;
 
-			for i in 0 to 9 loop
+			for i in 0 to 10 loop
 				X(i).rail1 <= '0';
 				X(i).rail0 <= '0';
 			end loop;

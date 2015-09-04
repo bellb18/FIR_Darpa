@@ -1,4 +1,4 @@
--- Not Generic Yet
+-- Only works up to size 8
 
 Library IEEE;
 use IEEE.std_logic_1164.all;
@@ -58,7 +58,7 @@ begin
 			port map(X, ki, rst, sleep, s1_out, s1_sleepout, s1_ko);
 		MData : MUX_genm
 			generic map(11)
-			port map(s1_out, X, skip, sleep, Z);
+			port map(s1_out, X, skip, s1_sleepout, Z);
 		MSleep : MUX
 			port map(s1_sleepout, sleep, skip.RAIL1, sleepout);
 		Mko : Mux
@@ -78,7 +78,7 @@ begin
 			port map(Xarray(1), ki, rst, s2_sleepout1, s2_out, s2_sleepout2, s2_ko2);
 		MData : MUX_genm
 			generic map(11)
-			port map(s2_out, X, skip, sleep, Z); -- Is this sleep wrong?
+			port map(s2_out, X, skip, s2_sleepout2, Z); -- Is this sleep wrong?
 		MSleep : MUX
 			port map(s2_sleepout2, sleep, skip.RAIL1, sleepout);
 	end generate;
@@ -102,7 +102,7 @@ begin
 			port map(Xarray(size - 1), ki, rst, sarray(size - 1), s3_out, s3_sleepout, karray(size - 1));
 		MData : MUX_genm
 			generic map(11)
-			port map(s3_out, X, skip, sleep, Z); -- Is this sleep wrong?
+			port map(s3_out, X, skip, s3_sleepout, Z); -- Is this sleep wrong?
 		MSleep : MUX
 			port map(s3_sleepout, sleep, skip.RAIL1, sleepout);
 	end generate;

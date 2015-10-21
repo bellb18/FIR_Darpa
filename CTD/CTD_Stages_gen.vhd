@@ -1,5 +1,3 @@
--- Only works up to size 8
-
 Library IEEE;
 use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;

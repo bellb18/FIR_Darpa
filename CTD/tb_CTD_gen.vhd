@@ -7,19 +7,18 @@ use ieee.math_real.all;
 use std.textio.all;
 use ieee.std_logic_textio.all;
 
-entity tb_CTD_Stages_gen is
+entity tb_CTD_gen is
 end;
 
-architecture arch of tb_CTD_Stages_gen is
+architecture arch of tb_CTD_gen is
 	signal X                            : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
 	signal Z                            : DUAL_RAIL_LOGIC_VECTOR(10 downto 0);
-	signal skip : dual_rail_logic;
+	signal skip : std_logic_vector(3 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 
-	component CTD_stages_genm is
-	generic(size : in integer := 4);
+	component CTD_genm is
 	port(X        : in  dual_rail_logic_vector(10 downto 0);
-		 skip     : in  dual_rail_logic;
+		 skip     : in  std_logic_vector(3 downto 0);
 		 ki       : in  std_logic;
 		 sleep  : in  std_logic;
 		 rst      : in  std_logic;
@@ -33,7 +32,7 @@ architecture arch of tb_CTD_Stages_gen is
 	
 
 begin
-	CUT : CTD_Stages_genm
+	CUT : CTD_genm
 		generic map(8)
 		port map(X, skip, ki, sleep, rst, sleepout, ko, Z);
 
@@ -48,8 +47,9 @@ begin
 			X(i).rail0 <= '0';
 		end loop;
 		
-		skip.rail1 <= '0';
-		skip.rail0 <= '0';
+		for i in 0 to 3 loop
+			skip(i) <= '0';
+		end loop;
 
 		rst   <= '1';
 		sleep <= '1';
@@ -61,11 +61,13 @@ begin
 			wait for 1 ns;
 			
 			if i < 50 then
-				skip.rail1 <= '0';
-				skip.rail0 <= '1';
+				for j in 0 to 3 loop
+					skip(j) <= '0';
+				end loop;
 			else
-				skip.rail1 <= '1';
-				skip.rail0 <= '0';
+				for j in 0 to 3 loop
+					skip(j) <= '1';
+				end loop;
 			end if;
 
 			X   <= Int_to_DR(Xarray(i), 11);

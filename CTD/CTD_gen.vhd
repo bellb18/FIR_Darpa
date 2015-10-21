@@ -5,9 +5,9 @@ use IEEE.std_logic_1164.all;
 use work.ncl_signals.all;
 entity CTD_genm is
 	port(X        : in  dual_rail_logic_vector(10 downto 0);
-		 skip     : in  dual_rail_logic_vector(3 downto 0);
+		 skip     : in  std_logic_vector(3 downto 0);
 		 ki       : in  std_logic;
-		 sleepIn  : in  std_logic;
+		 sleep    : in  std_logic;
 		 rst      : in  std_logic;
 		 sleepOut : out std_logic;
 		 ko       : out std_logic;
@@ -18,7 +18,7 @@ architecture arch of CTD_genm is
 	component CTD_Stages_genm is
 	generic(size : in integer := 4);
 	port(X        : in  dual_rail_logic_vector(10 downto 0);
-		 skip     : in  dual_rail_logic;
+		 skip     : in  std_logic;
 		 ki       : in  std_logic;
 		 sleep    : in  std_logic;
 		 rst      : in  std_logic;
@@ -49,7 +49,7 @@ begin
 	
 	CTD_0 : CTD_Stages_genm
 		generic map(1)
-		port map(X, skip(0), ko_3, sleepIn, rst, sleepout_0, ko, Xarray(0));
+		port map(X, skip(0), ko_3, sleep, rst, sleepout_0, ko, Xarray(0));
 
 	CTD_1 : CTD_Stages_genm
 		generic map(2)

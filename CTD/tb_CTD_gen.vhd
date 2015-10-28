@@ -33,7 +33,6 @@ architecture arch of tb_CTD_gen is
 
 begin
 	CUT : CTD_genm
-		generic map(8)
 		port map(X, skip, ki, sleep, rst, sleepout, ko, Z);
 
 	inputs : process

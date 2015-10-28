@@ -1,6 +1,6 @@
 Library IEEE;
 use IEEE.std_logic_1164.all;
-use work.ncl_signals.all;
+use work.ncl_signals.all; 
 entity CTD_Stages_genm is
 	generic(size : in integer := 4);
 	port(X        : in  dual_rail_logic_vector(10 downto 0);
@@ -26,12 +26,12 @@ architecture arch of CTD_Stages_genm is
 			 ko       : out std_logic);
 	end component;
 	
-	component MUX is
-	port(a, b, s : in  std_logic;
-		 z : out std_logic);
+	component MUX21_C is
+	port(D0, D1, SD : in  std_logic;
+		 Z : out std_logic);
 	end component;
 
-	component MUX_genm is
+	component MUX21_C_genm is
 		generic(width : in integer := 8);
 		port(A     : in  dual_rail_logic_vector(width - 1 downto 0);
 			 B     : in  dual_rail_logic_vector(width - 1 downto 0);
@@ -55,14 +55,14 @@ begin
 			generic map(11, "00000000000")
 			port map(X, ki, rst, sleep, s1_out, s1_sleepout, s1_ko);
 		GenS1 : for i in 0 to 10 generate
-			MDataR1 : MUX
+			MDataR1 : MUX21_C
 				port map(s1_out(i).rail1, X(i).rail1, skip, Z(i).rail1);
-			MDataR0 : MUX
+			MDataR0 : MUX21_C
 				port map(s1_out(i).rail0, X(i).rail0, skip, Z(i).rail0);
 		end generate;
-		MSleep : MUX
+		MSleep : MUX21_C
 			port map(s1_sleepout, sleep, skip, sleepout);
-		Mko : MUX
+		Mko : MUX21_C
 			port map(s1_ko, ki, skip, ko);
 	end generate;
 	
@@ -71,7 +71,7 @@ begin
 		RegFirst : ShiftRegMTNCL
 			generic map(11, "00000000000")
 			port map(Xarray(0), s2_ko2, rst, sleep, Xarray(1), s2_sleepout1, s2_ko1);
-		Mko : MUX
+		Mko : MUX21_C
 			port map(s2_ko1, ki, skip, ko);
 		
 		RegLast : ShiftRegMTNCL
@@ -79,13 +79,13 @@ begin
 			port map(Xarray(1), ki, rst, s2_sleepout1, s2_out, s2_sleepout2, s2_ko2);
 			
 		GenS2 : for i in 0 to 10 generate
-			MDataR0 : MUX
+			MDataR0 : MUX21_C
 				port map(s2_out(i).rail0, X(i).rail0, skip, Z(i).rail0); -- Is this sleep wrong?
-			MDataR1 : MUX
+			MDataR1 : MUX21_C
 				port map(s2_out(i).rail1, X(i).rail1, skip, Z(i).rail1); -- Is this sleep wrong?
 		end generate;
 		
-		MSleep : MUX
+		MSleep : MUX21_C
 			port map(s2_sleepout2, sleep, skip, sleepout);
 	end generate;
 	
@@ -94,7 +94,7 @@ begin
 		RegFirst : ShiftRegMTNCL
 			generic map(11, "00000000000")
 			port map(Xarray(0), karray(1), rst, sleep, Xarray(1), sarray(1), karray(0));
-		Mko : Mux
+		Mko : MUX21_C
 			port map(karray(0), ki, skip, ko);
 			
 		RegMidGen : for i in 1 to size - 2 generate
@@ -108,13 +108,13 @@ begin
 			port map(Xarray(size - 1), ki, rst, sarray(size - 1), s3_out, s3_sleepout, karray(size - 1));
 		
 		GenS3 : for i in 0 to 10 generate
-			MDataR0 : MUX
+			MDataR0 : MUX21_C
 				port map(s3_out(i).rail0, X(i).rail0, skip, Z(i).rail0);
-			MDataR1 : MUX
+			MDataR1 : MUX21_C
 				port map(s3_out(i).rail1, X(i).rail1, skip, Z(i).rail1);
 		end generate;
 		
-		MSleep : MUX
+		MSleep : MUX21_C
 			port map(s3_sleepout, sleep, skip, sleepout);
 	end generate;
 	

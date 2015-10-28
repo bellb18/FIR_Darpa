@@ -192,17 +192,17 @@ begin
 end arch;
 
 ----------------------------------------------------------- 
--- MUX
+-- MUX21_C
 ----------------------------------------------------------- 
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity MUX is
+entity MUX21_C is
 	port(a, b, s : in  std_logic;
 		 z : out std_logic);
-end MUX;
+end MUX21_C;
 
-architecture arch of MUX is
+architecture arch of MUX21_C is
 begin
 	P1 : process(a, b, s)
 	begin
@@ -215,18 +215,18 @@ begin
 end arch;
 
 ----------------------------------------------------------- 
--- MUX with Sleep Input
+-- MUX21_C with Sleep Input
 ----------------------------------------------------------- 
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity MUX_Sleep is
+entity MUX21_C_Sleep is
 	port(a, b, s : in  std_logic;
 		 sleep : in std_logic;
 		 z : out std_logic);
-end MUX_Sleep;
+end MUX21_C_Sleep;
 
-architecture arch of MUX_Sleep is
+architecture arch of MUX21_C_Sleep is
 begin
 	P1 : process(a, b, s, sleep)
 	begin

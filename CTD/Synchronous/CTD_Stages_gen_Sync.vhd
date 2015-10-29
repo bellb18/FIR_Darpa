@@ -21,8 +21,8 @@ architecture arch of CTD_Stages_gen_Sync is
 	end component;
 	
 	component MUX21_C is
-	port(a, b, s : in  std_logic;
-		 z : out std_logic);
+	port(D0, D1, SD : in  std_logic;
+		 Z : out std_logic);
 	end component;
 
 	-- Signal Declarations

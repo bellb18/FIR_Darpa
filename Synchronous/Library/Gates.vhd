@@ -124,6 +124,22 @@ begin
 end arch;
 
 ----------------------------------------------------------- 
+-- NAND2
+----------------------------------------------------------- 
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity NAND2 is
+	port(a, b: in  std_logic;
+		 z : out std_logic);
+end NAND2;
+
+architecture arch of NAND2 is
+begin
+		z <= a nand b;
+end arch;
+
+----------------------------------------------------------- 
 -- NAND with Sleep Input
 ----------------------------------------------------------- 
 library ieee;
@@ -238,4 +254,20 @@ begin
 			z <= a;
 		end if;
 	end process;
+end arch;
+
+----------------------------------------------------------- 
+-- NOR
+----------------------------------------------------------- 
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity NOR2 is
+	port(a, b : in  std_logic;
+		 z : out std_logic);
+end NOR2;
+
+architecture arch of NOR2 is
+begin
+	z <= a nor b;
 end arch;

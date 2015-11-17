@@ -21,6 +21,31 @@ begin
 	end process;
 end arch;
 
+library IEEE;
+use IEEE.std_logic_1164.all;
+----------------------------------------------------------- 
+-- Reg with reset to 1
+----------------------------------------------------------- 
+entity regD is
+	port(
+		D   : in  std_logic;
+		clk : in  std_logic;
+		rst : in  std_logic;
+		Q   : out std_logic);
+end regD;
+
+architecture arch of regD is
+begin
+	P1 : process(clk, rst)
+	begin
+		if (rst = '1') then
+			Q <= '1' after 1 ns;
+		elsif (clk'event and clk = '1') then
+			Q <= D after 2 ns;
+		end if;
+	end process;
+end arch;
+
 ----------------------------------------------------------- 
 -- Reg with Sleep Input
 ----------------------------------------------------------- 

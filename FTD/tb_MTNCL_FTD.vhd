@@ -18,7 +18,7 @@ architecture arch of tb_MTNCL_FTD is
 	signal Y                            : std_LOGIC_VECTOR(10 downto 0);
 	signal clk, rst					    : std_logic;
 
-	component MTNCL_FTD is
+	component MTNCL_FTD_SyncWrappers is
 		port(x        : in  std_logic_vector(9 downto 0);
 			 c        : in  CType;
 			 clk       : in  std_logic;
@@ -27,7 +27,7 @@ architecture arch of tb_MTNCL_FTD is
 	end component;
 
 begin
-	CUT : MTNCL_FTD
+	CUT : MTNCL_FTD_SyncWrappers
 		port map(X, C, clk, rst, Y);
 
 	inputs : process

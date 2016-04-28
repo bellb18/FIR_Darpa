@@ -82,27 +82,27 @@ begin
 	--Input registers
 	inRegX : genregm 
 		generic map(10)
-		port map(x, koSig, inputXReg);
+		port map(x, koX, inputXReg);
 	inRegY : genregm 
 		generic map(7)
-		port map(y, koSig, inputYReg);
+		port map(y, koX, inputYReg);
 	inCompX : compm
 		generic map(10)
 		port map(x, ko_pipe1b, rst, sleep, koX);
-	inCompY : compm
-		generic map(7)
-		port map(y, ko_pipe1b, rst, sleep, koY);
-	andKO : th22d_a
-		port map(koX, koY, rst, koSig);
+	--inCompY : compm
+		--generic map(7)
+		--port map(y, ko_pipe1b, rst, sleep, koY);
+	--andKO : th22d_a
+		--port map(koX, '1', rst, koSig);
 	sleepOut <= ko_OutReg;
-	ko <= koSig;
+	ko <= koX;
 	
 	
 	-- Generate partial products
 	AndGenx : for i in 0 to 9 generate
 		AndGeny : for j in 0 to 6 generate
 			AndGen : and2im
-				port map(inputXReg(i), inputYReg(j), koSig, temp_input_array(i)(j));
+				port map(inputXReg(i), inputYReg(j), koX, temp_input_array(i)(j));
 		end generate;
 	end generate;
 
@@ -124,98 +124,98 @@ begin
 
 	-- 0th Stage - All columns will have 6pp or less
 	FA06a : FAm1                        --P6
-		port map(input_array(6)(0), input_array(5)(1), koSig, carry_array1(0)(7), sum_array1(0)(6));
+		port map(input_array(6)(0), input_array(5)(1), koX, carry_array1(0)(7), sum_array1(0)(6));
 	FaGen0a : for i in 1 to 2 generate  --P7-P8
 		Fa0a : FAm
-			port map(input_array(i + 6)(0), input_array(i + 5)(1), input_array(i + 4)(2), koSig, carry_array1(0)(i + 7), sum_array1(0)(i + 6));
+			port map(input_array(i + 6)(0), input_array(i + 5)(1), input_array(i + 4)(2), koX, carry_array1(0)(i + 7), sum_array1(0)(i + 6));
 	end generate;
 	FA09a : FAm1                        --P9
-		port map(input_array(9)(0), input_array(8)(1), koSig, carry_array1(0)(10), sum_array1(0)(9));
+		port map(input_array(9)(0), input_array(8)(1), koX, carry_array1(0)(10), sum_array1(0)(9));
 	HA09a : HAm                         --P9
-		port map(input_array(7)(2), input_array(6)(3), koSig, carry_array2(0)(10), sum_array2(0)(9));
+		port map(input_array(7)(2), input_array(6)(3), koX, carry_array2(0)(10), sum_array2(0)(9));
 	FA010 : FAm                         --P10
-		port map(input_array(9)(1), input_array(8)(2), input_array(7)(3), koSig, carry_array1(0)(11), sum_array1(0)(10));
+		port map(input_array(9)(1), input_array(8)(2), input_array(7)(3), koX, carry_array1(0)(11), sum_array1(0)(10));
 
 	-- 1st Stage - All columns will have 4pp or less
 	HA14a : HAm                         --P4
-		port map(input_array(4)(0), input_array(3)(1), koSig, carry_array1(1)(5), sum_array1(1)(4));
+		port map(input_array(4)(0), input_array(3)(1), koX, carry_array1(1)(5), sum_array1(1)(4));
 	HA15a : HAm                         --P5
-		port map(input_array(2)(3), input_array(1)(4), koSig, carry_array1(1)(6), sum_array1(1)(5));
+		port map(input_array(2)(3), input_array(1)(4), koX, carry_array1(1)(6), sum_array1(1)(5));
 	FA15a : FAm                         --P5
-		port map(input_array(5)(0), input_array(4)(1), input_array(3)(2), koSig, carry_array2(1)(6), sum_array2(1)(5));
+		port map(input_array(5)(0), input_array(4)(1), input_array(3)(2), koX, carry_array2(1)(6), sum_array2(1)(5));
 	FA16a : FAm                         -- P6
-		port map(sum_array1(0)(6), input_array(4)(2), input_array(3)(3), koSig, carry_array1(1)(7), sum_array1(1)(6));
+		port map(sum_array1(0)(6), input_array(4)(2), input_array(3)(3), koX, carry_array1(1)(7), sum_array1(1)(6));
 
 	FaGen1a : for i in 1 to 2 generate  --P7-P8 gate 1
 		FA1a : FAm
-			port map(input_array(i + 3)(3), sum_array1(0)(i + 6), carry_array1(0)(i + 6), koSig, carry_array1(1)(i + 7), sum_array1(1)(i + 6));
+			port map(input_array(i + 3)(3), sum_array1(0)(i + 6), carry_array1(0)(i + 6), koX, carry_array1(1)(i + 7), sum_array1(1)(i + 6));
 	end generate;
 
 	FA19a : FAm                         -- P9 gate 1
-		port map(sum_array1(0)(9), sum_array2(0)(9), carry_array1(0)(9), koSig, carry_array1(1)(10), sum_array1(1)(9));
+		port map(sum_array1(0)(9), sum_array2(0)(9), carry_array1(0)(9), koX, carry_array1(1)(10), sum_array1(1)(9));
 	FA110a : FAm                        -- P10 gate 1
-		port map(sum_array1(0)(10), carry_array2(0)(10), carry_array1(0)(10), koSig, carry_array1(1)(11), sum_array1(1)(10));
+		port map(sum_array1(0)(10), carry_array2(0)(10), carry_array1(0)(10), koX, carry_array1(1)(11), sum_array1(1)(10));
 	FA111a : FAm                        -- P11 gate 1
-		port map(carry_array1(0)(11), input_array(9)(2), input_array(8)(3), koSig, carry_array1(1)(12), sum_array1(1)(11));
+		port map(carry_array1(0)(11), input_array(9)(2), input_array(8)(3), koX, carry_array1(1)(12), sum_array1(1)(11));
 
 	FaGen1b : for i in 1 to 6 generate  --P6-P11 gate 2
 		FA1a : FAm
-			port map(input_array(i + 1)(4), input_array(i)(5), input_array(i - 1)(6), koSig, carry_array2(1)(i + 6), sum_array2(1)(i + 5));
+			port map(input_array(i + 1)(4), input_array(i)(5), input_array(i - 1)(6), koX, carry_array2(1)(i + 6), sum_array2(1)(i + 5));
 	end generate;
 
 	FA112a : FAm                        --P12
-		port map(input_array(9)(3), input_array(8)(4), input_array(7)(5), koSig, carry_array1(1)(13), sum_array1(1)(12));
+		port map(input_array(9)(3), input_array(8)(4), input_array(7)(5), koX, carry_array1(1)(13), sum_array1(1)(12));
 
 	-- 2nd Stage - All columns will have 3pp or less
 	HA23a : HAm                         -- P3
-		port map(input_array(3)(0), input_array(2)(1), koSig,
+		port map(input_array(3)(0), input_array(2)(1), koX,
 			     carry_array1(2)(4), sum_array1(2)(3));
 	FA24a : FAm                         -- P4
 		port map(sum_array1(1)(4), input_array(2)(2), input_array(1)(3),
-			     koSig, carry_array1(2)(5), sum_array1(2)(4));
+			     koX, carry_array1(2)(5), sum_array1(2)(4));
 	FA25a : FAm                         -- P5
 		port map(sum_array2(1)(5), sum_array1(1)(5), carry_array1(1)(5),
-			     koSig, carry_array1(2)(6), sum_array1(2)(5));
+			     koX, carry_array1(2)(6), sum_array1(2)(5));
 	FAGen2a : for i in 1 to 6 generate  -- P6-P11
 		FA2a : FAm
 			port map(sum_array2(1)(i + 5), sum_array1(1)(i + 5), carry_array2(1)(i + 5),
-				     koSig, carry_array1(2)(i + 6), sum_array1(2)(i + 5));
+				     koX, carry_array1(2)(i + 6), sum_array1(2)(i + 5));
 	end generate;
 	FA212a : FAm                        -- P12
 		port map(sum_array1(1)(12), carry_array2(1)(12), carry_array1(1)(12),
-			     koSig, carry_array1(2)(13), sum_array1(2)(12));
+			     koX, carry_array1(2)(13), sum_array1(2)(12));
 	FA213a : FAm                        -- P13
 		port map(carry_array1(1)(13), input_array(9)(4), input_array(8)(5),
-			     koSig, carry_array1(2)(14), sum_array1(2)(13));
+			     koX, carry_array1(2)(14), sum_array1(2)(13));
 			     
 	-- 3rd Stage - All columns will have 2pp or less
 	HA32a : HAm                         -- P2
-		port map(input_array(2)(0), input_array(1)(1), koSig,
+		port map(input_array(2)(0), input_array(1)(1), koX,
 			     carry_array1(3)(3), sum_array1(3)(2));
 	FA33a : FAm                         -- P3
 		port map(sum_array1(2)(3), input_array(1)(2), input_array(0)(3),
-			     koSig, carry_array1(3)(4), sum_array1(3)(3));
+			     koX, carry_array1(3)(4), sum_array1(3)(3));
 	FA34a : FAm                         -- P4
 		port map(sum_array1(2)(4), carry_array1(2)(4), input_array(0)(4),
-			     koSig, carry_array1(3)(5), sum_array1(3)(4));
+			     koX, carry_array1(3)(5), sum_array1(3)(4));
 	FA35a : FAm                         -- P5
 		port map(sum_array1(2)(5), carry_array1(2)(5), input_array(0)(5),
-			     koSig, carry_array1(3)(6), sum_array1(3)(5));
+			     koX, carry_array1(3)(6), sum_array1(3)(5));
 	FAGen3a : for i in 1 to 6 generate  -- P6-P11
 		FA3a : FAm
 			port map(carry_array1(2)(i + 5), carry_array1(1)(i + 5),
-				     sum_array1(2)(i + 5), koSig, carry_array1(3)(i + 6), sum_array1(3)(i + 5));
+				     sum_array1(2)(i + 5), koX, carry_array1(3)(i + 6), sum_array1(3)(i + 5));
 	end generate;
 
 	FA312a : FAm                        -- P12
 		port map(sum_array1(2)(12), carry_array1(2)(12),
-			     input_array(6)(6), koSig, carry_array1(3)(13), sum_array1(3)(12));
+			     input_array(6)(6), koX, carry_array1(3)(13), sum_array1(3)(12));
 	FA313a : FAm                        -- P13
 		port map(sum_array1(2)(13), carry_array1(2)(13),
-			     input_array(7)(6), koSig, carry_array1(3)(14), sum_array1(3)(13));
+			     input_array(7)(6), koX, carry_array1(3)(14), sum_array1(3)(13));
 	FA314a : FAm                        -- P14
 		port map(carry_array1(2)(14), input_array(9)(5),
-			     input_array(8)(6), koSig, carry_array1(3)(15), sum_array1(3)(14));
+			     input_array(8)(6), koX, carry_array1(3)(15), sum_array1(3)(14));
 			     
 	A <= input_array(9)(6) & sum_array1(3)(14 downto 3) & input_array(0)(2) & input_array(1)(0) & input_array(0)(0);
 	B <= carry_array1(3)(15 downto 3) & sum_array1(3)(2) & input_array(0)(1);
@@ -230,7 +230,7 @@ begin
 		port map(B, ko_pipe1b, B2);
 	PipeComp1 : compm
 		generic map(31)
-		port map(A_B, ko_pipe1, rst, koSig, ko_pipe1b);
+		port map(A_B, ko_pipe1, rst, koX, ko_pipe1b);
 		
 	A2_B2 <= A2 & B2;
 		

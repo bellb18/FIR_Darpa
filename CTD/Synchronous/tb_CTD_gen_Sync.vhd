@@ -53,22 +53,21 @@ begin
 		rst <= '0';
 
 		for i in 0 to 99 loop
-			wait for 10 ns;
+			wait for 50 ns;
 			clk <= '0';
-			if i < 50 then
-				for j in 0 to 3 loop
-					skip(j) <= '0';
-				end loop;
-			else
+			if i = 25 then
 				skip(0) <= '1';
+			elsif i = 50 then
+				skip(0) <= '0';
+				skip(1) <= '1';
+			elsif i = 75 then
 				skip(1) <= '0';
-				skip(2) <= '1';
-				skip(3) <= '0';
+				skip(3) <= '1';
 			end if;
 
 			X <= std_logic_vector(to_signed(Xarray(i), 11));
 
-			wait for 10 ns;
+			wait for 50 ns;
 			clk <= '1';
 		end loop;
 		wait;

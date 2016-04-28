@@ -2,8 +2,38 @@ library ieee;
 package Sync_gates is
 	use ieee.std_logic_1164.all;
 	component INV_A is
-	port(a : in  std_logic;
-	 z : out std_logic);
+	port(A : in  std_logic;
+	 Z : out std_logic);
+	end component;
+
+	component NAND2 is
+	port(A, B: in  std_logic;
+		 Z : out std_logic);
+	end component;
+	
+	component AND2 is
+	port(A, B: in  std_logic;
+		 Z : out std_logic);
+	end component;
+	
+	component NOR2 is
+	port(A, B: in  std_logic;
+		 Z : out std_logic);
+	end component;
+	
+	component OR2 is
+	port(a, b: in  std_logic;
+		 z : out std_logic);
+	end component;
+	
+	component XNOR2 is
+	port(a, b: in  std_logic;
+		 z : out std_logic);
+	end component;
+	
+	component XOR2 is
+	port(a, b: in  std_logic;
+		 z : out std_logic);
 	end component;
 
 	type XTypeSync is array (15 downto 0) of std_logic_vector(9 downto 0);

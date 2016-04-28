@@ -208,6 +208,29 @@ begin
 end arch;
 
 ----------------------------------------------------------- 
+-- MUX
+----------------------------------------------------------- 
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity MUX is
+	port(A, B, S : in  std_logic;
+		 Z : out std_logic);
+end MUX;
+
+architecture arch of MUX is
+begin
+	P1 : process(A, B, S)
+	begin
+		if(S = '1') then
+			Z <= B;
+		else
+			Z <= A;
+		end if;
+	end process;
+end arch;
+
+----------------------------------------------------------- 
 -- MUX21_C
 ----------------------------------------------------------- 
 library ieee;

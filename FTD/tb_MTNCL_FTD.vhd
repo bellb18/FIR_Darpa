@@ -83,31 +83,44 @@ begin
 
 		for i in 0 to 99 loop
 			clk <= '0';
-			X <= std_logic_vector(to_signed(Xarray(i), 10));
-			wait for 32 ns;
+			--X <= std_logic_vector(to_signed(Xarray(i), 10));
+			-- Changed from 32 ns to get right clock speed for vector file
+			-- 500 ps for 1 GHz speed
+			-- 416 ps for 1.2 GHz speed
+			-- 833 ps for 600 mHz speed
+			-- 625 ps for 800 mHz speed
+			-- 455 ps for 1.1 GHz speed
+			wait for 500 ps;
 			clk <= '1';
-			wait for 32 ns;
+			wait for 500 ps;
+		end loop;
+		
+		for i in 0 to 1000000 loop
+			clk <= '0';
+			wait for 500 ps;
+			clk <= '1';
+			wait for 500 ps;
 		end loop;
 		wait;
 
 	end process;
 	
-	outputs : process(Y)
-		variable Correct : integer := 0;
-		variable j       : integer := 0;
-		variable s       : line;
-	begin
-		if j >= 15 then
-			Correct := ((Xarray(j) + Xarray(j - 15)) * 0 + (Xarray(j - 1) + Xarray(j - 14)) * 0 + (Xarray(j - 2) + Xarray(j - 13)) * 1 - 2 * (Xarray(j - 3) + Xarray(j - 12)) + (Xarray(j - 4) + Xarray(j - 11)) * 2 + (Xarray(j - 5) + Xarray(j - 10)) * 0 - 7 * (Xarray(j
-							- 6) + Xarray(j - 9)) + (Xarray(j - 7) + Xarray(j - 8)) * 38) / 32;
-			if (abs (Correct - to_integer(signed(Y))) >= 2) then
-				write(s, string'("Error: "));
-				write(s, std_logic_vector'(Y));
-				write(s, string'(" /= "));
-				write(s, integer'(Correct));
-				writeline(OUTPUT, s);
-			end if;
-		end if;
-		j := j + 1;
-	end process;
+	--outputs : process(Y)
+		--variable Correct : integer := 0;
+		--variable j       : integer := 0;
+		--variable s       : line;
+	--begin
+		--if j >= 15 then
+			--Correct := ((Xarray(j) + Xarray(j - 15)) * 0 + (Xarray(j - 1) + Xarray(j - 14)) * 0 + (Xarray(j - 2) + Xarray(j - 13)) * 1 - 2 * (Xarray(j - 3) + Xarray(j - 12)) + (Xarray(j - 4) + Xarray(j - 11)) * 2 + (Xarray(j - 5) + Xarray(j - 10)) * 0 - 7 * (Xarray(j
+				--			- 6) + Xarray(j - 9)) + (Xarray(j - 7) + Xarray(j - 8)) * 38) / 32;
+			--if (abs (Correct - to_integer(signed(Y))) >= 2) then
+				--write(s, string'("Error: "));
+				--write(s, std_logic_vector'(Y));
+				--write(s, string'(" /= "));
+				--write(s, integer'(Correct));
+				--writeline(OUTPUT, s);
+			--end if;
+		--end if;
+		--j := j + 1;
+	--end process;
 end arch;

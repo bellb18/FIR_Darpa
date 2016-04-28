@@ -133,20 +133,9 @@ begin
 	FA112a : FA                         --P12
 		port map(input_array(9)(3), input_array(8)(4), input_array(7)(5), carry_array1(1)(13), sum_array1(1)(12));
 
-	E <= input_array(9)(5) & carry_array1(1)(11 downto 6) & input_array(0)(3) & input_array(2)(0) & carry_array1(1)(13) & sum_array1(1)(12) & sum_array1(1)(11 downto 6) & sum_array1(1)(5) & input_array(2)(2) & input_array(3)(0);
-	F <= input_array(0)(1) & input_array(1)(0) & input_array(9)(6) & input_array(8)(6) & input_array(6)(6) & input_array(0)(4) & input_array(1)(1) & input_array(9)(4) & carry_array2(1)(12) & carry_array2(1)(11 downto 6) & carry_array1(1)(5) & input_array(1)(3) & input_array(2)(1);
-	G <= input_array(0)(0) & input_array(0)(2) & input_array(7)(6) & input_array(0)(5) & input_array(1)(2) & input_array(8)(5) & carry_array1(1)(12) & sum_array2(1)(11 downto 6) & sum_array2(1)(5) & sum_array1(1)(4);
-
-	-- Pipeline Register
-	Pipe2Reg1 : reg_gen
-		generic map(20)
-		port map(E, clk, rst, E_reg);
-	Pipe2Reg2 : reg_gen
-		generic map(18)
-		port map(F, clk, rst, F_reg);
-	Pipe2Reg3 : reg_gen
-		generic map(15)
-		port map(G, clk, rst, G_reg);
+	E_reg <= input_array(9)(5) & carry_array1(1)(11 downto 6) & input_array(0)(3) & input_array(2)(0) & carry_array1(1)(13) & sum_array1(1)(12) & sum_array1(1)(11 downto 6) & sum_array1(1)(5) & input_array(2)(2) & input_array(3)(0);
+	F_reg <= input_array(0)(1) & input_array(1)(0) & input_array(9)(6) & input_array(8)(6) & input_array(6)(6) & input_array(0)(4) & input_array(1)(1) & input_array(9)(4) & carry_array2(1)(12) & carry_array2(1)(11 downto 6) & carry_array1(1)(5) & input_array(1)(3) & input_array(2)(1);
+	G_reg <= input_array(0)(0) & input_array(0)(2) & input_array(7)(6) & input_array(0)(5) & input_array(1)(2) & input_array(8)(5) & carry_array1(1)(12) & sum_array2(1)(11 downto 6) & sum_array2(1)(5) & sum_array1(1)(4);
 
 	-- 2nd Stage - All columns will have 3pp or less
 	HA23a : HA                          -- P3

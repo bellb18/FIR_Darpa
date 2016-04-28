@@ -16,13 +16,13 @@ architecture arch of tb_CTD_gen is
 	signal skip : std_logic_vector(3 downto 0);
 	signal sleep, ki, ko, sleepout, rst : std_logic;
 
-	component CTD_genm is
+	component MTNCL_CTD is
 	port(X        : in  dual_rail_logic_vector(10 downto 0);
 		 skip     : in  std_logic_vector(3 downto 0);
 		 ki       : in  std_logic;
-		 sleep  : in  std_logic;
+		 sleep    : in  std_logic;
 		 rst      : in  std_logic;
-		 sleepout : out std_logic;
+		 sleepOut : out std_logic;
 		 ko       : out std_logic;
 		 Z        : out dual_rail_logic_vector(10 downto 0));
 	end component;
@@ -32,7 +32,7 @@ architecture arch of tb_CTD_gen is
 	
 
 begin
-	CUT : CTD_genm
+	CUT : MTNCL_CTD
 		port map(X, skip, ki, sleep, rst, sleepout, ko, Z);
 
 	inputs : process
@@ -59,14 +59,14 @@ begin
 			sleep <= '0';
 			wait for 1 ns;
 			
-			if i < 50 then
-				for j in 0 to 3 loop
-					skip(j) <= '0';
-				end loop;
-			else
-				for j in 0 to 3 loop
-					skip(j) <= '1';
-				end loop;
+			if i = 25 then
+				skip(0) <= '1';
+			elsif i = 50 then
+				skip(0) <= '0';
+				skip(1) <= '1';
+			elsif i = 75 then
+				skip(1) <= '0';
+				skip(3) <= '1';
 			end if;
 
 			X   <= Int_to_DR(Xarray(i), 11);

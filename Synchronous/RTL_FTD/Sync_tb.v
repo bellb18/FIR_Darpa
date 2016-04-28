@@ -194,7 +194,7 @@ end
 
 
 //fir_sync #(0, 0, 1, -2, 2, 0, -7, 38, 38, -7, 0, 2, -2, 1, 0, 0)
-fir_sync
+RTL_Sync_FTD
   dut(
   .clk(clk),
   .rst(rst),
